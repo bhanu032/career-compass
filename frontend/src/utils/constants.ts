@@ -1,0 +1,59 @@
+export const INDIAN_STATES: readonly string[] = [
+  "All India",
+  "Andhra Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Delhi",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Tamil Nadu",
+  "Telangana",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal",
+] as const;
+
+export const QUALIFICATIONS: readonly string[] = [
+  "10th Pass",
+  "12th Pass",
+  "ITI",
+  "Diploma",
+  "Bachelor's Degree",
+  "BE / B.Tech",
+  "B.Sc Nursing",
+  "Master's Degree",
+  "PhD",
+] as const;
+
+export const CATEGORIES: readonly string[] = [
+  "Central Government",
+  "State Government",
+  "Banking",
+  "Railway",
+  "Defence",
+  "Engineering",
+  "Medical",
+  "Teaching",
+  "PSU",
+  "Research",
+] as const;
+
+export const SORT_OPTIONS: readonly { value: string; label: string }[] = [
+  { value: "created_at:desc", label: "Newest first" },
+  { value: "last_date:asc", label: "Closing soonest" },
+  { value: "salary_min:desc", label: "Highest salary" },
+  { value: "title:asc", label: "Title A-Z" },
+] as const;
+
+export const PAGE_SIZE = 12;
