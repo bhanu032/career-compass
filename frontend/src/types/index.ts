@@ -43,6 +43,13 @@ export interface Job {
   experience: string | null;
   job_type: string | null;
   source: string | null;
+  // Rich structured fields (JSON strings, parse before use)
+  important_dates: string | null;   // [{label: string, value: string}]
+  application_fee: string | null;   // [{label: string, value: string}]
+  vacancy_details: string | null;   // [{post_name: string, total: string, eligibility: string}]
+  important_links: string | null;   // [{label: string, url: string, link_text: string}]
+  how_to_apply: string | null;      // string[]
+  short_info: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -88,6 +95,8 @@ export interface HomeData {
   top_organizations: OrganizationCount[];
   popular_categories: CategoryCount[];
   closing_soon: Job[];
+  latest_admit_cards: Job[];
+  latest_results: Job[];
 }
 
 export interface AdminStats {

@@ -12,7 +12,7 @@ class ONGCScraper(BaseScraper):
     name = "Oil and Natural Gas Corporation"
     base_url = "https://www.ongcindia.com"
     listing_url = "https://www.ongcindia.com/web/eng/career/recruitment-notice"
-    requires_javascript = False
+    requires_javascript = True
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "appointment", "engagement")
 

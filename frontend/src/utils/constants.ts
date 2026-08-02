@@ -57,3 +57,17 @@ export const SORT_OPTIONS: readonly { value: string; label: string }[] = [
 ] as const;
 
 export const PAGE_SIZE = 12;
+
+export const SCRAPER_SOURCES: readonly string[] = [
+  "sarkari_result",
+  "ssc",
+  "upsc",
+  "rrb",
+  "ibps",
+  "isro",
+  "drdo",
+  "ongc",
+  "barc",
+  "aiims",
+  "income_tax",
+] as const;

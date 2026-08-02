@@ -79,6 +79,7 @@ class ScraperService:
 
     def _upsert(self, item: ScrapedJob, source: str) -> bool:
         last_date = parse_date(item.last_date)
+        published_date = parse_date(item.published_date) if item.published_date else None
         existing = self.jobs.find_duplicate(item.title, item.organization, last_date)
         salary_min, salary_max = parse_salary_range(item.salary)
 
@@ -90,6 +91,22 @@ class ScraperService:
             existing.salary = item.salary or existing.salary
             existing.salary_min = salary_min or existing.salary_min
             existing.salary_max = salary_max or existing.salary_max
+            existing.age_limit = item.age_limit or existing.age_limit
+            existing.selection_process = item.selection_process or existing.selection_process
+            existing.vacancies = item.vacancies or existing.vacancies
+            # Rich structured fields — always overwrite when provided
+            if item.important_dates:
+                existing.important_dates = item.important_dates
+            if item.application_fee:
+                existing.application_fee = item.application_fee
+            if item.vacancy_details:
+                existing.vacancy_details = item.vacancy_details
+            if item.important_links:
+                existing.important_links = item.important_links
+            if item.how_to_apply:
+                existing.how_to_apply = item.how_to_apply
+            if item.short_info:
+                existing.short_info = item.short_info
             return False
 
         self.db.add(
@@ -102,15 +119,23 @@ class ScraperService:
                 salary=item.salary,
                 salary_min=salary_min,
                 salary_max=salary_max,
+                age_limit=item.age_limit,
                 last_date=last_date,
-                published_date=datetime.now(timezone.utc).date(),
+                published_date=published_date or datetime.now(timezone.utc).date(),
                 notification_pdf=item.notification_pdf,
                 application_url=item.application_url,
                 application_mode="Online",
                 description=item.description,
+                selection_process=item.selection_process,
                 vacancies=item.vacancies,
-                job_type="Permanent",
+                job_type=item.job_type or "job",
                 source=source,
+                important_dates=item.important_dates,
+                application_fee=item.application_fee,
+                vacancy_details=item.vacancy_details,
+                important_links=item.important_links,
+                how_to_apply=item.how_to_apply,
+                short_info=item.short_info,
             )
         )
         return True

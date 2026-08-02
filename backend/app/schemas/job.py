@@ -27,6 +27,13 @@ class JobBase(BaseModel):
     experience: Optional[str] = None
     job_type: Optional[str] = None
     source: Optional[str] = None
+    # Rich structured fields stored as JSON strings
+    important_dates: Optional[str] = None   # JSON: [{label, value}]
+    application_fee: Optional[str] = None   # JSON: [{label, value}]
+    vacancy_details: Optional[str] = None   # JSON: [{post_name, total, eligibility}]
+    important_links: Optional[str] = None   # JSON: [{label, url, link_text}]
+    how_to_apply: Optional[str] = None      # JSON: [str, ...]
+    short_info: Optional[str] = None        # Plain text intro paragraph
 
 
 class JobCreate(JobBase):
@@ -55,6 +62,12 @@ class JobUpdate(BaseModel):
     vacancies: Optional[int] = None
     experience: Optional[str] = None
     job_type: Optional[str] = None
+    important_dates: Optional[str] = None
+    application_fee: Optional[str] = None
+    vacancy_details: Optional[str] = None
+    important_links: Optional[str] = None
+    how_to_apply: Optional[str] = None
+    short_info: Optional[str] = None
 
 
 class JobRead(JobBase):

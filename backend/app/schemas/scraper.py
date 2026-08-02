@@ -37,3 +37,14 @@ class ScrapedJob(BaseModel):
     state: Optional[str] = None
     category: Optional[str] = None
     vacancies: Optional[int] = None
+    age_limit: Optional[str] = None
+    selection_process: Optional[str] = None
+    published_date: Optional[str] = None
+    job_type: Optional[str] = None          # "job" | "admit_card" | "result"
+    # Rich structured fields (JSON-serialised strings)
+    important_dates: Optional[str] = None
+    application_fee: Optional[str] = None
+    vacancy_details: Optional[str] = None
+    important_links: Optional[str] = None
+    how_to_apply: Optional[str] = None
+    short_info: Optional[str] = None

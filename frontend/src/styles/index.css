@@ -1,51 +1,437 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   DeshKiSeva — Global Stylesheet
+   Themes: light (default) · dark · tricolor (Indian flag)
+   ───────────────────────────────────────────────────────────────────────────── */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ── Tricolor CSS custom properties ─────────────────────────────────────────
+   Indian Flag palette:
+     Saffron  #FF9933  (Kesari)
+     White    #FFFFFF
+     Green    #138808  (India Green)
+     Navy     #000080  (Ashoka Chakra blue — used as accent/text anchor)
+   ─────────────────────────────────────────────────────────────────────────── */
+:root {
+  --tc-saffron:       #FF9933;
+  --tc-saffron-light: #FFF0DC;
+  --tc-saffron-dark:  #C8741A;
+  --tc-saffron-muted: rgba(255,153,51,0.12);
+  --tc-saffron-border:rgba(255,153,51,0.25);
+
+  --tc-green:         #138808;
+  --tc-green-light:   #E6F4E5;
+  --tc-green-dark:    #0D6006;
+  --tc-green-muted:   rgba(19,136,8,0.12);
+  --tc-green-border:  rgba(19,136,8,0.25);
+
+  --tc-navy:          #000080;
+  --tc-navy-light:    #E0E0F5;
+  --tc-navy-muted:    rgba(0,0,128,0.1);
+  --tc-navy-border:   rgba(0,0,128,0.2);
+
+  --tc-white:         #FFFFFF;
+  --tc-off-white:     #F5F5F0;
+  --tc-cream:         #FFFDF5;
+
+  /* Tricolor stripe gradient (used for decorative elements) */
+  --tc-stripe: linear-gradient(
+    to bottom,
+    var(--tc-saffron) 33.33%,
+    var(--tc-white)   33.33% 66.66%,
+    var(--tc-green)   66.66%
+  );
+  --tc-stripe-h: linear-gradient(
+    to right,
+    var(--tc-saffron) 33.33%,
+    var(--tc-white)   33.33% 66.66%,
+    var(--tc-green)   66.66%
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────── */
 @layer base {
-  :root {
-    color-scheme: light;
-  }
-  html.dark {
-    color-scheme: dark;
-  }
+  :root { color-scheme: light; }
+  html.dark { color-scheme: dark; }
+  html.tricolor { color-scheme: light; }
+
+  /* Scrollbar — theme-aware */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #f1f5f9; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+  html.dark ::-webkit-scrollbar-track { background: #0f172a; }
+  html.dark ::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.4); }
+  html.dark ::-webkit-scrollbar-thumb:hover { background: rgba(124,58,237,0.7); }
+
+  html.tricolor ::-webkit-scrollbar-track { background: var(--tc-off-white); }
+  html.tricolor ::-webkit-scrollbar-thumb { background: var(--tc-saffron-dark); border-radius: 99px; }
+  html.tricolor ::-webkit-scrollbar-thumb:hover { background: var(--tc-saffron); }
+
+  /* Selection */
+  ::selection { background: rgba(124,58,237,0.25); color: inherit; }
+  html.tricolor ::selection { background: rgba(255,153,51,0.35); color: inherit; }
+
+  /* Base body */
   body {
-    @apply bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100;
+    @apply antialiased;
+    background-color: #f8fafc;
+    color: #0f172a;
+  }
+  html.dark body {
+    background-color: #020308;
+    color: #f1f5f9;
+  }
+  html.tricolor body {
+    background-color: var(--tc-cream);
+    color: #1a1a2e;
   }
 }
 
+/* ─────────────────────────────────────────────────────────────────────────── */
 @layer components {
+
+  /* ── Layout ───────────────────────────────────────────────────────────── */
   .container-page {
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
   }
+
+  /* ── Card ─────────────────────────────────────────────────────────────── */
   .card {
-    @apply rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md dark:border-slate-800 dark:bg-slate-900;
+    @apply rounded-2xl border bg-white shadow-sm transition-all duration-300 hover:shadow-md;
+    border-color: #e2e8f0;
   }
+  html.dark .card {
+    background-color: rgba(255,255,255,0.03);
+    border-color: rgba(99,102,241,0.15);
+    box-shadow: 0 0 0 1px rgba(99,102,241,0.06), 0 4px 20px rgba(0,0,0,0.4);
+    backdrop-filter: blur(12px);
+  }
+  html.dark .card:hover {
+    border-color: rgba(99,102,241,0.3);
+    box-shadow: 0 0 0 1px rgba(99,102,241,0.18), 0 8px 32px rgba(0,0,0,0.5), 0 0 24px rgba(99,102,241,0.07);
+    transform: translateY(-1px);
+  }
+  html.tricolor .card {
+    background-color: #ffffff;
+    border-color: var(--tc-saffron-border);
+    box-shadow: 0 2px 12px rgba(255,153,51,0.08), 0 1px 3px rgba(0,0,128,0.06);
+  }
+  html.tricolor .card:hover {
+    border-color: var(--tc-saffron);
+    box-shadow: 0 4px 20px rgba(255,153,51,0.15), 0 2px 8px rgba(19,136,8,0.08);
+    transform: translateY(-1px);
+  }
+
+  /* ── Buttons ─────────────────────────────────────────────────────────── */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus:ring-offset-slate-950;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold
+           transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2
+           disabled:cursor-not-allowed disabled:opacity-60;
   }
+
+  /* Primary */
   .btn-primary {
-    @apply btn bg-brand-600 text-white hover:bg-brand-700;
+    @apply btn text-white;
+    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+    box-shadow: 0 2px 8px rgba(124,58,237,0.3);
+    focus-ring-color: #7c3aed;
   }
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #6d28d9, #5b21b6);
+    box-shadow: 0 4px 14px rgba(124,58,237,0.4);
+    transform: translateY(-1px);
+  }
+  html.dark .btn-primary {
+    background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    box-shadow: 0 0 20px rgba(124,58,237,0.35), 0 4px 12px rgba(0,0,0,0.3);
+  }
+  html.tricolor .btn-primary {
+    background: linear-gradient(135deg, var(--tc-saffron) 0%, #e07a00 100%);
+    box-shadow: 0 2px 10px rgba(255,153,51,0.35);
+    color: #fff;
+  }
+  html.tricolor .btn-primary:hover {
+    background: linear-gradient(135deg, #e07a00 0%, #c05f00 100%);
+    box-shadow: 0 4px 16px rgba(255,153,51,0.45);
+  }
+
+  /* Secondary */
   .btn-secondary {
-    @apply btn border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800;
+    @apply btn;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    color: #374151;
   }
+  .btn-secondary:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+  }
+  html.dark .btn-secondary {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(99,102,241,0.2);
+    color: #e2e8f0;
+  }
+  html.dark .btn-secondary:hover {
+    background: rgba(99,102,241,0.12);
+    border-color: rgba(99,102,241,0.4);
+  }
+  html.tricolor .btn-secondary {
+    background: #fff;
+    border: 1px solid var(--tc-saffron-border);
+    color: var(--tc-navy);
+  }
+  html.tricolor .btn-secondary:hover {
+    background: var(--tc-saffron-muted);
+    border-color: var(--tc-saffron);
+  }
+
+  /* Ghost */
   .btn-ghost {
-    @apply btn text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800;
+    @apply btn;
+    background: transparent;
+    color: #475569;
+    border: 1px solid transparent;
   }
+  .btn-ghost:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+  }
+  html.dark .btn-ghost {
+    color: #94a3b8;
+  }
+  html.dark .btn-ghost:hover {
+    background: rgba(255,255,255,0.05);
+    color: #e2e8f0;
+  }
+  html.tricolor .btn-ghost {
+    color: var(--tc-navy);
+  }
+  html.tricolor .btn-ghost:hover {
+    background: var(--tc-navy-muted);
+    color: var(--tc-navy);
+  }
+
+  /* ── Input ───────────────────────────────────────────────────────────── */
   .input {
-    @apply w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100;
+    @apply w-full rounded-xl px-3.5 py-2.5 text-sm transition-all duration-200 focus:outline-none;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    color: #0f172a;
   }
+  .input::placeholder { color: #94a3b8; }
+  .input:focus {
+    border-color: #7c3aed;
+    box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+  }
+  html.dark .input {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(99,102,241,0.2);
+    color: #f1f5f9;
+    backdrop-filter: blur(8px);
+  }
+  html.dark .input::placeholder { color: #475569; }
+  html.dark .input:focus {
+    border-color: rgba(124,58,237,0.6);
+    box-shadow: 0 0 0 3px rgba(124,58,237,0.15), 0 0 20px rgba(124,58,237,0.08);
+    background: rgba(255,255,255,0.06);
+  }
+  html.tricolor .input {
+    background: #fffdf8;
+    border-color: var(--tc-saffron-border);
+    color: #1a1a2e;
+  }
+  html.tricolor .input::placeholder { color: #a0855a; }
+  html.tricolor .input:focus {
+    border-color: var(--tc-saffron);
+    box-shadow: 0 0 0 3px rgba(255,153,51,0.2);
+  }
+
+  /* ── Label ───────────────────────────────────────────────────────────── */
   .label {
-    @apply mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300;
+    @apply mb-1.5 block text-sm font-medium;
+    color: #374151;
   }
+  html.dark .label { color: #cbd5e1; }
+  html.tricolor .label { color: var(--tc-navy); }
+
+  /* ── Badge ───────────────────────────────────────────────────────────── */
   .badge {
-    @apply inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-700 dark:bg-brand-900/40 dark:text-brand-200;
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium;
+    background: #f5f3ff;
+    color: #6d28d9;
+    border: 1px solid #ddd6fe;
   }
+  html.dark .badge {
+    background: rgba(124,58,237,0.15);
+    border-color: rgba(124,58,237,0.25);
+    color: #c4b5fd;
+  }
+  html.tricolor .badge {
+    background: var(--tc-saffron-muted);
+    border-color: var(--tc-saffron-border);
+    color: var(--tc-saffron-dark);
+  }
+
+  /* ── Skeleton ────────────────────────────────────────────────────────── */
   .skeleton {
-    @apply relative overflow-hidden rounded-lg bg-slate-200 dark:bg-slate-800;
+    @apply relative overflow-hidden rounded-lg;
+    background: #e2e8f0;
   }
   .skeleton::after {
-    @apply absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/40 to-transparent content-[''] dark:via-white/10;
+    @apply absolute inset-0 -translate-x-full animate-shimmer;
+    content: '';
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  }
+  html.dark .skeleton { background: rgba(255,255,255,0.05); }
+  html.dark .skeleton::after {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+  }
+  html.tricolor .skeleton { background: #f0e8d8; }
+  html.tricolor .skeleton::after {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TRICOLOR THEME — Component overrides
+   Scoped under html.tricolor so they never bleed into light/dark
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* ── Navbar ─────────────────────────────────────────────────────────────── */
+html.tricolor .tc-navbar {
+  background: rgba(255,255,255,0.96) !important;
+  border-bottom: 1px solid var(--tc-saffron-border) !important;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 2px 16px rgba(255,153,51,0.08) !important;
+}
+html.tricolor .tc-navbar-top-line {
+  background: var(--tc-stripe-h) !important;
+}
+html.tricolor .tc-nav-active {
+  background: var(--tc-saffron-muted) !important;
+  border: 1px solid var(--tc-saffron-border) !important;
+  color: var(--tc-saffron-dark) !important;
+}
+html.tricolor .tc-nav-link {
+  color: #374151 !important;
+}
+html.tricolor .tc-nav-link:hover {
+  background: var(--tc-green-muted) !important;
+  color: var(--tc-green-dark) !important;
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────────── */
+html.tricolor .tc-footer {
+  background: #fffdf8 !important;
+  border-top: 1px solid var(--tc-saffron-border) !important;
+}
+html.tricolor .tc-footer-top-line {
+  background: var(--tc-stripe-h) !important;
+}
+
+/* ── Page body ───────────────────────────────────────────────────────────── */
+html.tricolor .tc-page-bg {
+  background: var(--tc-cream) !important;
+}
+
+/* ── Section labels ─────────────────────────────────────────────────────── */
+html.tricolor .section-label,
+html.tricolor .tc-label-saffron {
+  background: var(--tc-saffron-muted) !important;
+  border-color: var(--tc-saffron-border) !important;
+  color: var(--tc-saffron-dark) !important;
+}
+html.tricolor .tc-label-green {
+  background: var(--tc-green-muted) !important;
+  border-color: var(--tc-green-border) !important;
+  color: var(--tc-green-dark) !important;
+}
+html.tricolor .tc-label-navy {
+  background: var(--tc-navy-muted) !important;
+  border-color: var(--tc-navy-border) !important;
+  color: var(--tc-navy) !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Tricolor decorative helpers (use as className on any element)
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* A 4px tall horizontal tricolor bar */
+.tc-bar {
+  height: 4px;
+  background: var(--tc-stripe-h);
+  border-radius: 99px;
+}
+
+/* A vertical tricolor sidebar stripe */
+.tc-sidebar-stripe {
+  width: 4px;
+  background: var(--tc-stripe);
+  border-radius: 99px;
+  flex-shrink: 0;
+}
+
+/* Saffron text gradient */
+.tc-text-saffron {
+  background: linear-gradient(135deg, #FF9933, #e07a00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Tricolor text gradient (saffron → navy → green) */
+.tc-text-gradient {
+  background: linear-gradient(135deg, #FF9933 0%, #000080 50%, #138808 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Flag ring glow on hover (e.g. logo) */
+html.tricolor .tc-logo-glow:hover {
+  box-shadow: 0 0 0 2px var(--tc-saffron), 0 0 12px rgba(255,153,51,0.4) !important;
+}
+
+/* Tricolor hero gradient background */
+html.tricolor .tc-hero {
+  background: linear-gradient(160deg,
+    rgba(255,153,51,0.18) 0%,
+    rgba(255,255,255,0.6)  35%,
+    rgba(19,136,8,0.12)   70%,
+    rgba(0,0,128,0.08)    100%
+  ) !important;
+}
+
+/* ── Dark theme global ambient (AI-style deep bg) ─────────────────────────── */
+html.dark body {
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% -20%, rgba(99,102,241,0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 80%, rgba(168,85,247,0.07) 0%, transparent 50%);
+}
+
+/* ── Dark keyframes ───────────────────────────────────────────────────────── */
+@keyframes gradient-x {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+  to { transform: translateX(100%); }
+}
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-4px); }
+}
+
+html.tricolor .animate-fade-up { animation: fade-up 0.35s ease-out both; }

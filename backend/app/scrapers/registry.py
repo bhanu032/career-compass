@@ -9,10 +9,12 @@ from app.scrapers.income_tax import IncomeTaxScraper
 from app.scrapers.isro import ISROScraper
 from app.scrapers.ongc import ONGCScraper
 from app.scrapers.rrb import RRBScraper
+from app.scrapers.sarkari_result import SarkariResultCmScraper
 from app.scrapers.ssc import SSCScraper
 from app.scrapers.upsc import UPSCScraper
 
 SCRAPER_CLASSES: List[Type[BaseScraper]] = [
+    SarkariResultCmScraper,
     SSCScraper,
     UPSCScraper,
     RRBScraper,

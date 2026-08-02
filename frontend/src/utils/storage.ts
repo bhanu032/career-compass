@@ -1,10 +1,10 @@
 import type { User } from "@/types";
 
-const ACCESS_KEY = "govjobs.access_token";
-const REFRESH_KEY = "govjobs.refresh_token";
-const USER_KEY = "govjobs.user";
-const RECENT_KEY = "govjobs.recently_viewed";
-const THEME_KEY = "govjobs.theme";
+const ACCESS_KEY = "deshkiseva.access_token";
+const REFRESH_KEY = "deshkiseva.refresh_token";
+const USER_KEY = "deshkiseva.user";
+const RECENT_KEY = "deshkiseva.recently_viewed";
+const THEME_KEY = "deshkiseva.theme";
 
 const isBrowser = typeof window !== "undefined";
 
@@ -65,12 +65,12 @@ export function pushRecentlyViewed(jobId: number, limit = 8): number[] {
   return next;
 }
 
-export function getStoredTheme(): "light" | "dark" | null {
+export function getStoredTheme(): "light" | "dark" | "tricolor" | null {
   if (!isBrowser) return null;
   const value = window.localStorage.getItem(THEME_KEY);
-  return value === "dark" || value === "light" ? value : null;
+  return value === "dark" || value === "light" || value === "tricolor" ? value : null;
 }
 
-export function setStoredTheme(theme: "light" | "dark"): void {
+export function setStoredTheme(theme: "light" | "dark" | "tricolor"): void {
   if (isBrowser) window.localStorage.setItem(THEME_KEY, theme);
 }

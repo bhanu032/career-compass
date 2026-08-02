@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import { EmptyState } from "@/components/EmptyState";
 import { JobCard } from "@/components/JobCard";
@@ -9,25 +10,23 @@ import { useBookmarkedJobs } from "@/hooks/useBookmarks";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 export function BookmarksPage(): JSX.Element {
-  useDocumentTitle("Saved jobs — GovJobs Portal", "Your bookmarked government job notifications.");
+  const { t } = useTranslation();
+  useDocumentTitle("Saved jobs — DeshKiSeva");
   const [page, setPage] = useState(1);
   const { data, isLoading } = useBookmarkedJobs(page);
 
   return (
     <div className="container-page py-10">
-      <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Saved jobs</h1>
+      <h1 className="text-3xl font-bold text-slate-900 dark:text-white">{t("bookmarks.title")}</h1>
       <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-        {(data?.total ?? 0).toLocaleString("en-IN")} bookmarked notifications
+        {t("bookmarks.count", { count: (data?.total ?? 0).toLocaleString("en-IN") })}
       </p>
-
       <div className="mt-8">
-        {isLoading ? (
-          <JobListSkeleton count={3} />
-        ) : (data?.items.length ?? 0) === 0 ? (
+        {isLoading ? <JobListSkeleton count={3} /> : (data?.items.length ?? 0) === 0 ? (
           <EmptyState
-            title="No saved jobs yet"
-            description="Bookmark a vacancy and it will show up here for quick access."
-            action={<Link to="/jobs" className="btn-primary mt-2">Browse jobs</Link>}
+            title={t("bookmarks.empty")}
+            description={t("bookmarks.emptyDesc")}
+            action={<Link to="/jobs" className="btn-primary mt-2">{t("bookmarks.browseJobs")}</Link>}
           />
         ) : (
           <>

@@ -55,10 +55,15 @@ class JobService:
         self.jobs.commit()
 
     def homepage_data(self) -> Dict[str, Any]:
+        latest_jobs_rows, _ = self.jobs.search(job_type="job", sort_by="created_at", sort_dir="desc", page=1, page_size=8)
+        admit_cards_rows, _ = self.jobs.search(job_type="admit_card", sort_by="created_at", sort_dir="desc", page=1, page_size=6)
+        results_rows, _ = self.jobs.search(job_type="result", sort_by="created_at", sort_dir="desc", page=1, page_size=6)
         return {
-            "latest_jobs": self.jobs.latest(8),
+            "latest_jobs": latest_jobs_rows,
             "top_organizations": self.jobs.top_organizations(),
             "popular_categories": self.jobs.popular_categories(),
+            "latest_admit_cards": admit_cards_rows,
+            "latest_results": results_rows,
         }
 
     def expiring_soon(self, limit: int = 6) -> List[Job]:

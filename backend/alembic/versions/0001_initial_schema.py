@@ -14,14 +14,14 @@ down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
-user_role = sa.Enum("ADMIN", "USER", name="user_role")
-scraper_status = sa.Enum("SUCCESS", "FAILED", "PARTIAL", name="scraper_status")
+user_role = sa.Enum("ADMIN", "USER", name="user_role", create_type=False)
+scraper_status = sa.Enum("SUCCESS", "FAILED", "PARTIAL", name="scraper_status", create_type=False)
 
 
 def upgrade() -> None:
     bind = op.get_bind()
-    user_role.create(bind, checkfirst=True)
-    scraper_status.create(bind, checkfirst=True)
+    bind.execute(sa.text("DO $$ BEGIN CREATE TYPE user_role AS ENUM ('ADMIN', 'USER'); EXCEPTION WHEN duplicate_object THEN null; END $$"))
+    bind.execute(sa.text("DO $$ BEGIN CREATE TYPE scraper_status AS ENUM ('SUCCESS', 'FAILED', 'PARTIAL'); EXCEPTION WHEN duplicate_object THEN null; END $$"))
 
     op.create_table(
         "users",
@@ -32,7 +32,7 @@ def upgrade() -> None:
         sa.Column("phone", sa.String(20)),
         sa.Column("state", sa.String(80)),
         sa.Column("qualification", sa.String(120)),
-        sa.Column("role", user_role, nullable=False, server_default="USER"),
+        sa.Column("role", sa.String(10), nullable=False, server_default="USER"),
         sa.Column("is_active", sa.Boolean, nullable=False, server_default=sa.true()),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
@@ -89,7 +89,7 @@ def upgrade() -> None:
         "scraper_logs",
         sa.Column("id", sa.Integer, primary_key=True),
         sa.Column("source", sa.String(80), nullable=False),
-        sa.Column("status", scraper_status, nullable=False),
+        sa.Column("status", sa.String(10), nullable=False),
         sa.Column("items_found", sa.Integer, server_default="0"),
         sa.Column("items_created", sa.Integer, server_default="0"),
         sa.Column("items_updated", sa.Integer, server_default="0"),

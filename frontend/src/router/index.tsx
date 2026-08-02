@@ -1,16 +1,18 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AdminLayout } from "@/layouts/AdminLayout";
 import { MainLayout } from "@/layouts/MainLayout";
+import { AdmitCardDetailPage } from "@/pages/AdmitCardDetailPage";
+import { AdmitCardsPage } from "@/pages/AdmitCardsPage";
 import { BookmarksPage } from "@/pages/BookmarksPage";
 import { HomePage } from "@/pages/HomePage";
 import { JobDetailsPage } from "@/pages/JobDetailsPage";
 import { JobsPage } from "@/pages/JobsPage";
-import { LoginPage } from "@/pages/LoginPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 import { ProfilePage } from "@/pages/ProfilePage";
-import { RegisterPage } from "@/pages/RegisterPage";
+import { ResultDetailPage } from "@/pages/ResultDetailPage";
+import { ResultsPage } from "@/pages/ResultsPage";
 import { SearchPage } from "@/pages/SearchPage";
 import { AdminDashboardPage } from "@/pages/admin/DashboardPage";
 import { AdminJobsPage } from "@/pages/admin/JobsPage";
@@ -24,13 +26,18 @@ export const router = createBrowserRouter([
       { path: "/", element: <HomePage /> },
       { path: "/jobs", element: <JobsPage /> },
       { path: "/jobs/:id", element: <JobDetailsPage /> },
+      { path: "/admit-cards", element: <AdmitCardsPage /> },
+      { path: "/admit-cards/:id", element: <AdmitCardDetailPage /> },
+      { path: "/results", element: <ResultsPage /> },
+      { path: "/results/:id", element: <ResultDetailPage /> },
       { path: "/search", element: <SearchPage /> },
-      { path: "/login", element: <LoginPage /> },
-      { path: "/register", element: <RegisterPage /> },
+      // Redirect old auth routes to home — login/register are removed
+      { path: "/login",    element: <Navigate to="/" replace /> },
+      { path: "/register", element: <Navigate to="/" replace /> },
       {
         element: <ProtectedRoute />,
         children: [
-          { path: "/profile", element: <ProfilePage /> },
+          { path: "/profile",   element: <ProfilePage /> },
           { path: "/bookmarks", element: <BookmarksPage /> },
         ],
       },
@@ -43,9 +50,9 @@ export const router = createBrowserRouter([
       {
         element: <AdminLayout />,
         children: [
-          { path: "/admin", element: <AdminDashboardPage /> },
-          { path: "/admin/jobs", element: <AdminJobsPage /> },
-          { path: "/admin/users", element: <AdminUsersPage /> },
+          { path: "/admin",          element: <AdminDashboardPage /> },
+          { path: "/admin/jobs",     element: <AdminJobsPage /> },
+          { path: "/admin/users",    element: <AdminUsersPage /> },
           { path: "/admin/scrapers", element: <AdminScrapersPage /> },
         ],
       },

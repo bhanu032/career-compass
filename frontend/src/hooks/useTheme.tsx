@@ -2,37 +2,54 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, t
 
 import { getStoredTheme, setStoredTheme } from "@/utils/storage";
 
-type Theme = "light" | "dark";
+export type Theme = "light" | "dark" | "tricolor";
 
 interface ThemeContextValue {
   theme: Theme;
+  cycleTheme: () => void;
+  /** @deprecated kept for backward-compat — calls cycleTheme */
   toggleTheme: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
+const CYCLE: Theme[] = ["light", "tricolor", "dark"];
+
 function initialTheme(): Theme {
   const stored = getStoredTheme();
   if (stored) return stored;
-  if (typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    return "dark";
-  }
   return "light";
+}
+
+function applyTheme(theme: Theme): void {
+  const html = document.documentElement;
+  // Remove all theme classes first
+  html.classList.remove("dark", "tricolor");
+  if (theme === "dark")      html.classList.add("dark");
+  if (theme === "tricolor")  html.classList.add("tricolor");
+  html.style.colorScheme = theme === "dark" ? "dark" : "light";
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }): JSX.Element {
   const [theme, setTheme] = useState<Theme>(initialTheme);
 
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
+    applyTheme(theme);
     setStoredTheme(theme);
   }, [theme]);
 
-  const toggleTheme = useCallback(() => {
-    setTheme((current) => (current === "dark" ? "light" : "dark"));
+  const cycleTheme = useCallback(() => {
+    setTheme((current) => {
+      const idx = CYCLE.indexOf(current);
+      return CYCLE[(idx + 1) % CYCLE.length];
+    });
   }, []);
 
-  const value = useMemo<ThemeContextValue>(() => ({ theme, toggleTheme }), [theme, toggleTheme]);
+  const value = useMemo<ThemeContextValue>(
+    () => ({ theme, cycleTheme, toggleTheme: cycleTheme }),
+    [theme, cycleTheme],
+  );
+
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 

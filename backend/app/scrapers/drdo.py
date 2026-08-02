@@ -11,8 +11,8 @@ class DRDOScraper(BaseScraper):
     source = "drdo"
     name = "Defence Research and Development Organisation"
     base_url = "https://www.drdo.gov.in"
-    listing_url = "https://www.drdo.gov.in/drdo/careers"
-    requires_javascript = False
+    listing_url = "https://www.drdo.gov.in/careers"
+    requires_javascript = True
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "appointment", "engagement")
 

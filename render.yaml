@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: deshkiseva-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        sync: false           # set manually in Render dashboard
+      - key: JWT_SECRET_KEY
+        generateValue: true   # Render generates a secure random value
+      - key: JWT_ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "30"
+      - key: REFRESH_TOKEN_EXPIRE_DAYS
+        value: "7"
+      - key: CORS_ORIGINS
+        sync: false           # set to your Vercel URL after deploy
+      - key: SCRAPER_INTERVAL_HOURS
+        value: "6"
+      - key: ENABLE_SCHEDULER
+        value: "true"
+      - key: FIRST_ADMIN_EMAIL
+        sync: false
+      - key: FIRST_ADMIN_PASSWORD
+        sync: false
+      - key: PYTHONUNBUFFERED
+        value: "1"
+    healthCheckPath: /health
+    autoDeploy: true

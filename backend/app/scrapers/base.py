@@ -32,7 +32,7 @@ class BaseScraper(ABC):
             return self._fetch_with_playwright(target)
         try:
             response = requests.get(
-                target, headers={"User-Agent": USER_AGENT}, timeout=self.timeout
+                target, headers={"User-Agent": USER_AGENT}, timeout=self.timeout, verify=False
             )
             response.raise_for_status()
             return response.text

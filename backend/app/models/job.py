@@ -40,6 +40,20 @@ class Job(Base, TimestampMixin):
     job_type: Mapped[str | None] = mapped_column(String(80), index=True)
     source: Mapped[str | None] = mapped_column(String(80), index=True)
 
+    # Rich structured fields (stored as JSON text)
+    # important_dates: list of {label: str, value: str}
+    important_dates: Mapped[str | None] = mapped_column(Text)
+    # application_fee: list of {label: str, value: str}
+    application_fee: Mapped[str | None] = mapped_column(Text)
+    # vacancy_details: list of {post_name: str, total: str, eligibility: str}
+    vacancy_details: Mapped[str | None] = mapped_column(Text)
+    # important_links: list of {label: str, url: str, link_text: str}
+    important_links: Mapped[str | None] = mapped_column(Text)
+    # how_to_apply: list of strings (bullet points)
+    how_to_apply: Mapped[str | None] = mapped_column(Text)
+    # short_info: the introductory paragraph from source page
+    short_info: Mapped[str | None] = mapped_column(Text)
+
     bookmarks: Mapped[List["Bookmark"]] = relationship(
         back_populates="job", cascade="all, delete-orphan"
     )

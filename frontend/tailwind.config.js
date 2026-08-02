@@ -26,10 +26,15 @@ export default {
         shimmer: {
           "100%": { transform: "translateX(100%)" },
         },
+        "bounce-subtle": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-4px)" },
+        },
       },
       animation: {
         "fade-up": "fade-up 0.35s ease-out both",
         shimmer: "shimmer 1.6s infinite",
+        "bounce-subtle": "bounce-subtle 1.2s ease-in-out infinite",
       },
     },
   },

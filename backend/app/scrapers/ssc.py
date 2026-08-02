@@ -12,7 +12,7 @@ class SSCScraper(BaseScraper):
     name = "Staff Selection Commission"
     base_url = "https://ssc.gov.in"
     listing_url = "https://ssc.gov.in/candidate-portal/notice-board"
-    requires_javascript = False
+    requires_javascript = True
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "appointment", "engagement")
 
@@ -44,7 +44,11 @@ class SSCScraper(BaseScraper):
                     last_date=None,
                     notification_pdf=pdf,
                     application_url=href,
-                    description=f"{title} published by {self.name}. Refer to the official notification for eligibility, vacancy details and the application procedure.",
+                    description=(
+                        f"{title} published by {self.name}. "
+                        "Refer to the official notification for eligibility, "
+                        "vacancy details and the application procedure."
+                    ),
                     state="All India",
                     category="Central Government",
                 )

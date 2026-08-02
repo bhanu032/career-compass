@@ -5,6 +5,13 @@ export function formatDate(value: string | null | undefined): string {
   return date.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
 }
 
+export function formatDateTime(value: string | null | undefined): string {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+}
+
 export function daysRemaining(value: string | null | undefined): number | null {
   if (!value) return null;
   const target = new Date(value).getTime();

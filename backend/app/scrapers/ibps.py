@@ -11,7 +11,7 @@ class IBPSScraper(BaseScraper):
     source = "ibps"
     name = "Institute of Banking Personnel Selection"
     base_url = "https://www.ibps.in"
-    listing_url = "https://www.ibps.in/index.php/category/notice-board/"
+    listing_url = "https://www.ibps.in/category/notice-board/"
     requires_javascript = False
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "appointment", "engagement")

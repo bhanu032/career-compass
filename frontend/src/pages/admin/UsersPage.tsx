@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Pagination } from "@/components/Pagination";
 import { Skeleton } from "@/components/Skeleton";
@@ -7,7 +8,8 @@ import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { formatDate } from "@/utils/format";
 
 export function AdminUsersPage(): JSX.Element {
-  useDocumentTitle("Manage users — GovJobs Portal");
+  const { t } = useTranslation();
+  useDocumentTitle("Manage users — DeshKiSeva");
   const [page, setPage] = useState(1);
   const { data, isLoading } = useAdminUsers(page);
   const toggleActive = useToggleUserActive();
@@ -16,16 +18,16 @@ export function AdminUsersPage(): JSX.Element {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Users</h1>
+      <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{t("common.users")}</h1>
 
       <div className="card overflow-x-auto p-6">
         <table className="w-full text-left text-sm">
           <thead className="text-xs uppercase tracking-wide text-slate-400">
             <tr>
-              <th className="py-2 pr-4">Name</th>
-              <th className="py-2 pr-4">Email</th>
-              <th className="py-2 pr-4">Role</th>
-              <th className="py-2 pr-4">Joined</th>
+              <th className="py-2 pr-4">{t("common.name")}</th>
+              <th className="py-2 pr-4">{t("common.email")}</th>
+              <th className="py-2 pr-4">{t("common.role")}</th>
+              <th className="py-2 pr-4">{t("common.joined")}</th>
               <th className="py-2" />
             </tr>
           </thead>
@@ -42,7 +44,7 @@ export function AdminUsersPage(): JSX.Element {
                     className="btn-secondary px-3 py-1.5 text-xs"
                     onClick={() => toggleActive.mutate({ id: user.id, is_active: !user.is_active })}
                   >
-                    {user.is_active ? "Deactivate" : "Activate"}
+                    {user.is_active ? t("common.deactivate") : t("common.activate")}
                   </button>
                 </td>
               </tr>
