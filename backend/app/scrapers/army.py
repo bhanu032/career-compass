@@ -12,7 +12,7 @@ class IndianArmyScraper(BaseScraper):
     source = "indian_army"
     name = "Indian Army"
     base_url = "https://joinindianarmy.nic.in"
-    listing_url = "https://joinindianarmy.nic.in/whatsnew.htm"
+    listing_url = "https://joinindianarmy.nic.in/Default.aspx"
     requires_javascript = False
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "rally", "soldier", "officer", "join", "enrolment")

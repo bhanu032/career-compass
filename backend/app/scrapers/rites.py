@@ -8,8 +8,8 @@ class RITESScraper(BaseScraper):
     source = "rites"
     name = "RITES Limited"
     base_url = "https://www.rites.com"
-    listing_url = "https://www.rites.com/web/index.php/career"
-    requires_javascript = False
+    listing_url = "https://www.rites.com/"
+    requires_javascript = True
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "post", "engineer", "officer", "consultant", "trainee")
 
     def parse(self, html: str) -> List[ScrapedJob]:

@@ -14,7 +14,7 @@ class IOCLScraper(BaseScraper):
     name = "Indian Oil Corporation Limited"
     base_url = "https://iocl.com"
     listing_url = "https://iocl.com/careers"
-    requires_javascript = False
+    requires_javascript = True
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "post", "officer", "trainee", "engineer", "apprentice")
 

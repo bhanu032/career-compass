@@ -8,8 +8,8 @@ class GAILScraper(BaseScraper):
     source = "gail"
     name = "GAIL (India) Limited"
     base_url = "https://www.gailonline.com"
-    listing_url = "https://www.gailonline.com/gailNewsite/career/recruitementNotices.html"
-    requires_javascript = False
+    listing_url = "https://www.gailonline.com/"
+    requires_javascript = True
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "post", "officer", "engineer", "trainee", "executive")
 
     def parse(self, html: str) -> List[ScrapedJob]:

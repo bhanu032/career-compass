@@ -12,8 +12,8 @@ class LICScraper(BaseScraper):
     source = "lic"
     name = "Life Insurance Corporation of India"
     base_url = "https://licindia.in"
-    listing_url = "https://licindia.in/Bottom-Links/Careers/Recruitment-Notices"
-    requires_javascript = False
+    listing_url = "https://licindia.in/"
+    requires_javascript = True
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "post", "officer", "assistant", "ado", "aao")
 

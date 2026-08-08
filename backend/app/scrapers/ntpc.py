@@ -14,7 +14,7 @@ class NTPCScraper(BaseScraper):
     name = "NTPC Limited"
     base_url = "https://www.ntpc.co.in"
     listing_url = "https://www.ntpc.co.in/en/human-resources/recruitment"
-    requires_javascript = False
+    requires_javascript = True
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "post", "officer", "trainee", "engineer", "executive")
 

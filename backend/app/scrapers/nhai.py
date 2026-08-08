@@ -8,8 +8,8 @@ class NHAIScraper(BaseScraper):
     source = "nhai"
     name = "National Highways Authority of India"
     base_url = "https://nhai.gov.in"
-    listing_url = "https://nhai.gov.in/career.html"
-    requires_javascript = False
+    listing_url = "https://nhai.gov.in/"
+    requires_javascript = True
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "post", "officer", "manager", "consultant", "opening")
 
     def parse(self, html: str) -> List[ScrapedJob]:

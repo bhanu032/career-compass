@@ -8,8 +8,8 @@ class IRCONScraper(BaseScraper):
     source = "ircon"
     name = "IRCON International Limited"
     base_url = "https://www.ircon.org"
-    listing_url = "https://www.ircon.org/index.php?option=com_content&view=article&id=74&Itemid=224"
-    requires_javascript = False
+    listing_url = "https://www.ircon.org/"
+    requires_javascript = True
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "post", "engineer", "officer", "manager", "trainee")
 
     def parse(self, html: str) -> List[ScrapedJob]:

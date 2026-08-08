@@ -13,7 +13,7 @@ class NIACLScraper(BaseScraper):
     source = "niacl"
     name = "New India Assurance"
     base_url = "https://www.newindia.co.in"
-    listing_url = "https://www.newindia.co.in/portal/CareerDetail/en"
+    listing_url = "https://newindia.co.in/portal/CareerListing/en"
     requires_javascript = False
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "post", "officer", "assistant")

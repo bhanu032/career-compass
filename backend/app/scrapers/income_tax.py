@@ -11,7 +11,7 @@ class IncomeTaxScraper(BaseScraper):
     source = "income_tax"
     name = "Income Tax Department"
     base_url = "https://www.incometaxindia.gov.in"
-    listing_url = "https://www.incometaxindia.gov.in/Pages/tenders-recruitments.aspx"
+    listing_url = "https://incometaxindia.gov.in/Pages/careers.aspx"
     requires_javascript = True
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "appointment", "engagement")

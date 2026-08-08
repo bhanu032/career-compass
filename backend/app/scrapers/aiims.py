@@ -11,7 +11,7 @@ class AIIMSScraper(BaseScraper):
     source = "aiims"
     name = "All India Institute of Medical Sciences"
     base_url = "https://www.aiims.edu"
-    listing_url = "https://www.aiims.edu/en/notices.html"
+    listing_url = "https://www.aiims.edu/index.php/en"
     requires_javascript = True
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "appointment", "engagement")

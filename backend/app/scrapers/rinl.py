@@ -8,8 +8,8 @@ class RINLScraper(BaseScraper):
     source = "rinl"
     name = "Rashtriya Ispat Nigam Limited"
     base_url = "https://www.vizagsteel.com"
-    listing_url = "https://www.vizagsteel.com/hr/recruitment.asp"
-    requires_javascript = False
+    listing_url = "https://www.vizagsteel.com/"
+    requires_javascript = True
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "post", "officer", "trainee", "executive", "apprentice")
 
     def parse(self, html: str) -> List[ScrapedJob]:

@@ -13,8 +13,8 @@ class BELScraper(BaseScraper):
     source = "bel"
     name = "Bharat Electronics Limited"
     base_url = "https://bel-india.in"
-    listing_url = "https://bel-india.in/CareerDetail.aspx"
-    requires_javascript = False
+    listing_url = "https://bel-india.in/"
+    requires_javascript = True
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "engineer", "trainee", "apprentice", "post")
 

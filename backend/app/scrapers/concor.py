@@ -9,7 +9,7 @@ class CONCORScraper(BaseScraper):
     name = "Container Corporation of India"
     base_url = "https://www.concorindia.co.in"
     listing_url = "https://www.concorindia.co.in/career.asp"
-    requires_javascript = False
+    requires_javascript = True
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "post", "officer", "manager", "executive", "assistant", "trainee")
 
     def parse(self, html: str) -> List[ScrapedJob]:

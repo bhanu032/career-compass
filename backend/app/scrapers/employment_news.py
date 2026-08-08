@@ -12,8 +12,8 @@ from app.utils.text import absolute_url, clean
 class EmploymentNewsScraper(BaseScraper):
     source = "employment_news"
     name = "Employment News"
-    base_url = "https://www.employmentnews.gov.in"
-    listing_url = "https://www.employmentnews.gov.in/NewVer/Pages/Advts.aspx"
+    base_url = "https://www.freejobalert.com"
+    listing_url = "https://www.freejobalert.com/employment-news/"
     requires_javascript = False
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "appointment", "post")

@@ -13,8 +13,8 @@ class BHELScraper(BaseScraper):
     source = "bhel"
     name = "Bharat Heavy Electricals Limited"
     base_url = "https://www.bhel.com"
-    listing_url = "https://www.bhel.com/careers/current-openings"
-    requires_javascript = False
+    listing_url = "https://www.bhel.com/"
+    requires_javascript = True
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "engineer", "trainee", "apprentice", "post", "opening")
 

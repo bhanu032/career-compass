@@ -13,8 +13,8 @@ class SAILScraper(BaseScraper):
     source = "sail"
     name = "Steel Authority of India Limited"
     base_url = "https://www.sail.co.in"
-    listing_url = "https://www.sail.co.in/en/careers"
-    requires_javascript = False
+    listing_url = "https://www.sail.co.in/"
+    requires_javascript = True
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "post", "officer", "trainee", "executive", "apprentice")
 

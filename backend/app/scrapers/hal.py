@@ -13,8 +13,8 @@ class HALScraper(BaseScraper):
     source = "hal"
     name = "Hindustan Aeronautics Limited"
     base_url = "https://hal-india.co.in"
-    listing_url = "https://hal-india.co.in/Career/Pg/69"
-    requires_javascript = False
+    listing_url = "https://hal-india.co.in/Career"
+    requires_javascript = True
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "apprentice", "trainee", "engineer")
 

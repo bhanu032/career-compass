@@ -13,8 +13,8 @@ class FCIScraper(BaseScraper):
     source = "fci"
     name = "Food Corporation of India"
     base_url = "https://fci.gov.in"
-    listing_url = "https://fci.gov.in/recruitments.php"
-    requires_javascript = False
+    listing_url = "https://fci.gov.in/jobs.php"
+    requires_javascript = True
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "post", "appointment", "opening")
 

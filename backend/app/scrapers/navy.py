@@ -12,7 +12,7 @@ class IndianNavyScraper(BaseScraper):
     source = "indian_navy"
     name = "Indian Navy"
     base_url = "https://www.joinindiannavy.gov.in"
-    listing_url = "https://www.joinindiannavy.gov.in/en/whats-new.html"
+    listing_url = "https://www.joinindiannavy.gov.in/"
     requires_javascript = False
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "officer", "sailor", "join", "entry")

@@ -8,8 +8,8 @@ class PGCILScraper(BaseScraper):
     source = "pgcil"
     name = "Power Grid Corporation of India"
     base_url = "https://powergrid.in"
-    listing_url = "https://powergrid.in/career.php"
-    requires_javascript = False
+    listing_url = "https://www.powergrid.in/career.php"
+    requires_javascript = True
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "trainee", "engineer", "officer", "diploma", "iti")
 
     def parse(self, html: str) -> List[ScrapedJob]:

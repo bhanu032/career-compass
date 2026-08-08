@@ -8,8 +8,8 @@ class NHPCScraper(BaseScraper):
     source = "nhpc"
     name = "NHPC Limited"
     base_url = "https://www.nhpcindia.com"
-    listing_url = "https://www.nhpcindia.com/Default.aspx?id=184&lg=eng"
-    requires_javascript = False
+    listing_url = "https://www.nhpcindia.com/"
+    requires_javascript = True
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "post", "engineer", "officer", "trainee", "executive")
 
     def parse(self, html: str) -> List[ScrapedJob]:

@@ -8,8 +8,8 @@ class NMDCScraper(BaseScraper):
     source = "nmdc"
     name = "NMDC Limited"
     base_url = "https://www.nmdc.co.in"
-    listing_url = "https://www.nmdc.co.in/career"
-    requires_javascript = False
+    listing_url = "https://www.nmdc.co.in/Career"
+    requires_javascript = True
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "post", "officer", "engineer", "trainee", "executive", "apprentice")
 
     def parse(self, html: str) -> List[ScrapedJob]:

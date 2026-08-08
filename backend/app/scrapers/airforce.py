@@ -12,7 +12,7 @@ class IndianAirForceScraper(BaseScraper):
     source = "indian_airforce"
     name = "Indian Air Force"
     base_url = "https://careerindianairforce.cdac.in"
-    listing_url = "https://careerindianairforce.cdac.in/index.aspx"
+    listing_url = "https://careerindianairforce.cdac.in/"
     requires_javascript = False
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "officer", "airman", "agniveer", "join", "entry")

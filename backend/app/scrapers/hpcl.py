@@ -12,8 +12,8 @@ from app.utils.text import absolute_url, clean
 class HPCLScraper(BaseScraper):
     source = "hpcl"
     name = "Hindustan Petroleum Corporation Limited"
-    base_url = "https://hindustanpetroleum.com"
-    listing_url = "https://hindustanpetroleum.com/careers"
+    base_url = "https://www.hindustanpetroleum.com"
+    listing_url = "https://www.hindustanpetroleum.com/Careers"
     requires_javascript = False
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "post", "officer", "trainee", "engineer", "apprentice")

@@ -11,7 +11,7 @@ class SSCScraper(BaseScraper):
     source = "ssc"
     name = "Staff Selection Commission"
     base_url = "https://ssc.gov.in"
-    listing_url = "https://ssc.gov.in/candidate-portal/notice-board"
+    listing_url = "https://ssc.gov.in/portal/recruitment-notices"
     requires_javascript = True
 
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "appointment", "engagement")

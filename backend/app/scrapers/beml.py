@@ -8,8 +8,8 @@ class BEMLScraper(BaseScraper):
     source = "beml"
     name = "BEML Limited"
     base_url = "https://www.beml.com"
-    listing_url = "https://www.beml.com/biz/recruit"
-    requires_javascript = False
+    listing_url = "https://www.beml.com/"
+    requires_javascript = True
     KEYWORDS = ("recruit", "vacanc", "advertis", "notification", "post", "engineer", "officer", "trainee", "executive", "apprentice")
 
     def parse(self, html: str) -> List[ScrapedJob]:
