@@ -13,7 +13,7 @@ export function JobsPage(): JSX.Element {
   useDocumentTitle("Latest Government Jobs — DeshKiSeva");
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteJobs({
-    sort_by: "created_at", sort_dir: "desc",
+    sort_by: "last_date", sort_dir: "asc", active_only: true,
   });
 
   const jobs = data?.pages.flatMap((p) => p.items) ?? [];

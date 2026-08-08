@@ -62,7 +62,7 @@ def list_jobs(
     page_size: Annotated[int, Query(ge=1, le=100)] = 12,
     sort_by: str = "created_at",
     sort_dir: str = "desc",
-    active_only: bool = False,
+    active_only: bool = True,
     lang: str = "en",
 ) -> Page[JobRead]:
     rows, total = service.search(
@@ -89,7 +89,7 @@ def search_jobs(
     salary_max: Optional[int] = None,
     last_date_before: Optional[date] = None,
     last_date_after: Optional[date] = None,
-    active_only: bool = False,
+    active_only: bool = True,
     sort_by: str = "created_at",
     sort_dir: str = "desc",
     page: Annotated[int, Query(ge=1)] = 1,
