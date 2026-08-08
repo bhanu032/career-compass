@@ -2,20 +2,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTheme } from "@/hooks/useTheme";
 import {
-  Award,
   BadgeCheck,
   BookOpen,
   Briefcase,
-  Building,
   Building2,
-  FileCheck,
   FileText,
   GraduationCap,
   Landmark,
   Scale,
   ScrollText,
   Shield,
-  Star,
   Train,
   Trophy,
   Users,
@@ -327,15 +323,13 @@ interface FloatingIconProps extends IconEntry {
   mouseX: number;
   mouseY: number;
   tick: number;
-  accent: string;
-  bannerH: number; // banner pixel height (for %-to-px sine)
 }
 
 function FloatingIcon(props: FloatingIconProps) {
   const {
     Component, type, baseColor, glowColor, size,
     lane, speed, phaseOffset, depth, pulse,
-    mouseX, mouseY, tick, accent, bannerH,
+    mouseX, mouseY, tick,
   } = props;
 
   const cfg = LANE_CONFIG[lane];
@@ -555,8 +549,6 @@ export function HeroBanner({ variant = "jobs", children, py = "py-20" }: HeroBan
           mouseX={mouse.x}
           mouseY={mouse.y}
           tick={tick}
-          accent={v.accent}
-          bannerH={bannerH}
         />
       ))}
 

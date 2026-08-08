@@ -20,8 +20,7 @@ function parseJson<T>(raw: string | null | undefined): T[] {
 interface KVRow { label: string; value: string; }
 interface LinkRow { label: string; url: string; link_text: string; }
 
-function SectionH({ icon: Icon, title, color = "blue" }: { icon: React.ElementType; title: string; color?: string }) {
-  const c = color === "blue" ? "border-blue-500 text-blue-600 text-blue-700 dark:text-blue-400" : "";
+function SectionH({ icon: Icon, title }: { icon: React.ElementType; title: string; color?: string }) {
   return (
     <div className={`flex items-center gap-2 border-b-2 border-blue-500 pb-2 mb-4`}>
       <Icon className="h-5 w-5 text-blue-600"/>

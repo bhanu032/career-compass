@@ -2,41 +2,6 @@ import { Moon, Sun } from "lucide-react";
 
 import { useTheme } from "@/hooks/useTheme";
 
-/** Mini Ashoka-Chakra SVG used in the tricolor button */
-function AshokaChakraIcon({ size = 18 }: { size?: number }) {
-  const spokes = Array.from({ length: 24 }, (_, i) => {
-    const angle = (i * 360) / 24;
-    const rad = (angle * Math.PI) / 180;
-    const r1 = 4, r2 = 10;
-    return (
-      <line
-        key={i}
-        x1={12 + Math.cos(rad) * r1}
-        y1={12 + Math.sin(rad) * r1}
-        x2={12 + Math.cos(rad) * r2}
-        y2={12 + Math.sin(rad) * r2}
-        stroke="#000080"
-        strokeWidth="0.9"
-        strokeLinecap="round"
-      />
-    );
-  });
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <circle cx="12" cy="12" r="11" stroke="#000080" strokeWidth="1.2" />
-      <circle cx="12" cy="12" r="4" stroke="#000080" strokeWidth="1" />
-      <circle cx="12" cy="12" r="1.4" fill="#000080" />
-      {spokes}
-    </svg>
-  );
-}
-
 /** Small tricolor flag strip shown in the button */
 function TricolorStrip() {
   return (
