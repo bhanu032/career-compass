@@ -209,8 +209,18 @@ export function JobDetailsPage(): JSX.Element {
                   </div>
                 ))}
               </dl>
-              {job.description && <section className="mt-8"><h2 className="text-lg font-bold text-slate-900 dark:text-white">{t("jobDetail.description")}</h2><p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-slate-600 dark:text-slate-300">{job.description}</p></section>}
+          {job.description && <section className="mt-8"><h2 className="text-lg font-bold text-slate-900 dark:text-white">{t("jobDetail.description")}</h2><p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-slate-600 dark:text-slate-300">{job.description}</p></section>}
               {job.selection_process && <section className="mt-8"><h2 className="text-lg font-bold text-slate-900 dark:text-white">{t("jobDetail.selectionProcess")}</h2><p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-slate-600 dark:text-slate-300">{job.selection_process}</p></section>}
+              {!job.description && !job.selection_process && job.application_url && (
+                <div className="mt-8 rounded-lg border border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950/30 p-4">
+                  <p className="text-sm font-semibold text-blue-800 dark:text-blue-300 mb-1">Complete details available on official website</p>
+                  <p className="text-sm text-blue-700 dark:text-blue-400 mb-3">This notification was fetched from the official source. For eligibility, salary, vacancies and application procedure, visit:</p>
+                  <a href={job.application_url} target="_blank" rel="noreferrer noopener" className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-800 dark:text-blue-400 underline break-all">
+                    <ExternalLink className="h-4 w-4 shrink-0"/>
+                    {job.application_url}
+                  </a>
+                </div>
+              )}
             </div>
           )}
         </article>
@@ -220,6 +230,12 @@ export function JobDetailsPage(): JSX.Element {
             <a href={job.application_url} target="_blank" rel="noreferrer noopener" className="btn-primary w-full">
               <ExternalLink className="h-4 w-4"/>{t("jobDetail.applyOnline")}
             </a>
+          )}
+          {!job.application_url && (
+            <div className="rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30 p-3 text-xs text-amber-800 dark:text-amber-300">
+              <p className="font-semibold mb-1">Full details not available</p>
+              <p>Visit the official website of <span className="font-medium">{job.organization}</span> for complete information, application link and notification PDF.</p>
+            </div>
           )}
           {job.notification_pdf && (
             <a href={job.notification_pdf} target="_blank" rel="noreferrer noopener" className="btn-secondary w-full">
