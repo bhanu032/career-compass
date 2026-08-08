@@ -582,15 +582,7 @@ The final project should be production-ready, modular, scalable, and follow indu
 
 One suggestion: instead of asking an AI to generate the entire project in one go, ask it to build it module by module (backend first, then frontend, then scrapers, then authentication, etc.). Large, production-ready projects are too big for a single response, and you'll typically get higher-quality, more maintainable code by generating and reviewing one module at a time.
 
-This project was built with [Lovable](https://lovable.dev).
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/28c3abfb-ffe0-4403-860f-a87465031a95).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+This project was built with care.
 
 ## Development
 
