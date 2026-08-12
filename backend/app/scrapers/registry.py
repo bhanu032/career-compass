@@ -46,17 +46,24 @@ from app.scrapers.sarkari_result import SarkariResultCmScraper
 from app.scrapers.ssc import SSCScraper
 from app.scrapers.upsc import UPSCScraper
 
-SCRAPER_CLASSES: List[Type[BaseScraper]] = [
-    # ── Aggregators (highest yield — run first) ──────────────────────────────
-    SarkariResultCmScraper,
+# ── Priority tiers ────────────────────────────────────────────────────────────
+# TIER_1: Run on every scheduled cycle (fast aggregators — high yield)
+TIER_1_CLASSES: List[Type[BaseScraper]] = [
+    SarkariResultCmScraper,   # covers jobs, admit cards, results in one scrape
+]
+
+# TIER_2: Run every 2nd cycle (major recruitment bodies)
+TIER_2_CLASSES: List[Type[BaseScraper]] = [
     FreeJobAlertScraper,
     EmploymentNewsScraper,
-    # ── Central Recruitment Bodies ────────────────────────────────────────────
     SSCScraper,
     UPSCScraper,
     RRBScraper,
     IBPSScraper,
-    # ── Defence & Research ────────────────────────────────────────────────────
+]
+
+# TIER_3: Run on-demand or manually via admin panel
+TIER_3_CLASSES: List[Type[BaseScraper]] = [
     IndianArmyScraper,
     IndianNavyScraper,
     IndianAirForceScraper,
@@ -66,12 +73,10 @@ SCRAPER_CLASSES: List[Type[BaseScraper]] = [
     HALScraper,
     BELScraper,
     BEMLScraper,
-    # ── Banking, Finance & Insurance ─────────────────────────────────────────
     RBIScraper,
     NABARDScraper,
     NIACLScraper,
     LICScraper,
-    # ── Energy & Oil PSUs ─────────────────────────────────────────────────────
     ONGCScraper,
     NTPCScraper,
     HPCLScraper,
@@ -81,13 +86,11 @@ SCRAPER_CLASSES: List[Type[BaseScraper]] = [
     CoalIndiaScraper,
     PGCILScraper,
     NHPCScraper,
-    # ── Engineering, Steel & Manufacturing PSUs ───────────────────────────────
     BHELScraper,
     SAILScraper,
     NMDCScraper,
     RINLScraper,
     MECLScraper,
-    # ── Transport, Infra & Telecom PSUs ──────────────────────────────────────
     NHAIScraper,
     AAIScraper,
     IRCONScraper,
@@ -95,19 +98,33 @@ SCRAPER_CLASSES: List[Type[BaseScraper]] = [
     CONCORScraper,
     BSNLScraper,
     MTNLScraper,
-    # ── Health, Food & Other Central Government ───────────────────────────────
     AIIMSScraper,
     IncomeTaxScraper,
     FCIScraper,
 ]
 
+# All scrapers combined (for registry lookup and admin "run all")
+SCRAPER_CLASSES: List[Type[BaseScraper]] = TIER_1_CLASSES + TIER_2_CLASSES + TIER_3_CLASSES
+
 SCRAPER_REGISTRY: Dict[str, Type[BaseScraper]] = {c.source: c for c in SCRAPER_CLASSES}
 
 
 def get_scrapers(sources: List[str] | None = None) -> List[BaseScraper]:
+    """Return scrapers for given sources. If none specified, return only Tier 1 (fast default)."""
     if not sources:
-        return [cls() for cls in SCRAPER_CLASSES]
+        return [cls() for cls in TIER_1_CLASSES]
     return [SCRAPER_REGISTRY[s]() for s in sources if s in SCRAPER_REGISTRY]
+
+
+def get_scrapers_by_tier(tier: int) -> List[BaseScraper]:
+    """Return scrapers for a specific tier (1, 2, or 3)."""
+    tier_map = {1: TIER_1_CLASSES, 2: TIER_2_CLASSES, 3: TIER_3_CLASSES}
+    return [cls() for cls in tier_map.get(tier, TIER_1_CLASSES)]
+
+
+def get_all_scrapers() -> List[BaseScraper]:
+    """Return all scrapers — use only for manual full runs."""
+    return [cls() for cls in SCRAPER_CLASSES]
 
 
 def list_sources() -> List[str]:

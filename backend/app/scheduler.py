@@ -8,12 +8,31 @@ from app.services.scraper_service import ScraperService
 logger = get_logger("scheduler")
 scheduler = BackgroundScheduler(timezone="UTC")
 
+_cycle_counter = 0
+
 
 def scheduled_scrape() -> None:
-    logger.info("Scheduled scraping run started")
+    global _cycle_counter
+    _cycle_counter += 1
+    logger.info("Scheduled scraping run #%d started", _cycle_counter)
+
     db = SessionLocal()
     try:
-        summary = ScraperService(db).run()
+        service = ScraperService(db)
+
+        # Tier 1 runs every cycle (SarkariResult — fast, high yield)
+        from app.scrapers.registry import get_scrapers_by_tier
+        tier = 1
+
+        # Tier 2 (major bodies) runs every 2nd cycle
+        if _cycle_counter % 2 == 0:
+            tier = 2
+
+        scrapers = get_scrapers_by_tier(tier)
+        sources = [s.source for s in scrapers]
+        logger.info("Running Tier %d scrapers: %s", tier, sources)
+
+        summary = service.run(sources=sources)
         logger.info("Scheduled scraping finished: %s", summary)
     finally:
         db.close()
