@@ -8,9 +8,9 @@
  * - Talking animation (head bob + subtle scale) when `isTalking` is true
  * - Falls back to a simple animated gradient avatar if the GLB fails to load
  */
-import { Suspense, useRef, useEffect } from "react";
+import { Suspense, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF, OrbitControls, Environment } from "@react-three/drei";
+import { useGLTF, Environment } from "@react-three/drei";
 import type { Group } from "three";
 
 interface ModelProps {
