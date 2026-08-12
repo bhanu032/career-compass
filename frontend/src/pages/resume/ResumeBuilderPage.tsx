@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CheckCircle2, ChevronLeft, ChevronRight, Download, Eye, FileText, Palette } from "lucide-react";
+import { CheckCircle2, ChevronLeft, ChevronRight, Download, Eye, FileText, Palette, Sparkles } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import { classNames } from "@/utils/format";
 import type { ResumeData, TemplateId } from "@/types/resume";
@@ -10,6 +10,7 @@ import { StepEducation } from "@/pages/resume/steps/StepEducation";
 import { StepSkills } from "@/pages/resume/steps/StepSkills";
 import { StepExtras } from "@/pages/resume/steps/StepExtras";
 import { StepTemplate } from "@/pages/resume/steps/StepTemplate";
+import { StepATS } from "@/pages/resume/steps/StepATS";
 import { ResumePreview } from "@/pages/resume/ResumePreview";
 
 const STEPS = [
@@ -19,7 +20,8 @@ const STEPS = [
   { id: 3, label: "Education",   icon: FileText },
   { id: 4, label: "Skills",      icon: FileText },
   { id: 5, label: "Extras",      icon: FileText },
-  { id: 6, label: "Preview",     icon: Eye },
+  { id: 6, label: "ATS Score",   icon: Sparkles },
+  { id: 7, label: "Preview",     icon: Eye },
 ];
 
 export function ResumeBuilderPage(): JSX.Element {
@@ -39,8 +41,8 @@ export function ResumeBuilderPage(): JSX.Element {
   function next() { setStep((s) => Math.min(s + 1, STEPS.length - 1)); }
   function prev() { setStep((s) => Math.max(s - 1, 0)); }
 
-  const isLastContentStep = step === 5;
-  const isPreviewStep = step === 6;
+  const isLastContentStep = step === 6;
+  const isPreviewStep = step === 7;
 
   const pageBg = isDark
     ? "bg-[#020308] text-slate-100"
@@ -174,6 +176,12 @@ export function ResumeBuilderPage(): JSX.Element {
             />
           )}
           {step === 6 && (
+            <StepATS
+              data={data}
+              onApply={(updated) => setData(updated)}
+            />
+          )}
+          {step === 7 && (
             <ResumePreview data={data} templateId={templateId} />
           )}
 
@@ -193,7 +201,7 @@ export function ResumeBuilderPage(): JSX.Element {
               </button>
               <button
                 type="button"
-                onClick={isLastContentStep ? () => setStep(6) : next}
+                onClick={isLastContentStep ? () => setStep(7) : next}
                 className="btn-primary flex items-center gap-2"
               >
                 {isLastContentStep ? (
@@ -217,7 +225,7 @@ export function ResumeBuilderPage(): JSX.Element {
             >
               <button
                 type="button"
-                onClick={() => setStep(5)}
+                onClick={() => setStep(6)}
                 className="btn-secondary flex items-center gap-2"
               >
                 <ChevronLeft className="h-4 w-4" />
