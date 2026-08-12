@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 
+import { ChatWidget } from "@/components/ChatWidget";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
 import { TranslationLoader } from "@/components/TranslationLoader";
@@ -105,6 +106,7 @@ export function MainLayout(): JSX.Element {
         <Outlet />
       </main>
       <Footer />
+      <ChatWidget />
     </div>
   );
 }
