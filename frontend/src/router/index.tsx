@@ -14,6 +14,7 @@ import { ProfilePage } from "@/pages/ProfilePage";
 import { ResultDetailPage } from "@/pages/ResultDetailPage";
 import { ResultsPage } from "@/pages/ResultsPage";
 import { SearchPage } from "@/pages/SearchPage";
+import { ResumeBuilderPage } from "@/pages/resume/ResumeBuilderPage";
 import { AdminDashboardPage } from "@/pages/admin/DashboardPage";
 import { AdminJobsPage } from "@/pages/admin/JobsPage";
 import { AdminScrapersPage } from "@/pages/admin/ScrapersPage";
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
       { path: "/results", element: <ResultsPage /> },
       { path: "/results/:id", element: <ResultDetailPage /> },
       { path: "/search", element: <SearchPage /> },
+      { path: "/resume-builder", element: <ResumeBuilderPage /> },
       // Redirect old auth routes to home — login/register are removed
       { path: "/login",    element: <Navigate to="/" replace /> },
       { path: "/register", element: <Navigate to="/" replace /> },

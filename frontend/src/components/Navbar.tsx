@@ -30,11 +30,12 @@ export function Navbar(): JSX.Element {
   const isDark     = theme === "dark";
 
   const LINKS = [
-    { to: "/",            label: t("nav.home") },
-    { to: "/jobs",        label: t("nav.latestJobs") },
-    { to: "/admit-cards", label: t("nav.admitCards") },
-    { to: "/results",     label: t("nav.results") },
-    { to: "/search",      label: t("nav.search") },
+    { to: "/",                label: t("nav.home") },
+    { to: "/jobs",            label: t("nav.latestJobs") },
+    { to: "/admit-cards",     label: t("nav.admitCards") },
+    { to: "/results",         label: t("nav.results") },
+    { to: "/search",          label: t("nav.search") },
+    { to: "/resume-builder",  label: "Resume Builder" },
   ];
 
   function handleLogout(): void {
