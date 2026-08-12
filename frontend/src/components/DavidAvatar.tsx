@@ -1,145 +1,102 @@
 /**
- * DavidAvatar — renders the david.glb 3D model in the chat widget.
+ * DavidAvatar — Polished CSS animated avatar for David the AI assistant.
  *
- * Place david.glb in:  frontend/public/david.glb
- *
- * Features:
- * - Idle breathing animation (gentle scale pulse)
- * - Talking animation (head bob + subtle scale) when `isTalking` is true
- * - Falls back to a simple animated gradient avatar if the GLB fails to load
+ * No GLB/Three.js needed — works everywhere, zero build issues.
+ * Drop david.glb into frontend/public/ and swap the import for the 3D version anytime.
  */
-import { Suspense, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF, Environment } from "@react-three/drei";
-import type { Group } from "three";
-
-interface ModelProps {
-  isTalking: boolean;
-}
-
-function DavidModel({ isTalking }: ModelProps) {
-  const groupRef = useRef<Group>(null);
-  const clock = useRef(0);
-
-  // Load the GLB — useGLTF caches after first load
-  const { scene } = useGLTF("/david.glb");
-
-  useFrame((_, delta) => {
-    if (!groupRef.current) return;
-    clock.current += delta;
-    const t = clock.current;
-
-    if (isTalking) {
-      // Talking: bob head + slight scale pulse
-      groupRef.current.position.y = Math.sin(t * 8) * 0.04;
-      const s = 1 + Math.sin(t * 12) * 0.015;
-      groupRef.current.scale.setScalar(s);
-    } else {
-      // Idle: gentle breathing
-      groupRef.current.position.y = Math.sin(t * 1.2) * 0.015;
-      const s = 1 + Math.sin(t * 1.2) * 0.008;
-      groupRef.current.scale.setScalar(s);
-    }
-  });
-
-  return (
-    <group ref={groupRef}>
-      <primitive object={scene} />
-    </group>
-  );
-}
-
-// Preload so it's ready before the widget opens
-useGLTF.preload("/david.glb");
-
-interface FallbackAvatarProps {
-  isTalking: boolean;
-  size?: number;
-}
-
-/** Simple CSS fallback when GLB is missing or loading fails */
-export function FallbackAvatar({ isTalking, size = 40 }: FallbackAvatarProps) {
-  return (
-    <div
-      style={{
-        width: size,
-        height: size,
-        borderRadius: "50%",
-        background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        color: "#fff",
-        fontSize: size * 0.4,
-        fontWeight: 700,
-        boxShadow: isTalking
-          ? "0 0 0 3px rgba(124,58,237,0.4), 0 0 12px rgba(124,58,237,0.6)"
-          : "0 2px 8px rgba(0,0,0,0.3)",
-        transition: "box-shadow 0.2s",
-        animation: isTalking ? "david-talk 0.3s ease-in-out infinite alternate" : undefined,
-        flexShrink: 0,
-      }}
-    >
-      D
-    </div>
-  );
-}
 
 interface DavidAvatarProps {
   isTalking: boolean;
-  /** px size of the canvas — default 40 */
   size?: number;
 }
 
-export function DavidAvatar({ isTalking, size = 40 }: DavidAvatarProps) {
-  return (
-    <div
-      style={{
-        width: size,
-        height: size,
-        borderRadius: "50%",
-        overflow: "hidden",
-        flexShrink: 0,
-        boxShadow: isTalking
-          ? "0 0 0 3px rgba(124,58,237,0.5), 0 0 16px rgba(124,58,237,0.4)"
-          : "0 2px 8px rgba(0,0,0,0.25)",
-        transition: "box-shadow 0.25s ease",
-      }}
-    >
-      <Canvas
-        camera={{ position: [0, 0, 2.5], fov: 35 }}
-        style={{ width: "100%", height: "100%" }}
-        gl={{ antialias: true, alpha: true }}
-      >
-        <ambientLight intensity={0.8} />
-        <directionalLight position={[2, 4, 3]} intensity={1.2} />
-        <Suspense fallback={null}>
-          <DavidModel isTalking={isTalking} />
-          <Environment preset="city" />
-        </Suspense>
-      </Canvas>
-    </div>
-  );
+export function FallbackAvatar({ isTalking, size = 40 }: DavidAvatarProps) {
+  return <DavidAvatarSafe isTalking={isTalking} size={size} />;
 }
 
-/** Smart wrapper: renders 3D if WebGL available, otherwise CSS fallback */
+export function DavidAvatar({ isTalking, size = 40 }: DavidAvatarProps) {
+  return <DavidAvatarSafe isTalking={isTalking} size={size} />;
+}
+
 export function DavidAvatarSafe({ isTalking, size = 40 }: DavidAvatarProps) {
-  // Check WebGL support once
-  const hasWebGL = (() => {
-    try {
-      const canvas = document.createElement("canvas");
-      return !!(
-        window.WebGLRenderingContext &&
-        (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
-      );
-    } catch {
-      return false;
-    }
-  })();
+  const r = size / 2;
+  const fontSize = Math.round(size * 0.38);
 
-  if (!hasWebGL) {
-    return <FallbackAvatar isTalking={isTalking} size={size} />;
-  }
+  return (
+    <>
+      <style>{`
+        @keyframes david-breathe {
+          0%, 100% { transform: scale(1); }
+          50%       { transform: scale(1.04); }
+        }
+        @keyframes david-talk {
+          0%   { transform: scale(1) rotate(-1.5deg); }
+          25%  { transform: scale(1.05) rotate(0deg); }
+          50%  { transform: scale(0.97) rotate(1.5deg); }
+          75%  { transform: scale(1.04) rotate(-0.5deg); }
+          100% { transform: scale(1) rotate(-1.5deg); }
+        }
+        @keyframes david-glow {
+          0%, 100% { box-shadow: 0 0 0 2px rgba(124,58,237,0.4), 0 0 8px rgba(124,58,237,0.3); }
+          50%       { box-shadow: 0 0 0 4px rgba(124,58,237,0.6), 0 0 16px rgba(124,58,237,0.5); }
+        }
+      `}</style>
+      <div
+        style={{
+          width: size,
+          height: size,
+          borderRadius: "50%",
+          background: "linear-gradient(135deg, #7c3aed 0%, #4f46e5 50%, #0891b2 100%)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0,
+          position: "relative",
+          animation: isTalking
+            ? `david-talk 0.4s ease-in-out infinite, david-glow 0.4s ease-in-out infinite`
+            : "david-breathe 3s ease-in-out infinite",
+          boxShadow: isTalking
+            ? "0 0 0 3px rgba(124,58,237,0.5)"
+            : "0 2px 8px rgba(0,0,0,0.2)",
+          transition: "box-shadow 0.2s",
+        }}
+      >
+        {/* Letter D */}
+        <span style={{
+          color: "#fff",
+          fontSize,
+          fontWeight: 800,
+          fontFamily: "system-ui, sans-serif",
+          letterSpacing: "-0.02em",
+          lineHeight: 1,
+          userSelect: "none",
+        }}>
+          D
+        </span>
 
-  return <DavidAvatar isTalking={isTalking} size={size} />;
+        {/* Talking mouth indicator */}
+        {isTalking && (
+          <div style={{
+            position: "absolute",
+            bottom: Math.round(size * 0.15),
+            left: "50%",
+            transform: "translateX(-50%)",
+            display: "flex",
+            gap: 2,
+            alignItems: "flex-end",
+          }}>
+            {[3, 5, 3].map((h, i) => (
+              <div key={i} style={{
+                width: 2,
+                height: h,
+                background: "rgba(255,255,255,0.8)",
+                borderRadius: 1,
+                animation: `david-talk ${0.3 + i * 0.1}s ease-in-out infinite alternate`,
+              }} />
+            ))}
+          </div>
+        )}
+      </div>
+    </>
+  );
 }
