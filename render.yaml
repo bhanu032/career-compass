@@ -3,13 +3,13 @@ services:
     name: deshkiseva-api
     runtime: python
     rootDir: backend
-    buildCommand: pip install -r requirements.txt && playwright install chromium --with-deps && alembic upgrade head
+    buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: DATABASE_URL
-        sync: false           # set manually in Render dashboard
+        sync: false           # set in Render dashboard — use Internal DB URL
       - key: JWT_SECRET_KEY
-        generateValue: true   # Render generates a secure random value
+        generateValue: true   # Render auto-generates a secure value
       - key: JWT_ALGORITHM
         value: HS256
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
@@ -17,7 +17,7 @@ services:
       - key: REFRESH_TOKEN_EXPIRE_DAYS
         value: "7"
       - key: CORS_ORIGINS
-        value: "https://career-compass-topaz.vercel.app"
+        sync: false           # set to your Vercel frontend URL
       - key: SCRAPER_INTERVAL_HOURS
         value: "6"
       - key: ENABLE_SCHEDULER
@@ -28,5 +28,9 @@ services:
         sync: false
       - key: PYTHONUNBUFFERED
         value: "1"
+      - key: OPENAI_API_KEY
+        sync: false           # optional — set for AI-powered chat & resume optimizer
+      - key: OPENAI_MODEL
+        value: "gpt-4o-mini"
     healthCheckPath: /health
     autoDeploy: true
