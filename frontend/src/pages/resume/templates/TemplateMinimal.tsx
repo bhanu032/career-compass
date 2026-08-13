@@ -2,9 +2,10 @@
  * Minimal Template — Clean single-column, teal accents
  * Best for: Any job — universally accepted ATS-friendly layout
  */
-import type { ResumeData } from "@/types/resume";
+import type { ResumeCustomization, ResumeData } from "@/types/resume";
+import { resumeShellStyle } from "@/pages/resume/resumeTemplateUtils";
 
-interface Props { data: ResumeData; printMode?: boolean; }
+interface Props { data: ResumeData; customization?: ResumeCustomization; printMode?: boolean; }
 
 const A = "#0f766e";
 
@@ -17,7 +18,7 @@ function fmtDate(d: string) {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: 20 }}>
+    <div className="resume-section resume-avoid-break" style={{ marginBottom: 20 }}>
       <div style={{ marginBottom: 10, paddingBottom: 4, borderBottom: `2px solid ${A}` }}>
         <span style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.1em", color: A, textTransform: "uppercase" }}>
           {title}
@@ -28,12 +29,21 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-export function TemplateMinimal({ data, printMode }: Props): JSX.Element {
+export function TemplateMinimal({ data, customization, printMode }: Props): JSX.Element {
   const { personal: p, experience, education, skills, projects, certificates } = data;
 
-  const wrapStyle: React.CSSProperties = printMode
-    ? { width: "210mm", minHeight: "297mm", margin: "0 auto", fontFamily: "'Helvetica Neue', Arial, sans-serif", fontSize: 12.5, color: "#1e293b", background: "#fff", padding: "36px 48px", boxSizing: "border-box" }
-    : { width: "100%", fontFamily: "'Helvetica Neue', Arial, sans-serif", fontSize: 12.5, color: "#1e293b", background: "#fff", padding: "32px 40px", borderRadius: 12 };
+  const wrapStyle = {
+    ...resumeShellStyle(customization, {
+      fontFamily: "'Helvetica Neue', Arial, sans-serif",
+      fontSize: 12.5,
+      color: "#1e293b",
+      printMode,
+      padded: true,
+    }),
+    padding: printMode
+      ? `${36 * (customization?.pageMargin ?? 1)}px ${48 * (customization?.pageMargin ?? 1)}px`
+      : `${32 * (customization?.pageMargin ?? 1)}px ${40 * (customization?.pageMargin ?? 1)}px`,
+  };
 
   const skillGroups: { [key: string]: string[] } = {};
   skills.forEach((s) => {
@@ -42,7 +52,7 @@ export function TemplateMinimal({ data, printMode }: Props): JSX.Element {
   });
 
   return (
-    <div style={wrapStyle}>
+    <div className="resume-template" style={wrapStyle}>
       {/* Header */}
       <div style={{ marginBottom: 24, textAlign: "center" }}>
         <h1 style={{ margin: 0, fontSize: 30, fontWeight: 300, letterSpacing: 4, color: "#0f172a" }}>
@@ -76,7 +86,7 @@ export function TemplateMinimal({ data, printMode }: Props): JSX.Element {
       {experience.length > 0 && (
         <Section title="Experience">
           {experience.map((e) => (
-            <div key={e.id} style={{ marginBottom: 14 }}>
+            <div key={e.id} className="resume-item resume-avoid-break" style={{ marginBottom: 14 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
                 <p style={{ margin: 0, fontWeight: 700, fontSize: 13 }}>{e.position}</p>
                 <span style={{ fontSize: 11, color: "#64748b" }}>
@@ -97,7 +107,7 @@ export function TemplateMinimal({ data, printMode }: Props): JSX.Element {
       {education.length > 0 && (
         <Section title="Education">
           {education.map((e) => (
-            <div key={e.id} style={{ marginBottom: 10, display: "flex", justifyContent: "space-between" }}>
+            <div key={e.id} className="resume-item resume-avoid-break" style={{ marginBottom: 10, display: "flex", justifyContent: "space-between" }}>
               <div>
                 <p style={{ margin: 0, fontWeight: 700, fontSize: 13 }}>
                   {e.degree}{e.field ? ` in ${e.field}` : ""}
@@ -131,7 +141,7 @@ export function TemplateMinimal({ data, printMode }: Props): JSX.Element {
       {projects.length > 0 && (
         <Section title="Projects">
           {projects.map((pr) => (
-            <div key={pr.id} style={{ marginBottom: 10 }}>
+            <div key={pr.id} className="resume-item resume-avoid-break" style={{ marginBottom: 10 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
                 <p style={{ margin: 0, fontWeight: 700, fontSize: 13 }}>{pr.name}</p>
                 {pr.technologies && <span style={{ fontSize: 11, color: "#64748b" }}>{pr.technologies}</span>}
@@ -147,7 +157,7 @@ export function TemplateMinimal({ data, printMode }: Props): JSX.Element {
         <Section title="Certifications">
           <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
             {certificates.map((c) => (
-              <div key={c.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+              <div key={c.id} className="resume-item resume-avoid-break" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
                 <span style={{ fontSize: 12.5, fontWeight: 600 }}>{c.name}</span>
                 <span style={{ fontSize: 11, color: "#64748b" }}>
                   {c.issuer}{c.date ? ` · ${fmtDate(c.date)}` : ""}

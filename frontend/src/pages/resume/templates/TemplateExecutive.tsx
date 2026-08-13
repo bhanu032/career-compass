@@ -2,9 +2,10 @@
  * Executive Template — Premium layout with amber/gold accents
  * Best for: Senior government positions, IAS/IPS, Director-level
  */
-import type { ResumeData } from "@/types/resume";
+import type { ResumeCustomization, ResumeData } from "@/types/resume";
+import { resumeShellStyle } from "@/pages/resume/resumeTemplateUtils";
 
-interface Props { data: ResumeData; printMode?: boolean; }
+interface Props { data: ResumeData; customization?: ResumeCustomization; printMode?: boolean; }
 
 const GOLD = "#92400e";
 const GOLD_LIGHT = "#fef3c7";
@@ -19,7 +20,7 @@ function fmtDate(d: string) {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: 22 }}>
+    <div className="resume-section resume-avoid-break" style={{ marginBottom: 22 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
         <div style={{ width: 24, height: 24, background: GOLD_LIGHT, border: `1px solid ${GOLD}40`, borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "center" }}>
           <div style={{ width: 8, height: 8, background: GOLD, borderRadius: 2 }} />
@@ -34,15 +35,18 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-export function TemplateExecutive({ data, printMode }: Props): JSX.Element {
+export function TemplateExecutive({ data, customization, printMode }: Props): JSX.Element {
   const { personal: p, experience, education, skills, projects, certificates } = data;
 
-  const wrapStyle: React.CSSProperties = printMode
-    ? { width: "210mm", minHeight: "297mm", margin: "0 auto", fontFamily: "'Times New Roman', 'Georgia', serif", fontSize: 12.5, color: DARK, background: "#fff", boxSizing: "border-box" }
-    : { width: "100%", fontFamily: "'Times New Roman', 'Georgia', serif", fontSize: 12.5, color: DARK, background: "#fff", borderRadius: 12, overflow: "hidden" };
+  const wrapStyle = resumeShellStyle(customization, {
+    fontFamily: "'Times New Roman', 'Georgia', serif",
+    fontSize: 12.5,
+    color: DARK,
+    printMode,
+  });
 
   return (
-    <div style={wrapStyle}>
+    <div className="resume-template" style={wrapStyle}>
       {/* Gold top bar */}
       <div style={{ height: 6, background: `linear-gradient(to right, ${GOLD}, #d97706, #92400e)` }} />
 
@@ -83,7 +87,7 @@ export function TemplateExecutive({ data, printMode }: Props): JSX.Element {
           {experience.length > 0 && (
             <Section title="Professional Experience">
               {experience.map((e) => (
-                <div key={e.id} style={{ marginBottom: 16, paddingBottom: 14, borderBottom: `1px dashed ${GOLD}25` }}>
+                <div key={e.id} className="resume-item resume-avoid-break" style={{ marginBottom: 16, paddingBottom: 14, borderBottom: `1px dashed ${GOLD}25` }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                     <div>
                       <p style={{ margin: 0, fontWeight: 700, fontSize: 13.5, color: DARK }}>{e.position}</p>
@@ -106,7 +110,7 @@ export function TemplateExecutive({ data, printMode }: Props): JSX.Element {
           {education.length > 0 && (
             <Section title="Academic Credentials">
               {education.map((e) => (
-                <div key={e.id} style={{ marginBottom: 12, display: "flex", justifyContent: "space-between" }}>
+                <div key={e.id} className="resume-item resume-avoid-break" style={{ marginBottom: 12, display: "flex", justifyContent: "space-between" }}>
                   <div>
                     <p style={{ margin: 0, fontWeight: 700, fontSize: 13 }}>
                       {e.degree}{e.field ? `, ${e.field}` : ""}
@@ -132,7 +136,7 @@ export function TemplateExecutive({ data, printMode }: Props): JSX.Element {
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                 {skills.map((s) => (
-                  <div key={s.id} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div key={s.id} className="resume-item resume-avoid-break" style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <div style={{ width: 5, height: 5, borderRadius: 1, background: GOLD, flexShrink: 0 }} />
                     <span style={{ fontSize: 12, color: "#292524" }}>{s.name}</span>
                     <span style={{ fontSize: 10, color: "#a8a29e", marginLeft: "auto" }}>{s.level}</span>
@@ -148,7 +152,7 @@ export function TemplateExecutive({ data, printMode }: Props): JSX.Element {
                 Certifications
               </p>
               {certificates.map((c) => (
-                <div key={c.id} style={{ marginBottom: 8, paddingLeft: 8, borderLeft: `2px solid ${GOLD}` }}>
+                <div key={c.id} className="resume-item resume-avoid-break" style={{ marginBottom: 8, paddingLeft: 8, borderLeft: `2px solid ${GOLD}` }}>
                   <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: DARK }}>{c.name}</p>
                   <p style={{ margin: "1px 0 0", fontSize: 10.5, color: "#78716c" }}>
                     {c.issuer}{c.date ? ` · ${fmtDate(c.date)}` : ""}
@@ -164,7 +168,7 @@ export function TemplateExecutive({ data, printMode }: Props): JSX.Element {
                 Key Projects
               </p>
               {projects.map((pr) => (
-                <div key={pr.id} style={{ marginBottom: 10, paddingLeft: 8, borderLeft: `2px solid ${GOLD}` }}>
+                <div key={pr.id} className="resume-item resume-avoid-break" style={{ marginBottom: 10, paddingLeft: 8, borderLeft: `2px solid ${GOLD}` }}>
                   <p style={{ margin: 0, fontSize: 12, fontWeight: 700, color: DARK }}>{pr.name}</p>
                   {pr.technologies && <p style={{ margin: "1px 0 0", fontSize: 10.5, color: GOLD }}>{pr.technologies}</p>}
                   {pr.description && <p style={{ margin: "3px 0 0", fontSize: 11, lineHeight: 1.6, color: "#57534e" }}>{pr.description}</p>}

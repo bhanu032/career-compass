@@ -2,9 +2,10 @@
  * Modern Template — Bold sidebar with purple accent
  * Best for: Tech, private sector, startups
  */
-import type { ResumeData } from "@/types/resume";
+import type { ResumeCustomization, ResumeData } from "@/types/resume";
+import { resumeShellStyle } from "@/pages/resume/resumeTemplateUtils";
 
-interface Props { data: ResumeData; printMode?: boolean; }
+interface Props { data: ResumeData; customization?: ResumeCustomization; printMode?: boolean; }
 
 const A = "#7c3aed";
 const SIDE_BG = "#1e1b4b";
@@ -18,7 +19,7 @@ function fmtDate(d: string) {
 
 function SideSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: 20 }}>
+    <div className="resume-section resume-avoid-break" style={{ marginBottom: 20 }}>
       <p style={{ margin: "0 0 8px", fontSize: 11, fontWeight: 800, letterSpacing: "0.1em", color: A, textTransform: "uppercase" }}>
         {title}
       </p>
@@ -29,7 +30,7 @@ function SideSection({ title, children }: { title: string; children: React.React
 
 function MainSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: 18 }}>
+    <div className="resume-section resume-avoid-break" style={{ marginBottom: 18 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
         <div style={{ width: 4, height: 18, background: A, borderRadius: 2 }} />
         <span style={{ fontSize: 13, fontWeight: 800, letterSpacing: "0.04em", color: "#1e1b4b", textTransform: "uppercase" }}>
@@ -41,16 +42,20 @@ function MainSection({ title, children }: { title: string; children: React.React
   );
 }
 
-export function TemplateModern({ data, printMode }: Props): JSX.Element {
+export function TemplateModern({ data, customization, printMode }: Props): JSX.Element {
   const { personal: p, experience, education, skills, projects, certificates } = data;
   const levelPct: Record<string, number> = { Beginner: 25, Intermediate: 50, Advanced: 75, Expert: 100 };
 
-  const wrapStyle: React.CSSProperties = printMode
-    ? { width: "210mm", minHeight: "297mm", margin: "0 auto", fontFamily: "'Segoe UI', Arial, sans-serif", fontSize: 13, color: "#1e1b4b", background: "#fff", display: "flex", boxSizing: "border-box" }
-    : { width: "100%", fontFamily: "'Segoe UI', Arial, sans-serif", fontSize: 13, color: "#1e1b4b", background: "#fff", display: "flex", borderRadius: 12, overflow: "hidden" };
+  const wrapStyle = resumeShellStyle(customization, {
+    fontFamily: "'Segoe UI', Arial, sans-serif",
+    fontSize: 13,
+    color: "#1e1b4b",
+    printMode,
+    display: "flex",
+  });
 
   return (
-    <div style={wrapStyle}>
+    <div className="resume-template" style={wrapStyle}>
       {/* Sidebar */}
       <div style={{ width: "32%", background: SIDE_BG, padding: "32px 20px", flexShrink: 0, color: "#e2e8f0" }}>
         {/* Avatar circle */}
@@ -79,7 +84,7 @@ export function TemplateModern({ data, printMode }: Props): JSX.Element {
         {skills.length > 0 && (
           <SideSection title="Skills">
             {skills.map((s) => (
-              <div key={s.id} style={{ marginBottom: 7 }}>
+              <div key={s.id} className="resume-item resume-avoid-break" style={{ marginBottom: 7 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, marginBottom: 3 }}>
                   <span style={{ color: "#e2e8f0", fontWeight: 600 }}>{s.name}</span>
                   <span style={{ color: "#94a3b8", fontSize: 10 }}>{levelPct[s.level]}%</span>
@@ -96,7 +101,7 @@ export function TemplateModern({ data, printMode }: Props): JSX.Element {
         {certificates.length > 0 && (
           <SideSection title="Certifications">
             {certificates.map((c) => (
-              <div key={c.id} style={{ marginBottom: 7 }}>
+              <div key={c.id} className="resume-item resume-avoid-break" style={{ marginBottom: 7 }}>
                 <p style={{ margin: 0, fontSize: 11, fontWeight: 600, color: "#e2e8f0" }}>{c.name}</p>
                 <p style={{ margin: "1px 0 0", fontSize: 10, color: "#94a3b8" }}>
                   {c.issuer}{c.date ? ` · ${fmtDate(c.date)}` : ""}
@@ -118,7 +123,7 @@ export function TemplateModern({ data, printMode }: Props): JSX.Element {
         {experience.length > 0 && (
           <MainSection title="Experience">
             {experience.map((e) => (
-              <div key={e.id} style={{ marginBottom: 14, paddingLeft: 12, borderLeft: `2px solid ${A}20` }}>
+              <div key={e.id} className="resume-item resume-avoid-break" style={{ marginBottom: 14, paddingLeft: 12, borderLeft: `2px solid ${A}20` }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                   <div>
                     <p style={{ margin: 0, fontWeight: 700, fontSize: 13, color: "#0f172a" }}>{e.position}</p>
@@ -141,7 +146,7 @@ export function TemplateModern({ data, printMode }: Props): JSX.Element {
         {education.length > 0 && (
           <MainSection title="Education">
             {education.map((e) => (
-              <div key={e.id} style={{ marginBottom: 10, paddingLeft: 12, borderLeft: `2px solid ${A}20` }}>
+              <div key={e.id} className="resume-item resume-avoid-break" style={{ marginBottom: 10, paddingLeft: 12, borderLeft: `2px solid ${A}20` }}>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <div>
                     <p style={{ margin: 0, fontWeight: 700, fontSize: 13, color: "#0f172a" }}>
@@ -164,7 +169,7 @@ export function TemplateModern({ data, printMode }: Props): JSX.Element {
         {projects.length > 0 && (
           <MainSection title="Projects">
             {projects.map((pr) => (
-              <div key={pr.id} style={{ marginBottom: 10, paddingLeft: 12, borderLeft: `2px solid ${A}20` }}>
+              <div key={pr.id} className="resume-item resume-avoid-break" style={{ marginBottom: 10, paddingLeft: 12, borderLeft: `2px solid ${A}20` }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <p style={{ margin: 0, fontWeight: 700, fontSize: 13, color: "#0f172a" }}>{pr.name}</p>
                   {pr.technologies && (

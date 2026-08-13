@@ -7,6 +7,7 @@ import { useTheme } from "@/hooks/useTheme";
 interface Props {
   selected: TemplateId;
   onSelect: (id: TemplateId) => void;
+  compact?: boolean;
 }
 
 // Accent color map for each template preview key
@@ -19,6 +20,10 @@ const PREVIEW_COLORS: Record<string, { bg: string; accent: string; side: string 
   cyan:   { bg: "#ecfeff", accent: "#0891b2", side: "#cffafe" },
   green:  { bg: "#f0fdf4", accent: "#059669", side: "#dcfce7" },
   navy:   { bg: "#eff6ff", accent: "#1d4ed8", side: "#dbeafe" },
+  slate:  { bg: "#f8fafc", accent: "#0f172a", side: "#e2e8f0" },
+  gray:   { bg: "#f8fafc", accent: "#475569", side: "#e5e7eb" },
+  pink:   { bg: "#fdf2f8", accent: "#db2777", side: "#fce7f3" },
+  custom: { bg: "#faf5ff", accent: "#7c3aed", side: "#ede9fe" },
 };
 
 function MiniPreview({ color, layout }: { color: string; layout: "sidebar" | "single" | "timeline" }) {
@@ -127,22 +132,31 @@ const LAYOUT_MAP: Record<TemplateId, "sidebar" | "single" | "timeline"> = {
   slate:     "sidebar",
   timeline:  "timeline",
   compact:   "single",
+  ats:        "single",
+  consulting: "single",
+  academic:   "single",
+  portfolio:  "sidebar",
+  custom:     "sidebar",
 };
 
-export function StepTemplate({ selected, onSelect }: Props): JSX.Element {
+export function StepTemplate({ selected, onSelect, compact = false }: Props): JSX.Element {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
   return (
     <div>
-      <h2 className={classNames("text-xl font-bold", isDark ? "text-white" : "text-slate-900")}>
-        Choose a Template
-      </h2>
-      <p className={classNames("mt-1 text-sm", isDark ? "text-slate-400" : "text-slate-500")}>
-        8 professional designs — pick one that fits the job you're applying for
-      </p>
+      {!compact && (
+        <>
+          <h2 className={classNames("text-xl font-bold", isDark ? "text-white" : "text-slate-900")}>
+            Choose a Template
+          </h2>
+          <p className={classNames("mt-1 text-sm", isDark ? "text-slate-400" : "text-slate-500")}>
+            {RESUME_TEMPLATES.length} professional designs - pick one that fits the job you're applying for
+          </p>
+        </>
+      )}
 
-      <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className={classNames(compact ? "mt-0 grid grid-cols-2 gap-3" : "mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4")}>
         {RESUME_TEMPLATES.map((tpl) => {
           const isSelected = selected === tpl.id;
           return (

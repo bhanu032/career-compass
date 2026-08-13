@@ -2,9 +2,10 @@
  * Timeline Template — Dot-and-line timeline for experience & education
  * Best for: Experienced professionals, UPSC mains, chronological careers
  */
-import type { ResumeData } from "@/types/resume";
+import type { ResumeCustomization, ResumeData } from "@/types/resume";
+import { resumeShellStyle } from "@/pages/resume/resumeTemplateUtils";
 
-interface Props { data: ResumeData; printMode?: boolean; }
+interface Props { data: ResumeData; customization?: ResumeCustomization; printMode?: boolean; }
 
 const GREEN  = "#059669";
 const GREEN2 = "#d1fae5";
@@ -21,7 +22,7 @@ function fmtDate(d: string): string {
 
 function SectionHeading({ children }: { children: string }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+    <div className="resume-section resume-avoid-break" style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
       <div style={{ width: 28, height: 28, borderRadius: "50%", background: GREEN, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
         <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#fff" }} />
       </div>
@@ -40,7 +41,7 @@ function TimelineItem({
   description?: string; isLast: boolean;
 }) {
   return (
-    <div style={{ display: "flex", gap: 0, marginBottom: isLast ? 0 : 14 }}>
+    <div className="resume-item resume-avoid-break" style={{ display: "flex", gap: 0, marginBottom: isLast ? 0 : 14 }}>
       {/* Timeline rail */}
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 28, flexShrink: 0 }}>
         <div style={{ width: 10, height: 10, borderRadius: "50%", background: GREEN, border: "2px solid #fff", boxShadow: `0 0 0 2px ${GREEN}`, flexShrink: 0, marginTop: 3 }} />
@@ -69,15 +70,18 @@ function TimelineItem({
   );
 }
 
-export function TemplateTimeline({ data, printMode }: Props): JSX.Element {
+export function TemplateTimeline({ data, customization, printMode }: Props): JSX.Element {
   const { personal: p, experience, education, skills, projects, certificates } = data;
 
-  const wrap: React.CSSProperties = printMode
-    ? { width: "210mm", minHeight: "297mm", margin: "0 auto", fontFamily: "'Helvetica Neue', Arial, sans-serif", fontSize: 12.5, color: GRAY, background: "#fff", boxSizing: "border-box" }
-    : { width: "100%", fontFamily: "'Helvetica Neue', Arial, sans-serif", fontSize: 12.5, color: GRAY, background: "#fff", borderRadius: 12, overflow: "hidden" };
+  const wrap = resumeShellStyle(customization, {
+    fontFamily: "'Helvetica Neue', Arial, sans-serif",
+    fontSize: 12.5,
+    color: GRAY,
+    printMode,
+  });
 
   return (
-    <div style={wrap}>
+    <div className="resume-template" style={wrap}>
       {/* Green header */}
       <div style={{ background: `linear-gradient(135deg, ${DARK} 0%, ${GREEN} 100%)`, color: "#fff", padding: "28px 40px 24px" }}>
         <h1 style={{ margin: 0, fontSize: 28, fontWeight: 700, letterSpacing: 0.5 }}>
@@ -99,14 +103,14 @@ export function TemplateTimeline({ data, printMode }: Props): JSX.Element {
         {/* Main */}
         <div style={{ flex: 1, padding: "22px 24px 28px 32px" }}>
           {p.summary && (
-            <div style={{ marginBottom: 20 }}>
+            <div className="resume-section resume-avoid-break" style={{ marginBottom: 20 }}>
               <SectionHeading>About Me</SectionHeading>
               <p style={{ margin: 0, fontSize: 12.5, lineHeight: 1.8, color: GRAY, paddingLeft: 38 }}>{p.summary}</p>
             </div>
           )}
 
           {experience.length > 0 && (
-            <div style={{ marginBottom: 20 }}>
+            <div className="resume-section resume-avoid-break" style={{ marginBottom: 20 }}>
               <SectionHeading>Experience</SectionHeading>
               <div style={{ paddingLeft: 10 }}>
                 {experience.map((e, i) => (
@@ -124,7 +128,7 @@ export function TemplateTimeline({ data, printMode }: Props): JSX.Element {
           )}
 
           {education.length > 0 && (
-            <div style={{ marginBottom: 20 }}>
+            <div className="resume-section resume-avoid-break" style={{ marginBottom: 20 }}>
               <SectionHeading>Education</SectionHeading>
               <div style={{ paddingLeft: 10 }}>
                 {education.map((e, i) => (
@@ -142,7 +146,7 @@ export function TemplateTimeline({ data, printMode }: Props): JSX.Element {
           )}
 
           {projects.length > 0 && (
-            <div>
+            <div className="resume-section resume-avoid-break">
               <SectionHeading>Projects</SectionHeading>
               <div style={{ paddingLeft: 10 }}>
                 {projects.map((pr, i) => (
@@ -163,11 +167,11 @@ export function TemplateTimeline({ data, printMode }: Props): JSX.Element {
         {/* Sidebar */}
         <div style={{ width: "32%", background: "#f0fdf4", borderLeft: `1px solid ${GREEN}20`, padding: "22px 18px 28px", flexShrink: 0 }}>
           {skills.length > 0 && (
-            <div style={{ marginBottom: 20 }}>
+            <div className="resume-section resume-avoid-break" style={{ marginBottom: 20 }}>
               <p style={{ margin: "0 0 10px", fontSize: 10.5, fontWeight: 800, color: DARK, letterSpacing: "0.1em", textTransform: "uppercase" }}>Skills</p>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 {skills.map((s) => (
-                  <div key={s.id} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div key={s.id} className="resume-item resume-avoid-break" style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <div style={{ width: 6, height: 6, borderRadius: "50%", background: GREEN, flexShrink: 0 }} />
                     <span style={{ fontSize: 12, fontWeight: 600, color: DARK, flex: 1 }}>{s.name}</span>
                     <span style={{ fontSize: 10, color: GREEN, background: GREEN2, padding: "1px 6px", borderRadius: 99, fontWeight: 600 }}>
@@ -180,10 +184,10 @@ export function TemplateTimeline({ data, printMode }: Props): JSX.Element {
           )}
 
           {certificates.length > 0 && (
-            <div>
+            <div className="resume-section resume-avoid-break">
               <p style={{ margin: "0 0 10px", fontSize: 10.5, fontWeight: 800, color: DARK, letterSpacing: "0.1em", textTransform: "uppercase" }}>Certifications</p>
               {certificates.map((c) => (
-                <div key={c.id} style={{ marginBottom: 8, padding: "6px 8px", background: "#fff", borderRadius: 6, border: `1px solid ${GREEN}25` }}>
+                <div key={c.id} className="resume-item resume-avoid-break" style={{ marginBottom: 8, padding: "6px 8px", background: "#fff", borderRadius: 6, border: `1px solid ${GREEN}25` }}>
                   <p style={{ margin: 0, fontSize: 11.5, fontWeight: 600, color: DARK }}>{c.name}</p>
                   <p style={{ margin: "2px 0 0", fontSize: 10.5, color: "#6b7280" }}>
                     {c.issuer}{c.date ? ` · ${fmtDate(c.date)}` : ""}

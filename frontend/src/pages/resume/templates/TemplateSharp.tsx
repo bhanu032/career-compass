@@ -2,9 +2,10 @@
  * Sharp Template — Bold red accent, geometric header block
  * Best for: Banking, competitive exams (SSC CGL, IBPS PO), fresh graduates
  */
-import type { ResumeData } from "@/types/resume";
+import type { ResumeCustomization, ResumeData } from "@/types/resume";
+import { resumeShellStyle } from "@/pages/resume/resumeTemplateUtils";
 
-interface Props { data: ResumeData; printMode?: boolean; }
+interface Props { data: ResumeData; customization?: ResumeCustomization; printMode?: boolean; }
 
 const RED = "#b91c1c";
 const RED_LIGHT = "#fef2f2";
@@ -36,16 +37,19 @@ function SectionTitle({ children }: { children: string }) {
   );
 }
 
-export function TemplateSharp({ data, printMode }: Props): JSX.Element {
+export function TemplateSharp({ data, customization, printMode }: Props): JSX.Element {
   const { personal: p, experience, education, skills, projects, certificates } = data;
   const levelPct: Record<string, number> = { Beginner: 25, Intermediate: 50, Advanced: 75, Expert: 100 };
 
-  const wrap: React.CSSProperties = printMode
-    ? { width: "210mm", minHeight: "297mm", margin: "0 auto", fontFamily: "Arial, sans-serif", fontSize: 12.5, color: DARK, background: "#fff", boxSizing: "border-box" }
-    : { width: "100%", fontFamily: "Arial, sans-serif", fontSize: 12.5, color: DARK, background: "#fff", borderRadius: 12, overflow: "hidden" };
+  const wrap = resumeShellStyle(customization, {
+    fontFamily: "Arial, sans-serif",
+    fontSize: 12.5,
+    color: DARK,
+    printMode,
+  });
 
   return (
-    <div style={wrap}>
+    <div className="resume-template" style={wrap}>
       {/* Top accent strip */}
       <div style={{ height: 5, background: RED }} />
 
@@ -76,7 +80,7 @@ export function TemplateSharp({ data, printMode }: Props): JSX.Element {
         {/* Main — left 63% */}
         <div style={{ flex: 1, padding: "20px 24px 28px 36px" }}>
           {p.summary && (
-            <div style={{ marginBottom: 18 }}>
+            <div className="resume-section resume-avoid-break" style={{ marginBottom: 18 }}>
               <SectionTitle>Profile</SectionTitle>
               <p style={{ margin: 0, fontSize: 12.5, lineHeight: 1.8, color: "#374151", background: RED_LIGHT, padding: "10px 14px", borderRadius: 6, borderLeft: `3px solid ${RED}` }}>
                 {p.summary}
@@ -85,10 +89,10 @@ export function TemplateSharp({ data, printMode }: Props): JSX.Element {
           )}
 
           {experience.length > 0 && (
-            <div style={{ marginBottom: 18 }}>
+            <div className="resume-section resume-avoid-break" style={{ marginBottom: 18 }}>
               <SectionTitle>Work Experience</SectionTitle>
               {experience.map((e, i) => (
-                <div key={e.id} style={{ marginBottom: i < experience.length - 1 ? 14 : 0 }}>
+                <div key={e.id} className="resume-item resume-avoid-break" style={{ marginBottom: i < experience.length - 1 ? 14 : 0 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                     <div>
                       <p style={{ margin: 0, fontWeight: 700, fontSize: 13, color: DARK }}>{e.position}</p>
@@ -110,10 +114,10 @@ export function TemplateSharp({ data, printMode }: Props): JSX.Element {
           )}
 
           {education.length > 0 && (
-            <div style={{ marginBottom: 18 }}>
+            <div className="resume-section resume-avoid-break" style={{ marginBottom: 18 }}>
               <SectionTitle>Education</SectionTitle>
               {education.map((e) => (
-                <div key={e.id} style={{ marginBottom: 10, display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <div key={e.id} className="resume-item resume-avoid-break" style={{ marginBottom: 10, display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                   <div>
                     <p style={{ margin: 0, fontWeight: 700, fontSize: 13 }}>{e.degree}{e.field ? ` — ${e.field}` : ""}</p>
                     <p style={{ margin: "2px 0 0", fontSize: 12, color: RED, fontWeight: 600 }}>{e.institution}</p>
@@ -128,10 +132,10 @@ export function TemplateSharp({ data, printMode }: Props): JSX.Element {
           )}
 
           {projects.length > 0 && (
-            <div>
+            <div className="resume-section resume-avoid-break">
               <SectionTitle>Projects</SectionTitle>
               {projects.map((pr) => (
-                <div key={pr.id} style={{ marginBottom: 10 }}>
+                <div key={pr.id} className="resume-item resume-avoid-break" style={{ marginBottom: 10 }}>
                   <div style={{ display: "flex", justifyContent: "space-between" }}>
                     <p style={{ margin: 0, fontWeight: 700, fontSize: 13 }}>{pr.name}</p>
                     {pr.technologies && <span style={{ fontSize: 10.5, color: RED, fontWeight: 600 }}>{pr.technologies}</span>}
@@ -147,10 +151,10 @@ export function TemplateSharp({ data, printMode }: Props): JSX.Element {
         {/* Sidebar — right 37% */}
         <div style={{ width: "37%", borderLeft: `2px solid ${RED}15`, background: RED_LIGHT, padding: "20px 20px 28px 20px", flexShrink: 0 }}>
           {skills.length > 0 && (
-            <div style={{ marginBottom: 20 }}>
+            <div className="resume-section resume-avoid-break" style={{ marginBottom: 20 }}>
               <p style={{ margin: "0 0 10px", fontSize: 11, fontWeight: 800, color: RED, letterSpacing: "0.08em", textTransform: "uppercase" }}>Skills</p>
               {skills.map((s) => (
-                <div key={s.id} style={{ marginBottom: 8 }}>
+                <div key={s.id} className="resume-item resume-avoid-break" style={{ marginBottom: 8 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, marginBottom: 3 }}>
                     <span style={{ fontWeight: 600, color: DARK }}>{s.name}</span>
                     <span style={{ color: "#6b7280", fontSize: 10 }}>{s.level}</span>
@@ -164,10 +168,10 @@ export function TemplateSharp({ data, printMode }: Props): JSX.Element {
           )}
 
           {certificates.length > 0 && (
-            <div>
+            <div className="resume-section resume-avoid-break">
               <p style={{ margin: "0 0 10px", fontSize: 11, fontWeight: 800, color: RED, letterSpacing: "0.08em", textTransform: "uppercase" }}>Certifications</p>
               {certificates.map((c) => (
-                <div key={c.id} style={{ marginBottom: 8, paddingLeft: 8, borderLeft: `2px solid ${RED}` }}>
+                <div key={c.id} className="resume-item resume-avoid-break" style={{ marginBottom: 8, paddingLeft: 8, borderLeft: `2px solid ${RED}` }}>
                   <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: DARK }}>{c.name}</p>
                   <p style={{ margin: "1px 0 0", fontSize: 10.5, color: "#6b7280" }}>{c.issuer}{c.date ? ` · ${fmtDate(c.date)}` : ""}</p>
                 </div>

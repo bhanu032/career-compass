@@ -15,6 +15,7 @@ __pycache__/
 .Python
 *.egg-info/
 .eggs/
+*.db
 
 # ── Environment files ────────────────────────────────────────────────────────
 .env

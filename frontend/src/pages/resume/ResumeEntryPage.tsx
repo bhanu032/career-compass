@@ -6,7 +6,7 @@ import { useRef, useState } from "react";
 import { FileText, FilePlus, Loader2, AlertCircle, CheckCircle2, Upload, Sparkles } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import { classNames } from "@/utils/format";
-import { extractTextFromFile, parseResumeText } from "@/utils/resumeParser";
+import { extractTextFromFile, parseResumeText, resumeDataToText } from "@/utils/resumeParser";
 import type { ResumeData } from "@/types/resume";
 
 interface Props {
@@ -24,6 +24,7 @@ export function ResumeEntryPage({ onBuildNew, onUpload }: Props): JSX.Element {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [parsed, setParsed] = useState<ResumeData | null>(null);
+  const [parsedText, setParsedText] = useState("");
   const [fileName, setFileName] = useState("");
 
   const pageBg = isDark
@@ -39,11 +40,10 @@ export function ResumeEntryPage({ onBuildNew, onUpload }: Props): JSX.Element {
     : "bg-white border border-slate-200";
 
   async function handleFile(file: File) {
-    const allowed = ["application/pdf", "text/plain", "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+    const allowed = ["application/pdf", "text/plain"];
     const ext = file.name.split(".").pop()?.toLowerCase();
-    if (!allowed.includes(file.type) && !["pdf","txt","doc","docx"].includes(ext ?? "")) {
-      setError("Please upload a PDF, TXT, DOC, or DOCX file.");
+    if (!allowed.includes(file.type) && !["pdf","txt"].includes(ext ?? "")) {
+      setError("Please upload a text-based PDF or TXT file.");
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
@@ -53,6 +53,8 @@ export function ResumeEntryPage({ onBuildNew, onUpload }: Props): JSX.Element {
 
     setLoading(true);
     setError(null);
+    setParsed(null);
+    setParsedText("");
     setFileName(file.name);
 
     try {
@@ -64,7 +66,10 @@ export function ResumeEntryPage({ onBuildNew, onUpload }: Props): JSX.Element {
       }
       const data = parseResumeText(text);
       setParsed(data);
+      setParsedText(resumeDataToText(data));
     } catch (err) {
+      setParsed(null);
+      setParsedText("");
       setError(err instanceof Error ? err.message : "Failed to parse resume.");
     } finally {
       setLoading(false);
@@ -146,7 +151,7 @@ export function ResumeEntryPage({ onBuildNew, onUpload }: Props): JSX.Element {
                 Build from Scratch
               </p>
               <p className={classNames("mt-1.5 text-sm leading-relaxed", isDark ? "text-slate-400" : "text-slate-500")}>
-                Start with a blank resume. Fill in your details step-by-step with 8 professional templates.
+                Start with a complete sample resume and update each section for your needs.
               </p>
             </div>
             <div className="mt-auto flex flex-wrap gap-2">
@@ -184,7 +189,7 @@ export function ResumeEntryPage({ onBuildNew, onUpload }: Props): JSX.Element {
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
-                {["PDF", "TXT", "DOC", "Auto-parsed", "AI Ready"].map((tag) => (
+                {["PDF", "TXT", "Auto-parsed", "AI Ready"].map((tag) => (
                   <span key={tag} className={classNames(
                     "rounded-full px-2.5 py-1 text-xs font-medium",
                     isDark ? "bg-emerald-900/30 text-emerald-400" : "bg-emerald-50 text-emerald-700"
@@ -211,7 +216,7 @@ export function ResumeEntryPage({ onBuildNew, onUpload }: Props): JSX.Element {
               <input
                 ref={fileRef}
                 type="file"
-                accept=".pdf,.txt,.doc,.docx"
+                accept=".pdf,.txt"
                 className="hidden"
                 onChange={handleInputChange}
               />
@@ -231,8 +236,16 @@ export function ResumeEntryPage({ onBuildNew, onUpload }: Props): JSX.Element {
                     {fileName}
                   </p>
                   <p className={classNames("text-xs text-center", isDark ? "text-slate-400" : "text-slate-500")}>
-                    Found: {parsed.experience.length} jobs · {parsed.education.length} degrees · {parsed.skills.length} skills
+                    Found: {parsed.experience.length} jobs · {parsed.education.length} degrees · {parsed.skills.length} skills · {parsed.projects.length} projects
                   </p>
+                  {parsedText && (
+                    <pre className={classNames(
+                      "mt-2 max-h-28 w-full overflow-auto rounded-lg p-2 text-left text-[10px] leading-relaxed whitespace-pre-wrap",
+                      isDark ? "bg-slate-900/80 text-slate-300" : "bg-slate-50 text-slate-600"
+                    )}>
+                      {parsedText}
+                    </pre>
+                  )}
                 </div>
               ) : (
                 <div className="flex flex-col items-center gap-2 text-center">
@@ -241,7 +254,7 @@ export function ResumeEntryPage({ onBuildNew, onUpload }: Props): JSX.Element {
                     Drop file here or click to browse
                   </p>
                   <p className={classNames("text-xs", isDark ? "text-slate-500" : "text-slate-400")}>
-                    PDF, TXT, DOC, DOCX — max 5MB
+                    PDF or TXT - max 5MB
                   </p>
                 </div>
               )}
@@ -267,7 +280,7 @@ export function ResumeEntryPage({ onBuildNew, onUpload }: Props): JSX.Element {
                 </button>
                 <button
                   type="button"
-                  onClick={() => { setParsed(null); setFileName(""); setError(null); }}
+                  onClick={() => { setParsed(null); setParsedText(""); setFileName(""); setError(null); }}
                   className="btn-secondary px-3"
                 >
                   ×

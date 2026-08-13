@@ -20,8 +20,10 @@ scraper_status = sa.Enum("SUCCESS", "FAILED", "PARTIAL", name="scraper_status", 
 
 def upgrade() -> None:
     bind = op.get_bind()
-    bind.execute(sa.text("DO $$ BEGIN CREATE TYPE user_role AS ENUM ('ADMIN', 'USER'); EXCEPTION WHEN duplicate_object THEN null; END $$"))
-    bind.execute(sa.text("DO $$ BEGIN CREATE TYPE scraper_status AS ENUM ('SUCCESS', 'FAILED', 'PARTIAL'); EXCEPTION WHEN duplicate_object THEN null; END $$"))
+    # PostgreSQL needs explicit ENUM types; SQLite uses plain VARCHAR
+    if bind.dialect.name == "postgresql":
+        bind.execute(sa.text("DO $$ BEGIN CREATE TYPE user_role AS ENUM ('ADMIN', 'USER'); EXCEPTION WHEN duplicate_object THEN null; END $$"))
+        bind.execute(sa.text("DO $$ BEGIN CREATE TYPE scraper_status AS ENUM ('SUCCESS', 'FAILED', 'PARTIAL'); EXCEPTION WHEN duplicate_object THEN null; END $$"))
 
     op.create_table(
         "users",

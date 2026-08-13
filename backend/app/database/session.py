@@ -5,7 +5,15 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.config import settings
 
-engine = create_engine(settings.DATABASE_URL, pool_pre_ping=True, future=True)
+# SQLite needs check_same_thread=False; PostgreSQL ignores connect_args
+connect_args = {"check_same_thread": False} if settings.DATABASE_URL.startswith("sqlite") else {}
+
+engine = create_engine(
+    settings.DATABASE_URL,
+    pool_pre_ping=not settings.DATABASE_URL.startswith("sqlite"),
+    future=True,
+    connect_args=connect_args,
+)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, future=True)
 
 

@@ -6,25 +6,28 @@
 import { useState, useRef, useCallback } from "react";
 import {
   CheckCircle2, ChevronDown, ChevronLeft, ChevronRight,
-  Download, Eye, FileText, Palette, Sparkles, X, ZoomIn, ZoomOut,
+  Download, Eye, FileText, Palette, Plus, Sparkles, Trash2, X, ZoomIn, ZoomOut,
 } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import { classNames } from "@/utils/format";
 import type { ResumeData, TemplateId } from "@/types/resume";
-import { EMPTY_RESUME, RESUME_TEMPLATES } from "@/types/resume";
+import { DEFAULT_RESUME_CUSTOMIZATION, EMPTY_RESUME, RESUME_TEMPLATES, SAMPLE_RESUME } from "@/types/resume";
 import { StepPersonal }   from "@/pages/resume/steps/StepPersonal";
 import { StepExperience } from "@/pages/resume/steps/StepExperience";
 import { StepEducation }  from "@/pages/resume/steps/StepEducation";
 import { StepSkills }     from "@/pages/resume/steps/StepSkills";
 import { StepExtras }     from "@/pages/resume/steps/StepExtras";
-import { StepTemplate }   from "@/pages/resume/steps/StepTemplate";
+import { StepCustomize } from "@/pages/resume/steps/StepCustomize";
 import { StepATS }        from "@/pages/resume/steps/StepATS";
 import { ResumeEntryPage } from "@/pages/resume/ResumeEntryPage";
 import { ResumePreview }  from "@/pages/resume/ResumePreview";
+import { customizationForTemplate, withTemplateAccent } from "@/pages/resume/resumeTemplateUtils";
+import { nanoid } from "@/utils/nanoid";
+import { formatResumeData } from "@/utils/resumeParser";
 
 // ── Wizard steps ──────────────────────────────────────────────────────────────
 const STEPS = [
-  { id: 0, label: "Template",   short: "Tmpl"  },
+  { id: 0, label: "Customize",  short: "Style" },
   { id: 1, label: "Personal",   short: "Info"  },
   { id: 2, label: "Experience", short: "Exp"   },
   { id: 3, label: "Education",  short: "Edu"   },
@@ -43,12 +46,21 @@ export function ResumeBuilderPage(): JSX.Element {
   const [mode, setMode] = useState<"entry" | "builder">("entry");
   const [step, setStep] = useState(0);
   const [templateId, setTemplateId] = useState<TemplateId>("classic");
+  const [customization, setCustomization] = useState(() =>
+    customizationForTemplate("classic", DEFAULT_RESUME_CUSTOMIZATION)
+  );
   const [data, setData] = useState<ResumeData>(EMPTY_RESUME);
   const [zoomIdx, setZoomIdx] = useState(2);          // default 65%
   const [showPreviewMobile, setShowPreviewMobile] = useState(false);
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const exportRef = useRef<HTMLDivElement | null>(null);
 
   const zoom = ZOOM_STEPS[zoomIdx];
+  const paperWidth = 794;
+  const paperHeight = 1123;
+  const scaledPaperWidth = Math.round(paperWidth * zoom);
+  const scaledPaperHeight = Math.round(paperHeight * zoom);
 
   function update(partial: Partial<ResumeData>) {
     setData((prev) => ({ ...prev, ...partial }));
@@ -57,8 +69,10 @@ export function ResumeBuilderPage(): JSX.Element {
   function prev() { setStep((s) => Math.max(s - 1, 0)); }
 
   function handleBuildNew() {
-    setData(EMPTY_RESUME);
-    setStep(0);
+    setData(SAMPLE_RESUME);
+    setTemplateId("classic");
+    setCustomization(customizationForTemplate("classic", DEFAULT_RESUME_CUSTOMIZATION));
+    setStep(1);
     setMode("builder");
   }
   function handleUpload(parsed: ResumeData) {
@@ -67,9 +81,146 @@ export function ResumeBuilderPage(): JSX.Element {
     setMode("builder");
   }
 
-  function handlePrint() {
-    window.print();
+  async function handleDownloadPdf() {
+    if (!exportRef.current || isDownloading) return;
+
+    setIsDownloading(true);
+    try {
+      const importRemote = new Function("url", "return import(url)") as (url: string) => Promise<any>;
+      const name = data.personal.fullName.trim().replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "") || "resume";
+      const html2pdfModule = await importRemote("https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/+esm");
+      const html2pdf = html2pdfModule.default ?? html2pdfModule;
+
+      await html2pdf()
+        .set({
+          filename: `${name}-resume.pdf`,
+          margin: [0, 0, 0, 0],
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: {
+            backgroundColor: "#ffffff",
+            scale: 2,
+            useCORS: true,
+            logging: false,
+            letterRendering: true,
+            windowWidth: 794,
+          },
+          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+          pagebreak: {
+            mode: ["css", "legacy"],
+            avoid: [".resume-avoid-break", ".resume-section", ".resume-item", "table", "tr"],
+          },
+        })
+        .from(exportRef.current)
+        .save();
+    } catch (error) {
+      console.error("Paged PDF export failed, trying canvas fallback", error);
+      try {
+        const importRemote = new Function("url", "return import(url)") as (url: string) => Promise<any>;
+        const [{ default: html2canvas }, jspdfModule] = await Promise.all([
+          importRemote("https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm"),
+          importRemote("https://cdn.jsdelivr.net/npm/jspdf@2.5.1/+esm"),
+        ]);
+        const JsPdf = jspdfModule.jsPDF;
+        const canvas = await html2canvas(exportRef.current, {
+          backgroundColor: "#ffffff",
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          windowWidth: 794,
+          windowHeight: Math.max(exportRef.current.scrollHeight, 1123),
+        });
+
+        const pdf = new JsPdf("p", "mm", "a4");
+        const pageWidth = 210;
+        const pageHeight = 297;
+        const imgWidth = pageWidth;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        const imgData = canvas.toDataURL("image/png", 1);
+        let remainingHeight = imgHeight;
+        let position = 0;
+
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        remainingHeight -= pageHeight;
+
+        while (remainingHeight > 0) {
+          position -= pageHeight;
+          pdf.addPage();
+          pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+          remainingHeight -= pageHeight;
+        }
+
+        const name = data.personal.fullName.trim().replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "") || "resume";
+        pdf.save(`${name}-resume.pdf`);
+      } catch (fallbackError) {
+        console.error("Canvas PDF fallback failed", fallbackError);
+        window.print();
+      }
+    } finally {
+      setIsDownloading(false);
+    }
   }
+
+  const changeTemplate = useCallback((id: TemplateId) => {
+    setTemplateId(id);
+    setCustomization((prev) => withTemplateAccent(prev, id));
+  }, []);
+
+  function addCurrentSectionItem() {
+    if (step === 2) {
+      update({
+        experience: [
+          ...data.experience,
+          { id: nanoid(), company: "", position: "", startDate: "", endDate: "", current: false, description: "" },
+        ],
+      });
+    }
+    if (step === 3) {
+      update({
+        education: [
+          ...data.education,
+          { id: nanoid(), institution: "", degree: "", field: "", startDate: "", endDate: "", grade: "" },
+        ],
+      });
+    }
+    if (step === 4) {
+      update({
+        skills: [...data.skills, { id: nanoid(), name: "", level: "Intermediate" }],
+      });
+    }
+    if (step === 5) {
+      update({
+        projects: [...data.projects, { id: nanoid(), name: "", description: "", link: "", technologies: "" }],
+      });
+    }
+  }
+
+  function clearCurrentSection() {
+    if (step === 1) update({ personal: EMPTY_RESUME.personal });
+    if (step === 2) update({ experience: [] });
+    if (step === 3) update({ education: [] });
+    if (step === 4) update({ skills: [] });
+    if (step === 5) update({ projects: [], certificates: [] });
+  }
+
+  function useSampleForCurrentSection() {
+    if (step === 1) update({ personal: SAMPLE_RESUME.personal });
+    if (step === 2) update({ experience: SAMPLE_RESUME.experience });
+    if (step === 3) update({ education: SAMPLE_RESUME.education });
+    if (step === 4) update({ skills: SAMPLE_RESUME.skills });
+    if (step === 5) update({ projects: SAMPLE_RESUME.projects, certificates: SAMPLE_RESUME.certificates });
+  }
+
+  function formatCurrentSection() {
+    const formatted = formatResumeData(data);
+    if (step === 1) update({ personal: formatted.personal });
+    if (step === 2) update({ experience: formatted.experience });
+    if (step === 3) update({ education: formatted.education });
+    if (step === 4) update({ skills: formatted.skills });
+    if (step === 5) update({ projects: formatted.projects, certificates: formatted.certificates });
+  }
+
+  const showSectionTools = step >= 1 && step <= 5;
+  const canAddSectionItem = step >= 2 && step <= 5;
 
   // ── Entry screen ─────────────────────────────────────────────────────────
   if (mode === "entry") {
@@ -176,11 +327,12 @@ export function ResumeBuilderPage(): JSX.Element {
           {/* Download */}
           <button
             type="button"
-            onClick={handlePrint}
+            onClick={handleDownloadPdf}
+            disabled={isDownloading}
             className={classNames("flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition", accentBtn)}
           >
             <Download className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Download PDF</span>
+            <span className="hidden sm:inline">{isDownloading ? "Downloading..." : "Download PDF"}</span>
           </button>
         </div>
       </div>
@@ -192,7 +344,67 @@ export function ResumeBuilderPage(): JSX.Element {
         <div className={classNames("flex w-full flex-col overflow-hidden lg:w-[440px] xl:w-[480px] shrink-0", sidebarBg)}>
           {/* Scrollable form area */}
           <div className="flex-1 overflow-y-auto p-5">
-            {step === 0 && <StepTemplate selected={templateId} onSelect={setTemplateId} />}
+            {showSectionTools && (
+              <div className={classNames(
+                "mb-4 flex flex-wrap items-center gap-2 rounded-xl border p-2",
+                isDark ? "border-slate-700 bg-white/[0.03]" : "border-slate-200 bg-slate-50"
+              )}>
+                {canAddSectionItem && (
+                  <button
+                    type="button"
+                    onClick={addCurrentSectionItem}
+                    className={classNames(
+                      "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition",
+                      isDark ? "bg-slate-800 text-slate-200 hover:bg-slate-700" : "bg-white text-slate-700 hover:bg-slate-100"
+                    )}
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                    Add Section
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={useSampleForCurrentSection}
+                  className={classNames(
+                    "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition",
+                    isDark ? "bg-indigo-950/50 text-indigo-200 hover:bg-indigo-900/60" : "bg-violet-50 text-violet-700 hover:bg-violet-100"
+                  )}
+                >
+                  <Sparkles className="h-3.5 w-3.5" />
+                  Use Dummy
+                </button>
+                <button
+                  type="button"
+                  onClick={formatCurrentSection}
+                  className={classNames(
+                    "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition",
+                    isDark ? "bg-emerald-950/50 text-emerald-200 hover:bg-emerald-900/60" : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                  )}
+                >
+                  <FileText className="h-3.5 w-3.5" />
+                  Format Section
+                </button>
+                <button
+                  type="button"
+                  onClick={clearCurrentSection}
+                  className={classNames(
+                    "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition",
+                    isDark ? "bg-red-950/40 text-red-200 hover:bg-red-900/60" : "bg-red-50 text-red-700 hover:bg-red-100"
+                  )}
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  Clear Section
+                </button>
+              </div>
+            )}
+            {step === 0 && (
+              <StepCustomize
+                templateId={templateId}
+                customization={customization}
+                onTemplateChange={changeTemplate}
+                onCustomizationChange={setCustomization}
+              />
+            )}
             {step === 1 && <StepPersonal data={data.personal} onChange={(p) => update({ personal: p })} />}
             {step === 2 && <StepExperience data={data.experience} onChange={(e) => update({ experience: e })} />}
             {step === 3 && <StepEducation data={data.education} onChange={(e) => update({ education: e })} />}
@@ -231,9 +443,9 @@ export function ResumeBuilderPage(): JSX.Element {
                 <ChevronRight className="h-4 w-4" />
               </button>
             ) : (
-              <button type="button" onClick={handlePrint} className="btn-primary flex items-center gap-1.5 py-2 text-sm">
+              <button type="button" onClick={handleDownloadPdf} disabled={isDownloading} className="btn-primary flex items-center gap-1.5 py-2 text-sm">
                 <Download className="h-4 w-4" />
-                Download
+                {isDownloading ? "Downloading..." : "Download"}
               </button>
             )}
           </div>
@@ -254,7 +466,7 @@ export function ResumeBuilderPage(): JSX.Element {
                 <button
                   key={tpl.id}
                   type="button"
-                  onClick={() => setTemplateId(tpl.id)}
+                  onClick={() => changeTemplate(tpl.id)}
                   className={classNames(
                     "rounded-full px-2.5 py-0.5 text-[11px] font-semibold transition whitespace-nowrap",
                     templateId === tpl.id
@@ -270,23 +482,29 @@ export function ResumeBuilderPage(): JSX.Element {
           </div>
 
           {/* A4 paper */}
-          <div className="flex flex-1 items-start justify-center overflow-auto py-6 px-4">
+          <div className="flex flex-1 overflow-auto px-6 py-8">
             <div
+              className="mx-auto shrink-0"
               style={{
-                transform: `scale(${zoom})`,
-                transformOrigin: "top center",
-                transition: "transform 0.2s ease",
-                width: 794,
-                minHeight: 1123,
-                background: "#fff",
-                boxShadow: "0 4px 60px rgba(0,0,0,0.3), 0 1px 8px rgba(0,0,0,0.2)",
-                borderRadius: 3,
-                overflow: "hidden",
-                // Compensate for scale so container doesn't leave huge gap
-                marginBottom: zoom < 0.8 ? `${(zoom - 1) * 1123 * 0.5}px` : 0,
+                width: scaledPaperWidth,
+                minHeight: scaledPaperHeight,
+                transition: "width 0.2s ease, min-height 0.2s ease",
               }}
             >
-              <ResumePreview data={data} templateId={templateId} printMode={false} />
+              <div
+                style={{
+                  transform: `scale(${zoom})`,
+                  transformOrigin: "top left",
+                  width: paperWidth,
+                  minHeight: paperHeight,
+                  background: "#fff",
+                  boxShadow: "0 12px 50px rgba(15,23,42,0.28), 0 2px 10px rgba(15,23,42,0.16)",
+                  borderRadius: 3,
+                  overflow: "visible",
+                }}
+              >
+                <ResumePreview data={data} templateId={templateId} customization={customization} printMode={false} />
+              </div>
             </div>
           </div>
         </div>
@@ -302,7 +520,7 @@ export function ResumeBuilderPage(): JSX.Element {
                 <button
                   key={tpl.id}
                   type="button"
-                  onClick={() => setTemplateId(tpl.id)}
+                  onClick={() => changeTemplate(tpl.id)}
                   className={classNames(
                     "rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap transition",
                     templateId === tpl.id ? "bg-violet-600 text-white" : "bg-white/10 text-white hover:bg-white/20"
@@ -318,20 +536,39 @@ export function ResumeBuilderPage(): JSX.Element {
             </button>
           </div>
           {/* Paper */}
-          <div className="flex flex-1 items-start justify-center overflow-auto py-4 px-2">
-            <div style={{ transform: "scale(0.42)", transformOrigin: "top center", width: 794, minHeight: 1123, background: "#fff", boxShadow: "0 4px 40px rgba(0,0,0,0.4)", borderRadius: 3, overflow: "hidden", marginBottom: "-650px" }}>
-              <ResumePreview data={data} templateId={templateId} printMode={false} />
+          <div className="flex flex-1 overflow-auto px-3 py-5">
+            <div className="mx-auto shrink-0" style={{ width: Math.round(paperWidth * 0.42), minHeight: Math.round(paperHeight * 0.42) }}>
+              <div style={{ transform: "scale(0.42)", transformOrigin: "top left", width: paperWidth, minHeight: paperHeight, background: "#fff", boxShadow: "0 8px 40px rgba(0,0,0,0.35)", borderRadius: 3, overflow: "visible" }}>
+                <ResumePreview data={data} templateId={templateId} customization={customization} printMode={false} />
+              </div>
             </div>
           </div>
           {/* Download */}
           <div className="flex gap-3 bg-slate-900 p-4">
-            <button type="button" onClick={handlePrint} className="btn-primary flex flex-1 items-center justify-center gap-2">
+            <button type="button" onClick={handleDownloadPdf} disabled={isDownloading} className="btn-primary flex flex-1 items-center justify-center gap-2">
               <Download className="h-4 w-4" />
-              Download PDF
+              {isDownloading ? "Downloading..." : "Download PDF"}
             </button>
           </div>
         </div>
       )}
+
+      <div
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          left: -10000,
+          top: 0,
+          width: "210mm",
+          background: "#ffffff",
+          pointerEvents: "none",
+          zIndex: -1,
+        }}
+      >
+        <div ref={exportRef} style={{ width: "210mm", minHeight: "297mm", background: "#ffffff" }}>
+          <ResumePreview data={data} templateId={templateId} customization={customization} printMode={false} />
+        </div>
+      </div>
 
       {/* ── Template picker modal ────────────────────────────────────────── */}
       {showTemplatePicker && (
@@ -349,7 +586,12 @@ export function ResumeBuilderPage(): JSX.Element {
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <StepTemplate selected={templateId} onSelect={(id) => { setTemplateId(id); setShowTemplatePicker(false); }} />
+            <StepCustomize
+              templateId={templateId}
+              customization={customization}
+              onTemplateChange={(id) => { changeTemplate(id); setShowTemplatePicker(false); }}
+              onCustomizationChange={setCustomization}
+            />
           </div>
         </div>
       )}
@@ -358,7 +600,7 @@ export function ResumeBuilderPage(): JSX.Element {
       <style>{`
         @media print {
           body > *:not(#resume-print-root) { display: none !important; }
-          #resume-print-root { display: block !important; position: fixed; inset: 0; z-index: 9999; }
+          #resume-print-root { display: block !important; position: static !important; inset: auto !important; z-index: 9999; }
           @page { size: A4; margin: 0; }
         }
       `}</style>

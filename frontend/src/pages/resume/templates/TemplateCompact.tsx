@@ -3,9 +3,10 @@
  * Fits maximum content on one page, no colour distractions
  * Best for: ATS systems, freshers, government form-style CVs
  */
-import type { ResumeData } from "@/types/resume";
+import type { ResumeCustomization, ResumeData } from "@/types/resume";
+import { resumeShellStyle } from "@/pages/resume/resumeTemplateUtils";
 
-interface Props { data: ResumeData; printMode?: boolean; }
+interface Props { data: ResumeData; customization?: ResumeCustomization; printMode?: boolean; }
 
 const ACC  = "#1d4ed8"; // blue accent
 const DARK = "#111827";
@@ -32,18 +33,26 @@ function SectionTitle({ children }: { children: string }) {
   );
 }
 
-export function TemplateCompact({ data, printMode }: Props): JSX.Element {
+export function TemplateCompact({ data, customization, printMode }: Props): JSX.Element {
   const { personal: p, experience, education, skills, projects, certificates } = data;
 
-  const wrap: React.CSSProperties = printMode
-    ? { width: "210mm", minHeight: "297mm", margin: "0 auto", fontFamily: "Arial, sans-serif", fontSize: 11.5, color: DARK, background: "#fff", padding: "28px 36px", boxSizing: "border-box" }
-    : { width: "100%", fontFamily: "Arial, sans-serif", fontSize: 11.5, color: DARK, background: "#fff", padding: "24px 32px", borderRadius: 12 };
+  const marginScale = customization?.pageMargin ?? 1;
+  const wrap = {
+    ...resumeShellStyle(customization, {
+      fontFamily: "Arial, sans-serif",
+      fontSize: 11.5,
+      color: DARK,
+      printMode,
+      padded: true,
+    }),
+    padding: printMode ? `${28 * marginScale}px ${36 * marginScale}px` : `${24 * marginScale}px ${32 * marginScale}px`,
+  };
 
   // Group skills by level for compact display
   const allSkillNames = skills.map((s) => s.name).filter(Boolean);
 
   return (
-    <div style={wrap}>
+    <div className="resume-template" style={wrap}>
       {/* Name header */}
       <div style={{ borderBottom: `2px solid ${DARK}`, paddingBottom: 10, marginBottom: 10 }}>
         <h1 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: DARK, letterSpacing: 0.5 }}>
@@ -63,17 +72,17 @@ export function TemplateCompact({ data, printMode }: Props): JSX.Element {
       </div>
 
       {p.summary && (
-        <div style={{ marginBottom: 10 }}>
+        <div className="resume-section resume-avoid-break" style={{ marginBottom: 10 }}>
           <SectionTitle>Objective / Summary</SectionTitle>
           <p style={{ margin: 0, lineHeight: 1.7, fontSize: 11.5, color: "#374151" }}>{p.summary}</p>
         </div>
       )}
 
       {experience.length > 0 && (
-        <div style={{ marginBottom: 10 }}>
+        <div className="resume-section resume-avoid-break" style={{ marginBottom: 10 }}>
           <SectionTitle>Work Experience</SectionTitle>
           {experience.map((e, i) => (
-            <div key={e.id} style={{ marginBottom: 8 }}>
+            <div key={e.id} className="resume-item resume-avoid-break" style={{ marginBottom: 8 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
                 <span style={{ fontWeight: 700, fontSize: 12 }}>{e.position}</span>
                 <span style={{ fontSize: 10.5, color: "#6b7280", flexShrink: 0, marginLeft: 8 }}>
@@ -93,7 +102,7 @@ export function TemplateCompact({ data, printMode }: Props): JSX.Element {
       )}
 
       {education.length > 0 && (
-        <div style={{ marginBottom: 10 }}>
+        <div className="resume-section resume-avoid-break" style={{ marginBottom: 10 }}>
           <SectionTitle>Education</SectionTitle>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11.5 }}>
             <thead>
@@ -124,7 +133,7 @@ export function TemplateCompact({ data, printMode }: Props): JSX.Element {
       )}
 
       {allSkillNames.length > 0 && (
-        <div style={{ marginBottom: 10 }}>
+        <div className="resume-section resume-avoid-break" style={{ marginBottom: 10 }}>
           <SectionTitle>Skills</SectionTitle>
           <p style={{ margin: 0, fontSize: 11.5, lineHeight: 1.8, color: "#374151" }}>
             {allSkillNames.join(" • ")}
@@ -133,10 +142,10 @@ export function TemplateCompact({ data, printMode }: Props): JSX.Element {
       )}
 
       {projects.length > 0 && (
-        <div style={{ marginBottom: 10 }}>
+        <div className="resume-section resume-avoid-break" style={{ marginBottom: 10 }}>
           <SectionTitle>Projects</SectionTitle>
           {projects.map((pr, i) => (
-            <div key={pr.id} style={{ marginBottom: 6 }}>
+            <div key={pr.id} className="resume-item resume-avoid-break" style={{ marginBottom: 6 }}>
               <span style={{ fontWeight: 700, fontSize: 12 }}>{pr.name}</span>
               {pr.technologies && <span style={{ fontSize: 11, color: "#6b7280" }}> — {pr.technologies}</span>}
               {pr.description && <p style={{ margin: "2px 0 0", fontSize: 11, lineHeight: 1.6, color: "#4b5563" }}>{pr.description}</p>}
@@ -148,7 +157,7 @@ export function TemplateCompact({ data, printMode }: Props): JSX.Element {
       )}
 
       {certificates.length > 0 && (
-        <div>
+        <div className="resume-section resume-avoid-break">
           <SectionTitle>Certifications</SectionTitle>
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             {certificates.map((c) => (

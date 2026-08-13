@@ -2,9 +2,10 @@
  * Slate Template — Dark charcoal header, clean right sidebar
  * Best for: Corporate, management, senior government roles
  */
-import type { ResumeData } from "@/types/resume";
+import type { ResumeCustomization, ResumeData } from "@/types/resume";
+import { resumeShellStyle } from "@/pages/resume/resumeTemplateUtils";
 
-interface Props { data: ResumeData; printMode?: boolean; }
+interface Props { data: ResumeData; customization?: ResumeCustomization; printMode?: boolean; }
 
 const SLATE_DARK = "#1e293b";
 const SLATE_MID  = "#334155";
@@ -21,7 +22,7 @@ function fmtDate(d: string): string {
 
 function MainSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: 18 }}>
+    <div className="resume-section resume-avoid-break" style={{ marginBottom: 18 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
         <div style={{ width: 3, height: 16, background: CYAN, borderRadius: 2 }} />
         <span style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: "0.09em", color: SLATE_DARK, textTransform: "uppercase" }}>
@@ -42,16 +43,21 @@ function SideLabel({ children }: { children: string }) {
   );
 }
 
-export function TemplateSlate({ data, printMode }: Props): JSX.Element {
+export function TemplateSlate({ data, customization, printMode }: Props): JSX.Element {
   const { personal: p, experience, education, skills, projects, certificates } = data;
   const levelPct: Record<string, number> = { Beginner: 25, Intermediate: 50, Advanced: 75, Expert: 100 };
 
-  const wrap: React.CSSProperties = printMode
-    ? { width: "210mm", minHeight: "297mm", margin: "0 auto", fontFamily: "'Segoe UI', Arial, sans-serif", fontSize: 12.5, color: SLATE_DARK, background: "#fff", boxSizing: "border-box", display: "flex", flexDirection: "column" }
-    : { width: "100%", fontFamily: "'Segoe UI', Arial, sans-serif", fontSize: 12.5, color: SLATE_DARK, background: "#fff", borderRadius: 12, overflow: "hidden", display: "flex", flexDirection: "column" };
+  const wrap = resumeShellStyle(customization, {
+    fontFamily: "'Segoe UI', Arial, sans-serif",
+    fontSize: 12.5,
+    color: SLATE_DARK,
+    printMode,
+    display: "flex",
+    flexDirection: "column",
+  });
 
   return (
-    <div style={wrap}>
+    <div className="resume-template" style={wrap}>
       {/* Header — full width dark block */}
       <div style={{ background: SLATE_DARK, color: "#fff", padding: "28px 36px 24px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
@@ -95,7 +101,7 @@ export function TemplateSlate({ data, printMode }: Props): JSX.Element {
           {experience.length > 0 && (
             <MainSection title="Experience">
               {experience.map((e) => (
-                <div key={e.id} style={{ marginBottom: 14, paddingBottom: 12, borderBottom: "1px solid #f1f5f9" }}>
+                <div key={e.id} className="resume-item resume-avoid-break" style={{ marginBottom: 14, paddingBottom: 12, borderBottom: "1px solid #f1f5f9" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                     <div>
                       <p style={{ margin: 0, fontWeight: 700, fontSize: 13, color: SLATE_DARK }}>{e.position}</p>
@@ -118,7 +124,7 @@ export function TemplateSlate({ data, printMode }: Props): JSX.Element {
           {education.length > 0 && (
             <MainSection title="Education">
               {education.map((e) => (
-                <div key={e.id} style={{ marginBottom: 10, display: "flex", justifyContent: "space-between" }}>
+                <div key={e.id} className="resume-item resume-avoid-break" style={{ marginBottom: 10, display: "flex", justifyContent: "space-between" }}>
                   <div>
                     <p style={{ margin: 0, fontWeight: 700, fontSize: 13 }}>{e.degree}{e.field ? ` in ${e.field}` : ""}</p>
                     <p style={{ margin: "2px 0 0", fontSize: 12, color: CYAN, fontWeight: 600 }}>{e.institution}</p>
@@ -135,7 +141,7 @@ export function TemplateSlate({ data, printMode }: Props): JSX.Element {
           {projects.length > 0 && (
             <MainSection title="Projects">
               {projects.map((pr) => (
-                <div key={pr.id} style={{ marginBottom: 10 }}>
+                <div key={pr.id} className="resume-item resume-avoid-break" style={{ marginBottom: 10 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <p style={{ margin: 0, fontWeight: 700, fontSize: 13 }}>{pr.name}</p>
                     {pr.technologies && (
@@ -158,7 +164,7 @@ export function TemplateSlate({ data, printMode }: Props): JSX.Element {
             <div style={{ marginBottom: 20 }}>
               <SideLabel>Skills</SideLabel>
               {skills.map((s) => (
-                <div key={s.id} style={{ marginBottom: 9 }}>
+                <div key={s.id} className="resume-item resume-avoid-break" style={{ marginBottom: 9 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11.5, marginBottom: 3 }}>
                     <span style={{ fontWeight: 600, color: SLATE_DARK }}>{s.name}</span>
                     <span style={{ fontSize: 10, color: "#94a3b8" }}>{levelPct[s.level]}%</span>
@@ -175,7 +181,7 @@ export function TemplateSlate({ data, printMode }: Props): JSX.Element {
             <div style={{ marginBottom: 20 }}>
               <SideLabel>Certifications</SideLabel>
               {certificates.map((c) => (
-                <div key={c.id} style={{ marginBottom: 9, paddingBottom: 8, borderBottom: "1px solid #e2e8f0" }}>
+                <div key={c.id} className="resume-item resume-avoid-break" style={{ marginBottom: 9, paddingBottom: 8, borderBottom: "1px solid #e2e8f0" }}>
                   <p style={{ margin: 0, fontSize: 12, fontWeight: 600, color: SLATE_DARK }}>{c.name}</p>
                   <p style={{ margin: "2px 0 0", fontSize: 10.5, color: "#64748b" }}>
                     {c.issuer}{c.date ? ` · ${fmtDate(c.date)}` : ""}
