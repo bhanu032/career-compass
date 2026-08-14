@@ -7,8 +7,8 @@
  */
 import { useRef, useCallback, useEffect } from "react";
 import {
-  CheckCircle2, ChevronLeft, ChevronRight,
-  Download, Eye, FileText, Palette, Plus, Sparkles, Trash2, X, ZoomIn, ZoomOut,
+  AlertCircle, CheckCircle2, ChevronLeft, ChevronRight,
+  Download, Eye, FileText, Loader2, Palette, Plus, Sparkles, Trash2, X, ZoomIn, ZoomOut,
 } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
@@ -27,6 +27,7 @@ import { ResumePreview }  from "@/pages/resume/ResumePreview";
 import { customizationForTemplate, withTemplateAccent } from "@/pages/resume/resumeTemplateUtils";
 import { nanoid } from "@/utils/nanoid";
 import { formatResumeData } from "@/utils/resumeParser";
+import { useResumeDownload } from "@/hooks/useResumeDownload";
 
 // Redux
 import {
@@ -98,7 +99,10 @@ export function ResumeEditorPage(): JSX.Element {
   const [zoomIdx, setZoomIdx]                   = useState(1);
   const [showPreviewMobile, setShowPreviewMobile] = useState(false);
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
-  const [isDownloading, setIsDownloading]       = useState(false);
+
+  // PDF download (direct browser download, no new tab)
+  const { isDownloading, progress, error: downloadError, triggerDownload, clearError } =
+    useResumeDownload();
 
   const zoom             = ZOOM_STEPS[zoomIdx];
   const paperWidth       = 794;
@@ -160,10 +164,7 @@ export function ResumeEditorPage(): JSX.Element {
   }
 
   function handleDownloadPdf() {
-    if (isDownloading) return;
-    setIsDownloading(true);
-    window.open("/resume-builder/print", "_blank");
-    setTimeout(() => setIsDownloading(false), 1000);
+    void triggerDownload(data, templateId, customization);
   }
 
   const showSectionTools = step >= 1 && step <= 5;
@@ -275,8 +276,13 @@ export function ResumeEditorPage(): JSX.Element {
             disabled={isDownloading}
             className={classNames("flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition", accentBtn)}
           >
-            <Download className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">{isDownloading ? "Opening..." : "Download PDF"}</span>
+            {isDownloading
+              ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              : <Download className="h-3.5 w-3.5" />
+            }
+            <span className="hidden sm:inline">
+              {isDownloading ? `${progress}%…` : "Download PDF"}
+            </span>
           </button>
         </div>
       </div>
@@ -369,8 +375,8 @@ export function ResumeEditorPage(): JSX.Element {
             ) : (
               <button type="button" onClick={handleDownloadPdf} disabled={isDownloading}
                 className="btn-primary flex items-center gap-1.5 py-2 text-sm">
-                <Download className="h-4 w-4" />
-                {isDownloading ? "Downloading..." : "Download"}
+                {isDownloading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+                {isDownloading ? `Generating ${progress}%…` : "Download"}
               </button>
             )}
           </div>
@@ -443,8 +449,8 @@ export function ResumeEditorPage(): JSX.Element {
           <div className="flex gap-3 bg-slate-900 p-4">
             <button type="button" onClick={handleDownloadPdf} disabled={isDownloading}
               className="btn-primary flex flex-1 items-center justify-center gap-2">
-              <Download className="h-4 w-4" />
-              {isDownloading ? "Opening..." : "Download PDF"}
+              {isDownloading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+              {isDownloading ? `Generating ${progress}%…` : "Download PDF"}
             </button>
           </div>
         </div>
@@ -470,6 +476,52 @@ export function ResumeEditorPage(): JSX.Element {
               onCustomizationChange={(c) => dispatch(setCustomizationAction(c))}
             />
           </div>
+        </div>
+      )}
+
+      {/* ── PDF generation progress overlay ──────────────────────────────── */}
+      {isDownloading && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className={classNames(
+            "flex flex-col items-center gap-4 rounded-2xl border p-8 shadow-2xl w-72",
+            isDark ? "bg-[#0d0e1a] border-indigo-900/40" : "bg-white border-slate-200"
+          )}>
+            <Loader2 className={classNames("h-10 w-10 animate-spin", isDark ? "text-indigo-400" : "text-violet-600")} />
+            <div className="w-full">
+              <div className="flex justify-between mb-1">
+                <span className={classNames("text-sm font-semibold", isDark ? "text-slate-200" : "text-slate-700")}>
+                  Generating PDF…
+                </span>
+                <span className={classNames("text-sm font-bold", isDark ? "text-indigo-400" : "text-violet-600")}>
+                  {progress}%
+                </span>
+              </div>
+              <div className={classNames("h-2 w-full rounded-full overflow-hidden", isDark ? "bg-slate-700" : "bg-slate-200")}>
+                <div
+                  className={classNames("h-full rounded-full transition-all duration-300", isDark ? "bg-indigo-500" : "bg-violet-600")}
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+            </div>
+            <p className={classNames("text-xs text-center", isDark ? "text-slate-500" : "text-slate-400")}>
+              Capturing resume and building PDF — please wait
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* ── Download error toast ──────────────────────────────────────────── */}
+      {downloadError && (
+        <div className="fixed bottom-5 left-1/2 z-[70] -translate-x-1/2 flex items-center gap-3 rounded-xl border border-red-300 bg-red-50 px-4 py-3 shadow-lg max-w-sm w-[calc(100vw-2rem)]">
+          <AlertCircle className="h-5 w-5 shrink-0 text-red-500" />
+          <p className="flex-1 text-sm text-red-700">{downloadError}</p>
+          <button
+            type="button"
+            onClick={clearError}
+            className="ml-2 rounded-lg p-1 text-red-400 hover:bg-red-100 transition"
+          >
+            <X className="h-4 w-4" />
+          </button>
         </div>
       )}
 
