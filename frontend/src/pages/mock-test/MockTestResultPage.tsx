@@ -8,10 +8,21 @@ import { classNames } from "@/utils/format";
 import { getPaperById } from "@/data/mockTests";
 import type { MockPaper, TestAttempt, TestResult, SectionResult } from "@/types/mockTest";
 
-// ── Score computation ─────────────────────────────────────────────────────────
+// ── Score computation with Official Board Grading Rules ──────────────────────
 function computeResult(attempt: TestAttempt, paper: MockPaper): TestResult {
+  const isSSC      = paper.examId.includes("ssc");
+  const isBanking  = paper.examId.includes("ibps") || paper.examId.includes("sbi");
+  const isRailways = paper.examId.includes("rrb");
+  const isUPSC     = paper.examId.includes("upsc");
+  const isTeaching = paper.examId.includes("ctet") || paper.examId.includes("uptet");
+
   const MARKS_PER_Q = paper.totalMarks / paper.totalQuestions;
-  const NEGATIVE    = MARKS_PER_Q * 0.5;
+  const NEGATIVE    = isTeaching ? 0
+                    : isSSC ? 0.5
+                    : isBanking ? 0.25
+                    : isRailways ? 0.33
+                    : isUPSC ? 0.66
+                    : MARKS_PER_Q * 0.25;
 
   let correct = 0, incorrect = 0, skipped = 0, totalMarks = 0;
   const sectionResults: SectionResult[] = [];

@@ -48,14 +48,17 @@ export function ResumePrintPage(): JSX.Element {
       <style>{`
         * { box-sizing: border-box; }
         html, body { margin: 0; padding: 0; background: #fff; }
-        @page { size: A4 portrait; margin: 12mm 15mm 12mm 15mm; }
+        @page { size: A4 portrait; margin: 0mm !important; }
         @media print {
-          html, body { margin: 0; padding: 0; background: #fff !important; }
+          html, body { margin: 0 !important; padding: 0 !important; background: #fff !important; }
           #print-toolbar { display: none !important; }
           #resume-print-root {
             margin: 0 !important;
+            padding: 0 !important;
             box-shadow: none !important;
             width: 100% !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
           }
         }
         @media screen {

@@ -86,11 +86,20 @@ export function ResumePreview({ data, templateId, customization, printMode = tru
             body > * { display: none !important; }
             body > #resume-print-root,
             body > * > #resume-print-root { display: block !important; }
-            #resume-print-root { position: static !important; inset: auto !important; background: #fff !important; }
-            #resume-print-root * { display: revert; }
+            #resume-print-root {
+              position: static !important;
+              inset: auto !important;
+              background: #fff !important;
+              margin: 0 !important;
+              padding: 0 !important;
+              box-shadow: none !important;
+              width: 100% !important;
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+            }
             @page {
               size: A4 portrait;
-              margin: 10mm 12mm 10mm 12mm;
+              margin: 0mm !important;
             }
           }
         `}</style>

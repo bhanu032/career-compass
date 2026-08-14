@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import { ShareButton } from "@/components/ShareButton";
+import { JobMockFinder } from "@/components/JobMockFinder";
 import { Skeleton } from "@/components/Skeleton";
 import { useAuth } from "@/hooks/useAuth";
 import { useToggleBookmark } from "@/hooks/useBookmarks";
@@ -223,6 +224,11 @@ export function JobDetailsPage(): JSX.Element {
               )}
             </div>
           )}
+
+          {/* Web Mock Test Finder component */}
+          <div className="mt-8">
+            <JobMockFinder jobTitle={job.title} organization={job.organization} category={job.category} />
+          </div>
         </article>
 
         <aside className="card sticky top-20 h-fit space-y-3 p-6">

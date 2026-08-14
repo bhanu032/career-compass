@@ -124,8 +124,13 @@ export async function exportResumeToPdf({
     transform:  "none",
     position:   "static",
     margin:     "0",
+    padding:    "0",
+    boxShadow:  "none",
+    border:     "none",
     visibility: "visible",
     opacity:    "1",
+    webkitPrintColorAdjust: "exact",
+    printColorAdjust: "exact",
   });
   container.appendChild(clone);
   document.body.appendChild(container);

@@ -1,5 +1,6 @@
 import { Send, Trash2, X } from "lucide-react";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 
 import { DavidAvatarSafe } from "@/components/DavidAvatar";
@@ -295,15 +296,31 @@ export function ChatWidget({ jobId }: ChatWidgetProps): JSX.Element {
                     )}
                     <div
                       className={classNames(
-                        "max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm shadow-sm",
+                        "max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm shadow-sm",
                         msg.role === "user"
                           ? classNames("rounded-br-sm", userMsgBg)
                           : classNames("rounded-bl-sm", assistantMsgBg),
                       )}
                     >
                       {msg.role === "assistant" ? (
-                        <div className="prose prose-sm max-w-none dark:prose-invert prose-p:my-1 prose-ul:my-1 prose-li:my-0.5 prose-headings:my-1">
-                          <ReactMarkdown>{msg.content}</ReactMarkdown>
+                        <div>
+                          <div className="prose prose-sm max-w-none dark:prose-invert prose-p:my-1 prose-ul:my-1 prose-li:my-0.5 prose-headings:my-1">
+                            <ReactMarkdown>{msg.content}</ReactMarkdown>
+                          </div>
+                          {msg.actions && msg.actions.length > 0 && (
+                            <div className="mt-3 pt-2.5 border-t border-violet-200/50 dark:border-indigo-800/40 flex flex-wrap gap-1.5">
+                              {msg.actions.map((act) => (
+                                <Link
+                                  key={act.url + act.label}
+                                  to={act.url}
+                                  onClick={() => setOpen(false)}
+                                  className="inline-flex items-center gap-1 rounded-xl bg-violet-600 text-white px-2.5 py-1 text-xs font-bold shadow-sm hover:bg-violet-500 transition active:scale-95"
+                                >
+                                  {act.label}
+                                </Link>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       ) : (
                         <p className="whitespace-pre-wrap">{msg.content}</p>
