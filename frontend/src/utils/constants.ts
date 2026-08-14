@@ -59,6 +59,7 @@ export const SORT_OPTIONS: readonly { value: string; label: string }[] = [
 export const PAGE_SIZE = 12;
 
 export const SCRAPER_SOURCES: readonly string[] = [
+  "apify_private_jobs",
   "sarkari_result",
   "ssc",
   "upsc",
