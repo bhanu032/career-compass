@@ -5,6 +5,11 @@ import { IBPS_PO_2024_SET1 } from "@/data/papers/ibpsPo";
 import { RRB_NTPC_2024_SET1 } from "@/data/papers/rrbNtpc";
 import { UPSC_CSE_2024_GS1 } from "@/data/papers/upsc";
 import { CTET_2024_PAPER1_SET1, CTET_2024_PAPER2_SET1 } from "@/data/papers/ctet";
+import { SSC_CGL_2024_SET1 } from "@/data/papers/sscCgl";
+import { UPPSC_PCS_2024_PRE } from "@/data/papers/statePsc";
+import { NDA_2024_GAT } from "@/data/papers/defence";
+import { SBI_PO_2024_PRELIMS } from "@/data/papers/sbiPo";
+import { RRB_GROUPD_2024_CBT } from "@/data/papers/rrbGroupD";
 
 // ── SSC CGL 2025 — 12 Sept Shift 2 ──────────────────────────────────────────
 // Questions sourced from the Similar-Based Paper (Testbook)
@@ -726,7 +731,7 @@ export const EXAM_GROUPS: ExamGroup[] = [
         tier: "Tier-I",
         description: "Combined Graduate Level — Tier I (Preliminary). 100 Qs, 60 mins, 200 marks. Negative marking: −0.5 per wrong answer.",
         totalPapers: 8,
-        papers: [SSC_CGL_2025_SHIFT2],
+        papers: [SSC_CGL_2025_SHIFT2, SSC_CGL_2024_SET1],
       },
       {
         id: "ssc-chsl",
@@ -774,7 +779,7 @@ export const EXAM_GROUPS: ExamGroup[] = [
         tier: "Prelims",
         description: "State Bank of India — PO Prelims. 100 Qs, 60 mins.",
         totalPapers: 5,
-        papers: [],
+        papers: [SBI_PO_2024_PRELIMS],
       },
     ],
   },
@@ -796,6 +801,15 @@ export const EXAM_GROUPS: ExamGroup[] = [
         description: "Railway Recruitment Board — NTPC CBT-1. 100 Qs, 90 mins.",
         totalPapers: 8,
         papers: [RRB_NTPC_2024_SET1],
+      },
+      {
+        id: "rrb-groupd",
+        examGroupId: "railways",
+        name: "RRB Group D",
+        tier: "CBT",
+        description: "Railway Recruitment Board — Group D Computer Based Test. 100 Qs, 90 mins.",
+        totalPapers: 7,
+        papers: [RRB_GROUPD_2024_CBT],
       },
     ],
   },
@@ -837,7 +851,7 @@ export const EXAM_GROUPS: ExamGroup[] = [
         tier: "Prelims",
         description: "Uttar Pradesh PSC — Preliminary. 150 Qs, 120 mins.",
         totalPapers: 6,
-        papers: [],
+        papers: [UPPSC_PCS_2024_PRE],
       },
     ],
   },
@@ -858,7 +872,7 @@ export const EXAM_GROUPS: ExamGroup[] = [
         tier: "GAT",
         description: "National Defence Academy — General Ability Test. 150 Qs, 150 mins.",
         totalPapers: 6,
-        papers: [],
+        papers: [NDA_2024_GAT],
       },
     ],
   },
