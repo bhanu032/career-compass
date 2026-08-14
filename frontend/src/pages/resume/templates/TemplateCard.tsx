@@ -22,7 +22,7 @@ const DEFAULT_ACCENT = "#4682bf";
 export function TemplateCard({ data, customization, printMode }: Props): JSX.Element {
   const { personal: p, experience, education, skills, projects, certificates } = data;
   const accent = customization?.accentColor || DEFAULT_ACCENT;
-  const gap = sectionGap(customization, 20);
+  const gap = sectionGap(customization, 14);  // was 20
   const fmt = (d: string) => formatResumeDate(d, customization?.dateFormat);
   const { h, v } = pageMargins(customization);
 

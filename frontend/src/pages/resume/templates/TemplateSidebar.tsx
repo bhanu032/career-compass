@@ -22,7 +22,7 @@ export function TemplateSidebar({ data, customization, printMode }: Props): JSX.
   const { personal: p, experience, education, skills, projects, certificates } = data;
   const accent = customization?.accentColor || DEFAULT_ACCENT;
   const sidebarBg = "#2d2d2d";
-  const gap = sectionGap(customization, 24);
+  const gap = sectionGap(customization, 16);  // was 24
   const fmt = (d: string) => formatResumeDate(d, customization?.dateFormat);
   const { h, v } = pageMargins(customization);
 

@@ -161,7 +161,7 @@ export function TemplateProfessional({
     templateId === "custom"
       ? customization?.accentColor || variant.accent
       : variant.accent;
-  const gap = sectionGap(customization, templateId === "ats" ? 14 : 18);
+  const gap = sectionGap(customization, templateId === "ats" ? 11 : 14);  // was 14/18
   const fmt = (date: string) => formatResumeDate(date, customization?.dateFormat);
   const { h, v } = pageMargins(customization);
   const { personal: p, experience, education, skills, projects, certificates } = data;
@@ -529,8 +529,8 @@ export function TemplateProfessional({
       <header
         style={{
           borderBottom: `3px solid ${accent}`,
-          paddingBottom: 14,
-          marginBottom: 20,
+          paddingBottom: 10,
+          marginBottom: 14,
         }}
       >
         <div

@@ -51,7 +51,7 @@ export function TemplateClassic({ data, customization, printMode }: Props): JSX.
   const { personal: p, experience, education, skills, projects, certificates } = data;
   const levelBar: Record<string, number> = { Beginner: 25, Intermediate: 50, Advanced: 75, Expert: 100 };
   const accent = customization?.accentColor || DEFAULT_ACCENT;
-  const gap = sectionGap(customization, 16);
+  const gap = sectionGap(customization, 12);  // was 16
   const fmt = (date: string) => formatResumeDate(date, customization?.dateFormat);
   const showLevels = customization?.showSkillLevels !== false;
   const { h, v } = pageMargins(customization);

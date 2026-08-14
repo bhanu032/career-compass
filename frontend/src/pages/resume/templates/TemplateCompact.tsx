@@ -42,7 +42,7 @@ function SectionTitle({ children }: { children: string }) {
 
 export function TemplateCompact({ data, customization, printMode }: Props): JSX.Element {
   const { personal: p, experience, education, skills, projects, certificates } = data;
-  const gap = sectionGap(customization, 10);
+  const gap = sectionGap(customization, 8);   // was 10
   const fmt = (d: string) => formatResumeDate(d, customization?.dateFormat);
   const { h, v } = pageMargins(customization);
 

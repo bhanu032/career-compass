@@ -21,7 +21,7 @@ const DEFAULT_ACCENT = "#54AFE4";
 export function TemplateLato({ data, customization, printMode }: Props): JSX.Element {
   const { personal: p, experience, education, skills, projects, certificates } = data;
   const accent = customization?.accentColor || DEFAULT_ACCENT;
-  const gap = sectionGap(customization, 32);
+  const gap = sectionGap(customization, 20);  // was 32
   const fmt = (d: string) => formatResumeDate(d, customization?.dateFormat);
   const { h, v } = pageMargins(customization);
 
@@ -78,8 +78,8 @@ export function TemplateLato({ data, customization, printMode }: Props): JSX.Ele
       style={{
         display: "flex",
         gap: 16,
-        marginBottom: 28,
-        lineHeight: 1.6,
+        marginBottom: 16,
+        lineHeight: 1.5,
       }}
     >
       <div style={{ width: "38%", flexShrink: 0, fontSize: 12 }}>{left}</div>
@@ -90,7 +90,7 @@ export function TemplateLato({ data, customization, printMode }: Props): JSX.Ele
   return (
     <div className="resume-template" style={{ ...shell, padding: `${v}px ${h}px` }}>
       {/* Header */}
-      <div style={{ marginBottom: gap }}>
+      <div style={{ marginBottom: 18 }}>
         <div style={{ marginBottom: 6 }}>
           <span style={{ fontSize: 36, fontWeight: 700, letterSpacing: 1 }}>
             {(p.fullName || "Your Name").split(" ")[0]}

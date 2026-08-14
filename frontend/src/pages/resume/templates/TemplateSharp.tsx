@@ -46,7 +46,7 @@ function Divider() {
 export function TemplateSharp({ data, customization, printMode }: Props): JSX.Element {
   const { personal: p, experience, education, skills, projects, certificates } = data;
   const levelPct: Record<string, number> = { Beginner: 25, Intermediate: 50, Advanced: 75, Expert: 100 };
-  const gap = sectionGap(customization, 16);
+  const gap = sectionGap(customization, 12);  // was 16
   const fmt = (d: string) => formatResumeDate(d, customization?.dateFormat);
   const { h, v } = pageMargins(customization);
 

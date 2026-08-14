@@ -50,7 +50,7 @@ function Section({ title, children, gap }: { title: string; children: React.Reac
 
 export function TemplateExecutive({ data, customization, printMode }: Props): JSX.Element {
   const { personal: p, experience, education, skills, projects, certificates } = data;
-  const gap = sectionGap(customization, 18);
+  const gap = sectionGap(customization, 14);  // was 18
   const fmt = (d: string) => formatResumeDate(d, customization?.dateFormat);
   const { h, v } = pageMargins(customization);
 

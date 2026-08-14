@@ -45,9 +45,9 @@ export const SKILL_STYLE_OPTIONS: Array<{ label: string; value: ResumeSkillStyle
 ];
 
 /** Base horizontal page margin in px (scales with pageMargin multiplier). */
-export const PAGE_MARGIN_H_BASE = 36;
+export const PAGE_MARGIN_H_BASE = 28;
 /** Base vertical page margin in px (scales with pageMargin multiplier). */
-export const PAGE_MARGIN_V_BASE = 28;
+export const PAGE_MARGIN_V_BASE = 20;
 
 /** Compute scaled page margins from customization. */
 export function pageMargins(customization?: ResumeCustomization): {
