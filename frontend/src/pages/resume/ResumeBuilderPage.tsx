@@ -479,37 +479,6 @@ export function ResumeEditorPage(): JSX.Element {
         </div>
       )}
 
-      {/* ── PDF generation progress overlay ──────────────────────────────── */}
-      {isDownloading && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className={classNames(
-            "flex flex-col items-center gap-4 rounded-2xl border p-8 shadow-2xl w-72",
-            isDark ? "bg-[#0d0e1a] border-indigo-900/40" : "bg-white border-slate-200"
-          )}>
-            <Loader2 className={classNames("h-10 w-10 animate-spin", isDark ? "text-indigo-400" : "text-violet-600")} />
-            <div className="w-full">
-              <div className="flex justify-between mb-1">
-                <span className={classNames("text-sm font-semibold", isDark ? "text-slate-200" : "text-slate-700")}>
-                  Generating PDF…
-                </span>
-                <span className={classNames("text-sm font-bold", isDark ? "text-indigo-400" : "text-violet-600")}>
-                  {progress}%
-                </span>
-              </div>
-              <div className={classNames("h-2 w-full rounded-full overflow-hidden", isDark ? "bg-slate-700" : "bg-slate-200")}>
-                <div
-                  className={classNames("h-full rounded-full transition-all duration-300", isDark ? "bg-indigo-500" : "bg-violet-600")}
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-            </div>
-            <p className={classNames("text-xs text-center", isDark ? "text-slate-500" : "text-slate-400")}>
-              Capturing resume and building PDF — please wait
-            </p>
-          </div>
-        </div>
-      )}
-
       {/* ── Download error toast ──────────────────────────────────────────── */}
       {downloadError && (
         <div className="fixed bottom-5 left-1/2 z-[70] -translate-x-1/2 flex items-center gap-3 rounded-xl border border-red-300 bg-red-50 px-4 py-3 shadow-lg max-w-sm w-[calc(100vw-2rem)]">
