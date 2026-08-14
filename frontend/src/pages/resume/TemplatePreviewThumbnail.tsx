@@ -29,7 +29,7 @@ type FillMode = "contain" | "cover";
 
 function useFitScale(enabled: boolean, mode: FillMode = "cover") {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [layout, setLayout] = useState({ scale: 0.2, offsetX: 0, offsetY: 0 });
+  const [scale, setScale] = useState(0.2);
 
   useEffect(() => {
     if (!enabled) return;
@@ -42,19 +42,11 @@ function useFitScale(enabled: boolean, mode: FillMode = "cover") {
       const height = el.clientHeight;
       if (width <= 0 || height <= 0) return;
 
+      // cover → scale to fill width (card aspect is 3:4, A4 is ~0.707:1 — width is the binding axis)
+      // contain → scale to fit fully (use the smaller axis)
       const scaleX = width / A4_WIDTH;
       const scaleY = height / A4_HEIGHT;
-      const scale = mode === "cover" ? Math.max(scaleX, scaleY) : Math.min(scaleX, scaleY);
-
-      const scaledWidth = A4_WIDTH * scale;
-      const scaledHeight = A4_HEIGHT * scale;
-
-      setLayout({
-        scale,
-        // Center horizontally; pin to top vertically (no gap above resume)
-        offsetX: (width - scaledWidth) / 2,
-        offsetY: mode === "contain" ? 0 : (height - scaledHeight) / 2,
-      });
+      setScale(mode === "cover" ? scaleX : Math.min(scaleX, scaleY));
     };
 
     update();
@@ -63,7 +55,7 @@ function useFitScale(enabled: boolean, mode: FillMode = "cover") {
     return () => observer.disconnect();
   }, [enabled, mode]);
 
-  return { containerRef, layout };
+  return { containerRef, scale };
 }
 
 export function TemplatePreviewThumbnail({
@@ -78,7 +70,7 @@ export function TemplatePreviewThumbnail({
   const resolvedCustomization =
     customization ?? customizationForTemplate(templateId, DEFAULT_RESUME_CUSTOMIZATION);
 
-  const { containerRef, layout } = useFitScale(fill, fillMode);
+  const { containerRef, scale: fitScale } = useFitScale(fill, fillMode);
 
   const preview = (
     <ResumePreview
@@ -106,14 +98,13 @@ export function TemplatePreviewThumbnail({
         <div
           style={{
             position: "absolute",
-            left: layout.offsetX,
-            top: layout.offsetY,
-            transform: `scale(${layout.scale})`,
+            top: 0,
+            left: 0,
+            transform: `scale(${fitScale})`,
             transformOrigin: "top left",
             width: A4_WIDTH,
             height: A4_HEIGHT,
             pointerEvents: "none",
-            overflow: "hidden",
           }}
         >
           {preview}
