@@ -28,6 +28,7 @@ import { JobListSkeleton } from "@/components/Skeleton";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useHomeData, useInfiniteJobs } from "@/hooks/useJobs";
 import { useProgressivePrivateJobs } from "@/hooks/useProgressiveJobs";
+import { useLiveSearchScraper } from "@/hooks/useLiveSearchScraper";
 import type { PrivateJob } from "@/data/privateJobs";
 import {
   calculateGovtJobMatch,
@@ -52,14 +53,6 @@ export function JobsPage(): JSX.Element {
   });
   const { data: homeData } = useHomeData();
 
-  // Fetch Live Progressive Private Jobs
-  const { jobs: privateJobs, isStreaming: isPrivateStreaming } = useProgressivePrivateJobs();
-
-  // Active Tab & Profile state
-  const [activeTab, setActiveTab] = useState<MainTab>("all");
-  const [userProfile, setUserProfile] = useState<UserJobProfile>(() => getUserJobProfile());
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-
   // Filter States
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -67,6 +60,17 @@ export function JobsPage(): JSX.Element {
   const [selectedLocation, setSelectedLocation] = useState("All");
   const [selectedSource, setSelectedSource] = useState("All");
   const [sortBy, setSortBy] = useState<SortOption>("relevance");
+
+  // Fetch Live Progressive Private Jobs & Real-Time Search Scraper
+  const { jobs: progressivePrivateJobs, isStreaming: isPrivateStreaming } = useProgressivePrivateJobs();
+  const { jobs: scrapedPrivateJobs, isScraping: isScraperActive } = useLiveSearchScraper(searchQuery);
+
+  const privateJobs = searchQuery.trim() ? scrapedPrivateJobs : progressivePrivateJobs;
+
+  // Active Tab & Profile state
+  const [activeTab, setActiveTab] = useState<MainTab>("all");
+  const [userProfile, setUserProfile] = useState<UserJobProfile>(() => getUserJobProfile());
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   const govtJobs = useMemo(() => govtData?.pages.flatMap((p) => p.items) ?? [], [govtData]);
   const admitCards = homeData?.latest_admit_cards ?? [];
@@ -289,6 +293,12 @@ export function JobsPage(): JSX.Element {
                 className="input pl-10 text-sm w-full"
               />
             </div>
+            {isScraperActive && (
+              <div className="flex items-center gap-2 text-xs font-bold text-blue-600 dark:text-blue-400">
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                Scraping live jobs in real-time across LinkedIn, Indeed, Glassdoor &amp; Govt Portals...
+              </div>
+            )}
 
             {/* Filter Selectors Grid */}
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
