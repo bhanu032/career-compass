@@ -90,13 +90,30 @@ export type TemplateId =
   | "portfolio"
   | "custom";
 
+export type TemplateCategory =
+  | "professional"
+  | "modern"
+  | "tech"
+  | "student"
+  | "creative";
+
 export interface ResumeTemplate {
   id: TemplateId;
   name: string;
   description: string;
   accent: string;
-  preview: string; // color key for MiniPreview
+  preview: string; // color key for legacy fallback
+  category: TemplateCategory;
 }
+
+export const TEMPLATE_CATEGORIES: Array<{ id: "all" | TemplateCategory; name: string }> = [
+  { id: "all", name: "All Templates" },
+  { id: "professional", name: "Professional" },
+  { id: "modern", name: "Modern" },
+  { id: "tech", name: "Tech" },
+  { id: "student", name: "Student" },
+  { id: "creative", name: "Creative" },
+];
 
 export const RESUME_TEMPLATES: ResumeTemplate[] = [
   {
@@ -105,6 +122,7 @@ export const RESUME_TEMPLATES: ResumeTemplate[] = [
     description: "Traditional two-column layout, perfect for government & PSU jobs",
     accent: "#1e3a5f",
     preview: "blue",
+    category: "professional",
   },
   {
     id: "modern",
@@ -112,6 +130,7 @@ export const RESUME_TEMPLATES: ResumeTemplate[] = [
     description: "Clean sidebar design with bold typography for tech & private sector",
     accent: "#7c3aed",
     preview: "purple",
+    category: "modern",
   },
   {
     id: "minimal",
@@ -119,6 +138,7 @@ export const RESUME_TEMPLATES: ResumeTemplate[] = [
     description: "Elegant single-column with clean lines - universally accepted ATS",
     accent: "#0f766e",
     preview: "teal",
+    category: "student",
   },
   {
     id: "executive",
@@ -126,6 +146,7 @@ export const RESUME_TEMPLATES: ResumeTemplate[] = [
     description: "Premium gold accents - ideal for senior & director-level positions",
     accent: "#92400e",
     preview: "amber",
+    category: "professional",
   },
   {
     id: "sharp",
@@ -133,6 +154,7 @@ export const RESUME_TEMPLATES: ResumeTemplate[] = [
     description: "Bold red accent - great for banking, SSC CGL & fresh graduates",
     accent: "#b91c1c",
     preview: "red",
+    category: "student",
   },
   {
     id: "slate",
@@ -140,6 +162,7 @@ export const RESUME_TEMPLATES: ResumeTemplate[] = [
     description: "Dark charcoal header with cyan highlights - corporate & management",
     accent: "#0891b2",
     preview: "cyan",
+    category: "modern",
   },
   {
     id: "timeline",
@@ -147,6 +170,7 @@ export const RESUME_TEMPLATES: ResumeTemplate[] = [
     description: "Dot-and-line timeline layout - stands out for experienced profiles",
     accent: "#059669",
     preview: "green",
+    category: "creative",
   },
   {
     id: "compact",
@@ -154,6 +178,7 @@ export const RESUME_TEMPLATES: ResumeTemplate[] = [
     description: "Dense ATS-optimised single column - maximum content on one page",
     accent: "#1d4ed8",
     preview: "navy",
+    category: "tech",
   },
   {
     id: "ats",
@@ -161,6 +186,7 @@ export const RESUME_TEMPLATES: ResumeTemplate[] = [
     description: "Recruiter-friendly, single-column format for job portals and ATS systems",
     accent: "#2563eb",
     preview: "blue",
+    category: "tech",
   },
   {
     id: "consulting",
@@ -168,6 +194,7 @@ export const RESUME_TEMPLATES: ResumeTemplate[] = [
     description: "Polished business resume for analyst, MBA, finance, and consulting roles",
     accent: "#0f172a",
     preview: "slate",
+    category: "professional",
   },
   {
     id: "academic",
@@ -175,6 +202,7 @@ export const RESUME_TEMPLATES: ResumeTemplate[] = [
     description: "CV-style layout for research, teaching, fellowships, and higher studies",
     accent: "#475569",
     preview: "gray",
+    category: "professional",
   },
   {
     id: "portfolio",
@@ -182,6 +210,7 @@ export const RESUME_TEMPLATES: ResumeTemplate[] = [
     description: "Modern project-forward format for tech, design, and product profiles",
     accent: "#db2777",
     preview: "pink",
+    category: "creative",
   },
   {
     id: "custom",
@@ -189,6 +218,7 @@ export const RESUME_TEMPLATES: ResumeTemplate[] = [
     description: "Build your own look with selected font, color, spacing, and skill style",
     accent: "#7c3aed",
     preview: "custom",
+    category: "creative",
   },
 ];
 

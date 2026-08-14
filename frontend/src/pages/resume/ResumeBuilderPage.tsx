@@ -3,11 +3,12 @@
  * Left: form steps with collapsible sections
  * Right: live A4 preview with template switcher
  */
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import {
-  CheckCircle2, ChevronDown, ChevronLeft, ChevronRight,
+  CheckCircle2, ChevronLeft, ChevronRight,
   Download, Eye, FileText, Palette, Plus, Sparkles, Trash2, X, ZoomIn, ZoomOut,
 } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
 import { classNames } from "@/utils/format";
 import type { ResumeData, TemplateId } from "@/types/resume";
@@ -19,9 +20,9 @@ import { StepSkills }     from "@/pages/resume/steps/StepSkills";
 import { StepExtras }     from "@/pages/resume/steps/StepExtras";
 import { StepCustomize } from "@/pages/resume/steps/StepCustomize";
 import { StepATS }        from "@/pages/resume/steps/StepATS";
-import { ResumeEntryPage } from "@/pages/resume/ResumeEntryPage";
 import { ResumePreview }  from "@/pages/resume/ResumePreview";
 import { customizationForTemplate, withTemplateAccent } from "@/pages/resume/resumeTemplateUtils";
+import { loadResumeFlowState, saveResumeFlowState } from "@/pages/resume/resumeFlowState";
 import { nanoid } from "@/utils/nanoid";
 import { formatResumeData } from "@/utils/resumeParser";
 
@@ -38,18 +39,36 @@ const STEPS = [
 
 const ZOOM_STEPS = [0.45, 0.55, 0.65, 0.75, 0.85, 0.95];
 
-export function ResumeBuilderPage(): JSX.Element {
+interface EditorLocationState {
+  data?: ResumeData;
+  templateId?: TemplateId;
+  customization?: ReturnType<typeof customizationForTemplate>;
+}
+
+export function ResumeEditorPage(): JSX.Element {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const locationState = (location.state as EditorLocationState | null) ?? {};
+  const persisted = loadResumeFlowState();
+
+  const initialTemplate = locationState.templateId ?? persisted?.templateId ?? "classic";
+  const initialData =
+    locationState.data ??
+    persisted?.data ??
+    SAMPLE_RESUME;
+  const initialCustomization =
+    locationState.customization ??
+    persisted?.customization ??
+    customizationForTemplate(initialTemplate, DEFAULT_RESUME_CUSTOMIZATION);
+
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const isTricolor = theme === "tricolor";
 
-  const [mode, setMode] = useState<"entry" | "builder">("entry");
   const [step, setStep] = useState(0);
-  const [templateId, setTemplateId] = useState<TemplateId>("classic");
-  const [customization, setCustomization] = useState(() =>
-    customizationForTemplate("classic", DEFAULT_RESUME_CUSTOMIZATION)
-  );
-  const [data, setData] = useState<ResumeData>(EMPTY_RESUME);
+  const [templateId, setTemplateId] = useState<TemplateId>(initialTemplate);
+  const [customization, setCustomization] = useState(initialCustomization);
+  const [data, setData] = useState<ResumeData>(initialData);
   const [zoomIdx, setZoomIdx] = useState(1);          // default 55% fits 40% pane
   const [showPreviewMobile, setShowPreviewMobile] = useState(false);
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
@@ -68,17 +87,14 @@ export function ResumeBuilderPage(): JSX.Element {
   function next() { setStep((s) => Math.min(s + 1, STEPS.length - 1)); }
   function prev() { setStep((s) => Math.max(s - 1, 0)); }
 
-  function handleBuildNew() {
-    setData(SAMPLE_RESUME);
-    setTemplateId("classic");
-    setCustomization(customizationForTemplate("classic", DEFAULT_RESUME_CUSTOMIZATION));
-    setStep(1);
-    setMode("builder");
-  }
-  function handleUpload(parsed: ResumeData) {
-    setData(parsed);
-    setStep(1);
-    setMode("builder");
+  useEffect(() => {
+    saveResumeFlowState({ data, templateId, customization });
+  }, [data, templateId, customization]);
+
+  function handleBack() {
+    navigate("/resume-builder/templates", {
+      state: { data, fromUpload: persisted?.fromUpload },
+    });
   }
 
   async function handleDownloadPdf() {
@@ -222,11 +238,6 @@ export function ResumeBuilderPage(): JSX.Element {
   const showSectionTools = step >= 1 && step <= 5;
   const canAddSectionItem = step >= 2 && step <= 5;
 
-  // ── Entry screen ─────────────────────────────────────────────────────────
-  if (mode === "entry") {
-    return <ResumeEntryPage onBuildNew={handleBuildNew} onUpload={handleUpload} />;
-  }
-
   // ── Theme tokens ──────────────────────────────────────────────────────────
   const pageBg = isDark ? "bg-[#020308]" : isTricolor ? "bg-[#FFFDF5]" : "bg-slate-100";
   const sidebarBg = isDark ? "bg-[#0d0e1a] border-r border-indigo-900/30" : isTricolor ? "bg-white border-r border-orange-100" : "bg-white border-r border-slate-200";
@@ -248,9 +259,9 @@ export function ResumeBuilderPage(): JSX.Element {
         <div className="flex items-center gap-2 overflow-x-auto">
           <button
             type="button"
-            onClick={() => setMode("entry")}
+            onClick={handleBack}
             className={classNames("flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition", isDark ? "hover:bg-white/10 text-slate-400" : "hover:bg-slate-100 text-slate-500")}
-            title="Back to start"
+            title="Back to templates"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>

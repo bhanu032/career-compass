@@ -14,7 +14,9 @@ import { ProfilePage } from "@/pages/ProfilePage";
 import { ResultDetailPage } from "@/pages/ResultDetailPage";
 import { ResultsPage } from "@/pages/ResultsPage";
 import { SearchPage } from "@/pages/SearchPage";
-import { ResumeBuilderPage } from "@/pages/resume/ResumeBuilderPage";
+import { ResumeLandingPage } from "@/pages/resume/ResumeLandingPage";
+import { ResumeTemplateSelectionPage } from "@/pages/resume/ResumeTemplateSelectionPage";
+import { ResumeEditorPage } from "@/pages/resume/ResumeBuilderPage";
 import { AdminDashboardPage } from "@/pages/admin/DashboardPage";
 import { AdminJobsPage } from "@/pages/admin/JobsPage";
 import { AdminScrapersPage } from "@/pages/admin/ScrapersPage";
@@ -32,7 +34,9 @@ export const router = createBrowserRouter([
       { path: "/results", element: <ResultsPage /> },
       { path: "/results/:id", element: <ResultDetailPage /> },
       { path: "/search", element: <SearchPage /> },
-      { path: "/resume-builder", element: <ResumeBuilderPage /> },
+      { path: "/resume-builder", element: <ResumeLandingPage /> },
+      { path: "/resume-builder/templates", element: <ResumeTemplateSelectionPage /> },
+      { path: "/resume-builder/edit", element: <ResumeEditorPage /> },
       // Redirect old auth routes to home — login/register are removed
       { path: "/login",    element: <Navigate to="/" replace /> },
       { path: "/register", element: <Navigate to="/" replace /> },

@@ -155,7 +155,7 @@ export function ResumeEntryPage({ onBuildNew, onUpload }: Props): JSX.Element {
               </p>
             </div>
             <div className="mt-auto flex flex-wrap gap-2">
-              {["8 Templates", "ATS Score", "AI Optimizer", "PDF Download"].map((tag) => (
+              {["13 Templates", "ATS Score", "AI Optimizer", "PDF Download"].map((tag) => (
                 <span key={tag} className={classNames(
                   "rounded-full px-2.5 py-1 text-xs font-medium",
                   isDark ? "bg-indigo-900/40 text-indigo-300" : isTricolor ? "bg-orange-50 text-orange-700" : "bg-violet-50 text-violet-700"
