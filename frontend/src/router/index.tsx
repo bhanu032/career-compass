@@ -18,6 +18,10 @@ import { ResumeLandingPage } from "@/pages/resume/ResumeLandingPage";
 import { ResumeTemplateSelectionPage } from "@/pages/resume/ResumeTemplateSelectionPage";
 import { ResumeEditorPage } from "@/pages/resume/ResumeBuilderPage";
 import { ResumePrintPage } from "@/pages/resume/ResumePrintPage";
+import { MockTestLandingPage } from "@/pages/mock-test/MockTestLandingPage";
+import { MockTestListPage } from "@/pages/mock-test/MockTestListPage";
+import { MockTestPage } from "@/pages/mock-test/MockTestPage";
+import { MockTestResultPage } from "@/pages/mock-test/MockTestResultPage";
 import { AdminDashboardPage } from "@/pages/admin/DashboardPage";
 import { AdminJobsPage } from "@/pages/admin/JobsPage";
 import { AdminScrapersPage } from "@/pages/admin/ScrapersPage";
@@ -26,6 +30,9 @@ import { AdminUsersPage } from "@/pages/admin/UsersPage";
 export const router = createBrowserRouter([
   // ── Bare print route — no layout wrapper ──────────────────────────────────
   { path: "/resume-builder/print", element: <ResumePrintPage /> },
+
+  // ── Mock test attempt — no main layout (full-screen engine) ───────────────
+  { path: "/mock-tests/attempt/:paperId", element: <MockTestPage /> },
 
   {
     element: <MainLayout />,
@@ -38,6 +45,11 @@ export const router = createBrowserRouter([
       { path: "/results", element: <ResultsPage /> },
       { path: "/results/:id", element: <ResultDetailPage /> },
       { path: "/search", element: <SearchPage /> },
+      // Mock Tests — result must come before :groupId to avoid route collision
+      { path: "/mock-tests", element: <MockTestLandingPage /> },
+      { path: "/mock-tests/result/:attemptId", element: <MockTestResultPage /> },
+      { path: "/mock-tests/:groupId", element: <MockTestListPage /> },
+      // Resume Builder
       { path: "/resume-builder", element: <ResumeLandingPage /> },
       { path: "/resume-builder/templates", element: <ResumeTemplateSelectionPage /> },
       { path: "/resume-builder/edit", element: <ResumeEditorPage /> },

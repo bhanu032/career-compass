@@ -34,6 +34,7 @@ export function Navbar(): JSX.Element {
     { to: "/jobs",            label: t("nav.latestJobs") },
     { to: "/admit-cards",     label: t("nav.admitCards") },
     { to: "/results",         label: t("nav.results") },
+    { to: "/mock-tests",      label: "Mock Tests" },
     { to: "/search",          label: t("nav.search") },
     { to: "/resume-builder",  label: "Resume Builder" },
   ];
