@@ -83,8 +83,9 @@ export function ResumePrintPage(): JSX.Element {
             gap: 8px;
           }
           #print-toolbar button:hover { background: #ea580c; }
-          #resume-print-wrapper {
+          #resume-print-root {
             margin-top: 56px;
+            width: 210mm !important;
             box-shadow: 0 8px 40px rgba(0,0,0,0.22);
             border-radius: 3px;
           }
@@ -105,14 +106,12 @@ export function ResumePrintPage(): JSX.Element {
         </button>
       </div>
 
-      <div id="resume-print-wrapper" style={{ width: "210mm", background: "#fff" }}>
-        <ResumePreview
-          data={data}
-          templateId={templateId}
-          customization={customization}
-          printMode={true}
-        />
-      </div>
+      <ResumePreview
+        data={data}
+        templateId={templateId}
+        customization={customization}
+        printMode={true}
+      />
     </>
   );
 }

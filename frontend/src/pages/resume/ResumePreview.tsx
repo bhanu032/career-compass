@@ -57,8 +57,11 @@ export function ResumePreview({ data, templateId, customization, printMode = tru
       {printMode && (
         <style>{`
           @media print {
-            body > *:not(#resume-print-root) { display: none !important; }
-            #resume-print-root { display: block !important; position: static !important; inset: auto !important; z-index: 9999; background: #fff; }
+            body > * { display: none !important; }
+            body > #resume-print-root,
+            body > * > #resume-print-root { display: block !important; }
+            #resume-print-root { position: static !important; inset: auto !important; background: #fff; }
+            #resume-print-root * { display: revert; }
             @page { size: A4; margin: 0; }
           }
         `}</style>
