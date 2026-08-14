@@ -289,6 +289,7 @@ export function ResumeTemplateSelectionPage(): JSX.Element {
               fill
               fillMode="contain"
               customization={previewCustomization}
+              data={initialData && hasResumeContent(initialData) ? initialData : undefined}
               className="h-full w-full rounded-xl"
             />
           </div>

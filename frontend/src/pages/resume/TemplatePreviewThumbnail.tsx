@@ -21,6 +21,8 @@ interface Props {
    */
   fillMode?: FillMode;
   customization?: ResumeCustomization;
+  /** Resume data to preview. Defaults to SAMPLE_RESUME if not provided. */
+  data?: import("@/types/resume").ResumeData;
   className?: string;
   style?: CSSProperties;
 }
@@ -64,17 +66,20 @@ export function TemplatePreviewThumbnail({
   fill = false,
   fillMode = "cover",
   customization,
+  data,
   className,
   style,
 }: Props): JSX.Element {
   const resolvedCustomization =
     customization ?? customizationForTemplate(templateId, DEFAULT_RESUME_CUSTOMIZATION);
 
+  const previewData = data ?? SAMPLE_RESUME;
+
   const { containerRef, scale: fitScale } = useFitScale(fill, fillMode);
 
   const preview = (
     <ResumePreview
-      data={SAMPLE_RESUME}
+      data={previewData}
       templateId={templateId}
       customization={resolvedCustomization}
       printMode={false}
