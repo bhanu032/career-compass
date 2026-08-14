@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Check, Key, Loader2, Play, Zap } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Check, Key, Loader2, Play, Search, Zap } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { Skeleton } from "@/components/Skeleton";
@@ -21,6 +21,14 @@ export function AdminScrapersPage(): JSX.Element {
   const [apifyQuery, setApifyQuery] = useState("Software Engineer");
   const [isApifyRunning, setIsApifyRunning] = useState(false);
   const [apifyStatus, setApifyStatus] = useState<string | null>(null);
+
+  const [scraperFilter, setScraperFilter] = useState("");
+
+  const filteredScraperSources = useMemo(() => {
+    if (!scraperFilter.trim()) return SCRAPER_SOURCES;
+    const q = scraperFilter.toLowerCase().trim();
+    return SCRAPER_SOURCES.filter((s) => s.toLowerCase().includes(q));
+  }, [scraperFilter]);
 
   function handleSaveApifyToken() {
     const trimmed = apifyToken.trim();
@@ -54,13 +62,16 @@ export function AdminScrapersPage(): JSX.Element {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Live Job Scrapers Control Center</h1>
+      <div className="flex flex-col gap-1">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Live Job Scrapers Control Center</h1>
+        <p className="text-xs text-slate-500">46+ Automated &amp; Manual Scrapers for Govt Portals (SarkariResult, SSC, UPSC, RRB) &amp; Private Portals (Apify)</p>
+      </div>
 
       {/* Apify Job Scraper API Section */}
       <section className="card p-6 border-violet-200 bg-gradient-to-br from-violet-50/50 via-white to-indigo-50/30 dark:border-violet-900/40 dark:from-violet-950/20 dark:to-slate-900">
         <div className="flex items-center gap-2 mb-3">
           <Zap className="h-5 w-5 text-violet-600 shrink-0" />
-          <h2 className="text-base font-bold text-slate-900 dark:text-white">Apify Job Scraper API (LinkedIn &amp; Indeed)</h2>
+          <h2 className="text-base font-bold text-slate-900 dark:text-white">Apify Job Scraper API (Private Jobs)</h2>
         </div>
         <p className="text-xs text-slate-600 dark:text-slate-300 mb-4">
           Connect your Apify API Token (<code className="text-violet-600 font-bold">apify_api_...</code>) to execute cloud-hosted job scrapers for LinkedIn, Indeed, Glassdoor, and Google Jobs.
@@ -110,26 +121,48 @@ export function AdminScrapersPage(): JSX.Element {
         )}
       </section>
 
-      {/* Manual Internal Scraper Runs */}
-      <section className="card p-6">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">{t("common.runManually")}</h2>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {SCRAPER_SOURCES.map((source) => (
+      {/* Manual Internal Scraper Runs for all 46+ Portals */}
+      <section className="card p-6 space-y-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-400">
+              Government &amp; Official Scrapers ({SCRAPER_SOURCES.length})
+            </h2>
+            <p className="text-xs text-slate-500">Run manual fetch for SarkariResult, FreeJobAlert, UPSC, SSC, Railways, Defense &amp; PSUs</p>
+          </div>
+
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400" />
+            <input
+              type="text"
+              value={scraperFilter}
+              onChange={(e) => setScraperFilter(e.target.value)}
+              placeholder="Filter scrapers (e.g. ssc, rrb, army)..."
+              className="input pl-9 text-xs w-full py-1.5"
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-2 max-h-80 overflow-y-auto p-1 border border-slate-100 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-900/40">
+          {filteredScraperSources.map((source) => (
             <button
               key={source}
               type="button"
-              className="btn-secondary"
+              className="btn-secondary text-xs py-1.5 px-3 uppercase tracking-wide font-bold"
               disabled={runScraper.isPending}
               onClick={() => runScraper.mutate(source)}
             >
               {runScraper.isPending && runScraper.variables === source ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-3.5 w-3.5 animate-spin text-violet-600" />
               ) : (
-                <Play className="h-4 w-4" />
+                <Play className="h-3.5 w-3.5 text-emerald-600" />
               )}
               {source}
             </button>
           ))}
+          {filteredScraperSources.length === 0 && (
+            <p className="text-xs text-slate-400 p-4">No scrapers match "{scraperFilter}".</p>
+          )}
         </div>
       </section>
 
