@@ -108,7 +108,7 @@ export function ResumeTemplateSelectionPage(): JSX.Element {
   const previewCustomization = customizationForTemplate(selectedTemplate, DEFAULT_RESUME_CUSTOMIZATION);
 
   return (
-    <div className={classNames("flex min-h-[calc(100vh-64px)] flex-col", pageBg)}>
+    <div className={classNames("flex h-[calc(100vh-64px)] flex-col overflow-hidden", pageBg)}>
       {/* Header */}
       <header
         className={classNames(
@@ -155,9 +155,9 @@ export function ResumeTemplateSelectionPage(): JSX.Element {
       </header>
 
       {/* Body */}
-      <main className="flex flex-1 flex-col overflow-hidden lg:flex-row">
+      <main className="flex flex-1 min-h-0 flex-col overflow-hidden lg:flex-row">
         {/* Left: categories + grid */}
-        <div className="flex flex-1 flex-col overflow-hidden lg:max-w-[55%]">
+        <div className="flex flex-1 min-h-0 flex-col overflow-hidden lg:max-w-[55%]">
           {/* Category tabs */}
           <div className="relative shrink-0 px-4 pt-3 sm:px-6">
             <div className="flex items-center gap-6 overflow-x-auto whitespace-nowrap sm:gap-10">
@@ -265,7 +265,7 @@ export function ResumeTemplateSelectionPage(): JSX.Element {
         {/* Right: large preview */}
         <div
           className={classNames(
-            "hidden min-h-0 flex-1 flex-col border-l p-4 lg:flex lg:w-[45%]",
+            "hidden min-h-0 flex-1 flex-col border-l p-4 lg:flex lg:w-[45%] overflow-hidden",
             isDark ? "border-indigo-900/30 bg-slate-900/50" : isTricolor ? "border-orange-100 bg-orange-50/30" : "border-slate-200 bg-slate-100"
           )}
         >
@@ -280,17 +280,17 @@ export function ResumeTemplateSelectionPage(): JSX.Element {
 
           <div
             className={classNames(
-              "flex min-h-0 flex-1 overflow-hidden rounded-2xl border",
+              "min-h-0 flex-1 overflow-y-auto rounded-2xl border",
               isDark ? "border-slate-700 bg-slate-800/60" : "border-slate-200 bg-white shadow-inner"
             )}
           >
             <TemplatePreviewThumbnail
               templateId={selectedTemplate}
               fill
-              fillMode="contain"
+              fillMode="scroll"
               customization={previewCustomization}
               data={initialData && hasResumeContent(initialData) ? initialData : undefined}
-              className="h-full w-full rounded-xl"
+              className="w-full rounded-xl"
             />
           </div>
         </div>

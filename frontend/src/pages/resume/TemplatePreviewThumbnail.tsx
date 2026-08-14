@@ -16,8 +16,9 @@ interface Props {
   fill?: boolean;
   /**
    * How to scale when `fill` is true.
-   * - "cover"  → fills the entire box (default for grid cards, may clip edges)
-   * - "contain" → fits fully inside the box (default for large preview panel)
+   * - "cover"   → scale to fill width, clip height (grid cards)
+   * - "contain" → scale to fit inside fixed-height box (no scroll)
+   * - "scroll"  → scale to fill width, natural height (scrollable preview panel)
    */
   fillMode?: FillMode;
   customization?: ResumeCustomization;
@@ -27,7 +28,7 @@ interface Props {
   style?: CSSProperties;
 }
 
-type FillMode = "contain" | "cover";
+type FillMode = "contain" | "cover" | "scroll";
 
 function useFitScale(enabled: boolean, mode: FillMode = "cover") {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -42,13 +43,18 @@ function useFitScale(enabled: boolean, mode: FillMode = "cover") {
     const update = () => {
       const width = el.clientWidth;
       const height = el.clientHeight;
-      if (width <= 0 || height <= 0) return;
+      if (width <= 0) return;
 
-      // cover → scale to fill width (card aspect is 3:4, A4 is ~0.707:1 — width is the binding axis)
-      // contain → scale to fit fully (use the smaller axis)
       const scaleX = width / A4_WIDTH;
-      const scaleY = height / A4_HEIGHT;
-      setScale(mode === "cover" ? scaleX : Math.min(scaleX, scaleY));
+
+      if (mode === "cover" || mode === "scroll") {
+        setScale(scaleX);
+      } else {
+        // contain — fit inside both dimensions
+        if (height <= 0) return;
+        const scaleY = height / A4_HEIGHT;
+        setScale(Math.min(scaleX, scaleY));
+      }
     };
 
     update();
@@ -87,6 +93,41 @@ export function TemplatePreviewThumbnail({
   );
 
   if (fill) {
+    // "scroll" mode: scale to width, natural height — parent must handle overflow-y-auto
+    if (fillMode === "scroll") {
+      const scaledH = Math.round(A4_HEIGHT * fitScale);
+      return (
+        <div
+          ref={containerRef}
+          className={className}
+          style={{
+            width: "100%",
+            background: "#fff",
+            position: "relative",
+            ...style,
+          }}
+        >
+          {/* spacer to give natural height */}
+          <div style={{ height: scaledH, pointerEvents: "none" }} />
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              transform: `scale(${fitScale})`,
+              transformOrigin: "top left",
+              width: A4_WIDTH,
+              minHeight: A4_HEIGHT,
+              pointerEvents: "none",
+            }}
+          >
+            {preview}
+          </div>
+        </div>
+      );
+    }
+
+    // "cover" / "contain" mode: fixed-height container
     return (
       <div
         ref={containerRef}
