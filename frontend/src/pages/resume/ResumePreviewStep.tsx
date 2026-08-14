@@ -143,10 +143,10 @@ export function ResumePreviewStep({ data, templateId, customization, onTemplateC
 
       {/* ── A4 Canvas ───────────────────────────────────────────────── */}
       <div className={classNames("flex flex-1 flex-col items-center overflow-auto py-6 px-4", canvasBg)}>
-        {/* Word Margin Indicator Badge */}
+        {/* A4 Document Preview Badge */}
         <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-slate-800/90 text-slate-200 px-3.5 py-1 text-xs font-semibold shadow-md backdrop-blur-md">
           <span className="h-2 w-2 rounded-full bg-emerald-400"></span>
-          MS Word Standard Margins &amp; Auto-Pagination Active (A4: 210 × 297 mm)
+          A4 Resume Preview (210 × 297 mm)
         </div>
 
         <div

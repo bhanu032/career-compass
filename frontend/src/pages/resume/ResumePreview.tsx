@@ -40,7 +40,7 @@ export function ResumePreview({ data, templateId, customization, printMode = tru
           overflow-wrap: anywhere;
         }
         
-        /* ── Standard MS Word Automatic Page Break & Pagination Rules ── */
+        /* ── Standard Page Break & Section Protection Rules ── */
         .resume-avoid-break,
         .resume-section,
         .resume-item,
@@ -65,8 +65,8 @@ export function ResumePreview({ data, templateId, customization, printMode = tru
 
         .resume-preview-root p,
         .resume-preview-root li {
-          orphans: 3;
-          widows: 3;
+          orphans: 2;
+          widows: 2;
         }
 
         .resume-section {
@@ -78,35 +78,6 @@ export function ResumePreview({ data, templateId, customization, printMode = tru
           break-before: page !important;
           page-break-before: always !important;
         }
-
-        /* Screen Word-style A4 visual page-break divider line at 1123px (A4 page height) */
-        @media screen {
-          #resume-print-root {
-            position: relative;
-          }
-          #resume-print-root::after {
-            content: "--- MS Word Standard Page Break (Page 2) ---";
-            position: absolute;
-            top: 1123px;
-            left: 0;
-            right: 0;
-            height: 24px;
-            background: rgba(226, 232, 240, 0.95);
-            border-top: 2px dashed #94a3b8;
-            border-bottom: 2px dashed #94a3b8;
-            color: #475569;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            pointer-events: none;
-            z-index: 50;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-          }
-        }
       `}</style>
 
       {printMode && (
@@ -117,10 +88,9 @@ export function ResumePreview({ data, templateId, customization, printMode = tru
             body > * > #resume-print-root { display: block !important; }
             #resume-print-root { position: static !important; inset: auto !important; background: #fff !important; }
             #resume-print-root * { display: revert; }
-            #resume-print-root::after { display: none !important; }
             @page {
               size: A4 portrait;
-              margin: 12mm 15mm 12mm 15mm;
+              margin: 10mm 12mm 10mm 12mm;
             }
           }
         `}</style>
