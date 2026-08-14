@@ -38,9 +38,9 @@ export function Navbar(): JSX.Element {
 
   // 3 Primary Navbar Pillars
   const PRIMARY_LINKS = [
-    { to: "/jobs", label: "Jobs", icon: Briefcase, badge: "Govt & Private" },
-    { to: "/mock-tests", label: "Mock Tests", icon: GraduationCap, badge: "100+ Papers" },
-    { to: "/resume-builder", label: "Resume Builder", icon: FileText, badge: "100% Free" },
+    { to: "/jobs", label: "Jobs", icon: Briefcase },
+    { to: "/mock-tests", label: "Mock Tests", icon: GraduationCap },
+    { to: "/resume-builder", label: "Resume Builder", icon: FileText },
   ];
 
   // Secondary Quick Links
@@ -149,7 +149,7 @@ export function Navbar(): JSX.Element {
                 to={link.to}
                 className={({ isActive }) =>
                   classNames(
-                    "relative flex items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-bold transition-all duration-200",
+                    "relative flex items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-bold transition-all duration-200 whitespace-nowrap",
                     isActive ? "" : inactiveClass,
                   )
                 }
@@ -157,13 +157,8 @@ export function Navbar(): JSX.Element {
                   isActive ? activeStyle() : { border: "1px solid transparent" }
                 }
               >
-                <Icon className="h-4 w-4 text-violet-500" />
+                <Icon className="h-4 w-4 text-violet-500 shrink-0" />
                 <span>{link.label}</span>
-                {link.badge && (
-                  <span className="rounded-full bg-violet-100 text-violet-700 px-2 py-0.5 text-[10px] font-extrabold dark:bg-violet-900/50 dark:text-violet-300">
-                    {link.badge}
-                  </span>
-                )}
               </NavLink>
             );
           })}
@@ -251,17 +246,10 @@ export function Navbar(): JSX.Element {
                     key={link.to}
                     to={link.to}
                     onClick={() => setOpen(false)}
-                    className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-bold text-slate-800 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+                    className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-bold text-slate-800 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
                   >
-                    <div className="flex items-center gap-2.5">
-                      <Icon className="h-4 w-4 text-violet-500" />
-                      <span>{link.label}</span>
-                    </div>
-                    {link.badge && (
-                      <span className="rounded-full bg-violet-100 text-violet-700 px-2 py-0.5 text-[10px] font-extrabold dark:bg-violet-900/50 dark:text-violet-300">
-                        {link.badge}
-                      </span>
-                    )}
+                    <Icon className="h-4 w-4 text-violet-500" />
+                    <span>{link.label}</span>
                   </Link>
                 );
               })}

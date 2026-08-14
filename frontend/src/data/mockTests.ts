@@ -10,6 +10,9 @@ import { UPPSC_PCS_2024_PRE } from "@/data/papers/statePsc";
 import { NDA_2024_GAT } from "@/data/papers/defence";
 import { SBI_PO_2024_PRELIMS } from "@/data/papers/sbiPo";
 import { RRB_GROUPD_2024_CBT } from "@/data/papers/rrbGroupD";
+import { IBPS_CLERK_2024_PRE } from "@/data/papers/ibpsClerk";
+import { RRB_ALP_2024_CBT1 } from "@/data/papers/rrbAlp";
+import { BPSC_70TH_PRE_2024 } from "@/data/papers/bpsc";
 
 // ── SSC CGL 2025 — 12 Sept Shift 2 ──────────────────────────────────────────
 // Questions sourced from the Similar-Based Paper (Testbook)
@@ -781,6 +784,15 @@ export const EXAM_GROUPS: ExamGroup[] = [
         totalPapers: 5,
         papers: [SBI_PO_2024_PRELIMS],
       },
+      {
+        id: "ibps-clerk",
+        examGroupId: "banking",
+        name: "IBPS Clerk",
+        tier: "Prelims",
+        description: "IBPS Clerk — Preliminary Exam. 100 Qs, 60 mins.",
+        totalPapers: 5,
+        papers: [IBPS_CLERK_2024_PRE],
+      },
     ],
   },
   {
@@ -810,6 +822,15 @@ export const EXAM_GROUPS: ExamGroup[] = [
         description: "Railway Recruitment Board — Group D Computer Based Test. 100 Qs, 90 mins.",
         totalPapers: 7,
         papers: [RRB_GROUPD_2024_CBT],
+      },
+      {
+        id: "rrb-alp",
+        examGroupId: "railways",
+        name: "RRB ALP",
+        tier: "CBT-1",
+        description: "Railway Recruitment Board — Assistant Loco Pilot CBT-1. 75 Qs, 60 mins.",
+        totalPapers: 5,
+        papers: [RRB_ALP_2024_CBT1],
       },
     ],
   },
@@ -852,6 +873,15 @@ export const EXAM_GROUPS: ExamGroup[] = [
         description: "Uttar Pradesh PSC — Preliminary. 150 Qs, 120 mins.",
         totalPapers: 6,
         papers: [UPPSC_PCS_2024_PRE],
+      },
+      {
+        id: "bpsc-pre",
+        examGroupId: "state_psc",
+        name: "70th BPSC",
+        tier: "Prelims",
+        description: "Bihar Public Service Commission — 70th Combined Prelims. 150 Qs, 120 mins.",
+        totalPapers: 5,
+        papers: [BPSC_70TH_PRE_2024],
       },
     ],
   },
