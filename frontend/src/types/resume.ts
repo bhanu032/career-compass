@@ -88,7 +88,10 @@ export type TemplateId =
   | "consulting"
   | "academic"
   | "portfolio"
-  | "custom";
+  | "custom"
+  | "lato"
+  | "sidebar"
+  | "card";
 
 export type TemplateCategory =
   | "professional"
@@ -219,6 +222,30 @@ export const RESUME_TEMPLATES: ResumeTemplate[] = [
     accent: "#7c3aed",
     preview: "custom",
     category: "creative",
+  },
+  {
+    id: "lato",
+    name: "Lato",
+    description: "Clean two-column card layout with skill dots — great for developers",
+    accent: "#54AFE4",
+    preview: "blue",
+    category: "modern",
+  },
+  {
+    id: "sidebar",
+    name: "Sidebar",
+    description: "Dark sidebar with coloured top bar — bold and distinctive design",
+    accent: "#5695cd",
+    preview: "blue",
+    category: "creative",
+  },
+  {
+    id: "card",
+    name: "Card",
+    description: "Profile-card layout with avatar, skill bars, and timeline education",
+    accent: "#4682bf",
+    preview: "blue",
+    category: "modern",
   },
 ];
 

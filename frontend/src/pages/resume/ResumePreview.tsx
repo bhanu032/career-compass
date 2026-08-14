@@ -8,6 +8,9 @@ import { TemplateSlate }     from "@/pages/resume/templates/TemplateSlate";
 import { TemplateTimeline }  from "@/pages/resume/templates/TemplateTimeline";
 import { TemplateCompact }   from "@/pages/resume/templates/TemplateCompact";
 import { TemplateProfessional } from "@/pages/resume/templates/TemplateProfessional";
+import { TemplateLato }      from "@/pages/resume/templates/TemplateLato";
+import { TemplateSidebar }   from "@/pages/resume/templates/TemplateSidebar";
+import { TemplateCard }      from "@/pages/resume/templates/TemplateCard";
 
 interface Props {
   data: ResumeData;
@@ -74,6 +77,9 @@ export function ResumePreview({ data, templateId, customization, printMode = tru
         {templateId === "academic"  && <TemplateProfessional {...props} templateId="academic" />}
         {templateId === "portfolio" && <TemplateProfessional {...props} templateId="portfolio" />}
         {templateId === "custom"    && <TemplateProfessional {...props} templateId="custom" />}
+        {templateId === "lato"      && <TemplateLato      {...props} />}
+        {templateId === "sidebar"   && <TemplateSidebar   {...props} />}
+        {templateId === "card"      && <TemplateCard      {...props} />}
       </div>
     </>
   );
