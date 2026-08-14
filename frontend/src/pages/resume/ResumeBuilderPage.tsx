@@ -97,93 +97,90 @@ export function ResumeEditorPage(): JSX.Element {
     });
   }
 
-  async function handleDownloadPdf() {
+  function handleDownloadPdf() {
     if (!exportRef.current || isDownloading) return;
 
     setIsDownloading(true);
+
     try {
       const name =
         data.personal.fullName.trim().replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "") ||
         "resume";
 
-      // Collect all <style> and <link rel="stylesheet"> from the current document
-      // so fonts (Google Fonts etc.) are available in the print window.
-      const styleNodes = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'));
-      const stylesHtml = styleNodes
-        .map((node) => node.outerHTML)
-        .join("\n");
+      // Collect all <style> and <link rel="stylesheet"> from the host page
+      // so fonts and any injected CSS transfer into the print frame.
+      const styleNodes = Array.from(
+        document.querySelectorAll('style, link[rel="stylesheet"]')
+      );
+      const stylesHtml = styleNodes.map((n) => n.outerHTML).join("\n");
 
-      const resumeHtml = exportRef.current.innerHTML;
+      // Build the resume HTML from the hidden off-screen export div
+      const resumeHtml = exportRef.current.outerHTML;
 
-      const printWindow = window.open("", "_blank", "width=900,height=700");
-      if (!printWindow) {
-        // Popup blocked — fall back to in-page print
-        window.print();
+      // Create a hidden iframe — avoids popup blockers entirely
+      const iframe = document.createElement("iframe");
+      iframe.style.cssText =
+        "position:fixed;left:-9999px;top:0;width:210mm;height:297mm;border:none;visibility:hidden;";
+      iframe.title = `${name}-resume`;
+      document.body.appendChild(iframe);
+
+      const doc = iframe.contentDocument ?? iframe.contentWindow?.document;
+      if (!doc) {
+        document.body.removeChild(iframe);
+        setIsDownloading(false);
         return;
       }
 
-      printWindow.document.write(`<!DOCTYPE html>
+      doc.open();
+      doc.write(`<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <title>${name}-resume</title>
   ${stylesHtml}
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; background: #fff; }
     @page { size: A4; margin: 0; }
-    @media print {
-      html, body { margin: 0; padding: 0; }
-    }
-    .resume-avoid-break,
-    .resume-section,
-    .resume-item,
-    table, tr {
+    @media print { html, body { margin: 0; padding: 0; } }
+    .resume-avoid-break, .resume-section, .resume-item, table, tr {
       break-inside: avoid;
       page-break-inside: avoid;
     }
-    .resume-section {
-      break-after: auto;
-      page-break-after: auto;
-    }
-    .resume-page-break {
-      break-before: page;
-      page-break-before: always;
-    }
+    .resume-section { break-after: auto; page-break-after: auto; }
+    .resume-page-break { break-before: page; page-break-before: always; }
   </style>
 </head>
-<body>
-  <div style="width:210mm; min-height:297mm; background:#fff;">
-    ${resumeHtml}
-  </div>
+<body style="margin:0;padding:0;background:#fff;">
+  ${resumeHtml}
 </body>
 </html>`);
+      doc.close();
 
-      printWindow.document.close();
-
-      // Wait for fonts/images to load, then print
-      printWindow.onload = () => {
-        setTimeout(() => {
-          printWindow.focus();
-          printWindow.print();
-          printWindow.close();
-        }, 400);
+      // Give fonts / layout a moment to settle, then print
+      const doPrint = () => {
+        try {
+          iframe.contentWindow?.focus();
+          iframe.contentWindow?.print();
+        } finally {
+          // Remove iframe after a short delay so print dialog has time to open
+          setTimeout(() => {
+            try { document.body.removeChild(iframe); } catch { /* already removed */ }
+          }, 1000);
+          setIsDownloading(false);
+        }
       };
 
-      // Fallback if onload doesn't fire (some browsers)
-      setTimeout(() => {
-        try {
-          printWindow.focus();
-          printWindow.print();
-          printWindow.close();
-        } catch {
-          // already closed or printed
-        }
-      }, 1200);
-    } catch (error) {
-      console.error("Print export failed", error);
-      window.print();
-    } finally {
+      // Use onload if available, otherwise fall back to a fixed delay
+      if (iframe.contentDocument?.readyState === "complete") {
+        setTimeout(doPrint, 300);
+      } else {
+        iframe.onload = () => setTimeout(doPrint, 300);
+        // Safety fallback
+        setTimeout(doPrint, 1500);
+      }
+    } catch (err) {
+      console.error("PDF print failed", err);
       setIsDownloading(false);
     }
   }
@@ -588,8 +585,8 @@ export function ResumeEditorPage(): JSX.Element {
           zIndex: -1,
         }}
       >
-        <div ref={exportRef} style={{ width: "210mm", minHeight: "297mm", background: "#ffffff" }}>
-          <ResumePreview data={data} templateId={templateId} customization={customization} printMode={false} />
+        <div ref={exportRef} style={{ width: "210mm", background: "#ffffff" }}>
+          <ResumePreview data={data} templateId={templateId} customization={customization} printMode={true} />
         </div>
       </div>
 
