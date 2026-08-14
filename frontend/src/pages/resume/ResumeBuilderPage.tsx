@@ -73,7 +73,7 @@ export function ResumeEditorPage(): JSX.Element {
   const [showPreviewMobile, setShowPreviewMobile] = useState(false);
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
-  const exportRef = useRef<HTMLDivElement | null>(null);
+  const exportRef = useRef<HTMLDivElement | null>(null); // kept for potential future use
 
   const zoom = ZOOM_STEPS[zoomIdx];
   const paperWidth = 794;
@@ -98,24 +98,12 @@ export function ResumeEditorPage(): JSX.Element {
   }
 
   function handleDownloadPdf() {
-    if (!exportRef.current || isDownloading) return;
+    if (isDownloading) return;
     setIsDownloading(true);
-
-    const wrapper = document.getElementById("resume-export-wrapper");
-    if (!wrapper) { setIsDownloading(false); return; }
-
-    // Temporarily move wrapper on-screen so @media print can see it
-    wrapper.style.cssText =
-      "position:absolute;left:0;top:0;width:210mm;background:#fff;pointer-events:none;z-index:-1;";
-
-    setTimeout(() => {
-      window.print();
-      setTimeout(() => {
-        wrapper.style.cssText =
-          "position:fixed;left:-10000px;top:0;width:210mm;background:#fff;pointer-events:none;z-index:-1;";
-        setIsDownloading(false);
-      }, 500);
-    }, 100);
+    // State is already saved to sessionStorage by the useEffect above.
+    // Open the dedicated print page — it renders the resume and auto-prints.
+    window.open("/resume-builder/print", "_blank");
+    setTimeout(() => setIsDownloading(false), 1000);
   }
 
   const changeTemplate = useCallback((id: TemplateId) => {
@@ -506,25 +494,6 @@ export function ResumeEditorPage(): JSX.Element {
         </div>
       )}
 
-      {/* Hidden export div — moved on-page during print */}
-      <div
-        id="resume-export-wrapper"
-        aria-hidden="true"
-        style={{
-          position: "fixed",
-          left: -10000,
-          top: 0,
-          width: "210mm",
-          background: "#ffffff",
-          pointerEvents: "none",
-          zIndex: -1,
-        }}
-      >
-        <div ref={exportRef} style={{ width: "210mm", background: "#ffffff" }}>
-          <ResumePreview data={data} templateId={templateId} customization={customization} printMode={true} />
-        </div>
-      </div>
-
       {/* ── Template picker modal ────────────────────────────────────────── */}
       {showTemplatePicker && (
         <div
@@ -551,19 +520,6 @@ export function ResumeEditorPage(): JSX.Element {
         </div>
       )}
 
-      {/* Print styles — hide everything except resume export wrapper */}
-      <style>{`
-        @media print {
-          body > * { display: none !important; }
-          #resume-export-wrapper { display: block !important; }
-          #resume-export-wrapper * { display: revert !important; }
-          @page { size: A4; margin: 0; }
-          .resume-avoid-break, .resume-section, .resume-item, table, tr {
-            break-inside: avoid;
-            page-break-inside: avoid;
-          }
-        }
-      `}</style>
     </div>
   );
 }

@@ -17,12 +17,16 @@ import { SearchPage } from "@/pages/SearchPage";
 import { ResumeLandingPage } from "@/pages/resume/ResumeLandingPage";
 import { ResumeTemplateSelectionPage } from "@/pages/resume/ResumeTemplateSelectionPage";
 import { ResumeEditorPage } from "@/pages/resume/ResumeBuilderPage";
+import { ResumePrintPage } from "@/pages/resume/ResumePrintPage";
 import { AdminDashboardPage } from "@/pages/admin/DashboardPage";
 import { AdminJobsPage } from "@/pages/admin/JobsPage";
 import { AdminScrapersPage } from "@/pages/admin/ScrapersPage";
 import { AdminUsersPage } from "@/pages/admin/UsersPage";
 
 export const router = createBrowserRouter([
+  // ── Bare print route — no layout wrapper ──────────────────────────────────
+  { path: "/resume-builder/print", element: <ResumePrintPage /> },
+
   {
     element: <MainLayout />,
     children: [
