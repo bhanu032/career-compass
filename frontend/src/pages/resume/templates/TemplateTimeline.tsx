@@ -165,7 +165,7 @@ export function TemplateTimeline({ data, customization, printMode }: Props): JSX
         style={{
           background: `linear-gradient(135deg, ${DARK} 0%, ${GREEN} 100%)`,
           color: "#fff",
-          padding: `${Math.round(v * 0.9)}px ${h}px ${Math.round(v * 0.75)}px`,
+          padding: `${Math.round(v * 0.75)}px ${h}px ${Math.round(v * 0.6)}px`,
           flexShrink: 0,
         }}
       >

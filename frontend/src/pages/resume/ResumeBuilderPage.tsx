@@ -475,23 +475,23 @@ export function ResumeEditorPage(): JSX.Element {
         <div className={classNames("hidden w-[40%] flex-col overflow-hidden lg:flex shrink-0", previewBg)}>
           {/* Preview toolbar */}
           <div className={classNames(
-            "flex h-10 items-center justify-between gap-3 px-4 shrink-0 border-b",
+            "flex items-center gap-2 px-3 py-1.5 shrink-0 border-b overflow-x-auto",
             isDark ? "bg-slate-800 border-slate-700" : isTricolor ? "bg-slate-200 border-slate-300" : "bg-slate-200 border-slate-300"
           )}>
-            <span className={classNames("text-xs font-semibold", isDark ? "text-slate-400" : "text-slate-500")}>
+            <span className={classNames("text-[11px] font-semibold shrink-0", isDark ? "text-slate-400" : "text-slate-500")}>
               Live Preview
             </span>
-            <div className="flex flex-wrap items-center gap-1">
+            <div className="flex items-center gap-1 overflow-x-auto scrollbar-none whitespace-nowrap">
               {RESUME_TEMPLATES.map((tpl) => (
                 <button
                   key={tpl.id}
                   type="button"
                   onClick={() => changeTemplate(tpl.id)}
                   className={classNames(
-                    "rounded-full px-2.5 py-0.5 text-[11px] font-semibold transition whitespace-nowrap",
+                    "rounded-full px-2 py-0.5 text-[10px] font-semibold transition shrink-0",
                     templateId === tpl.id
                       ? isDark ? "bg-indigo-600 text-white" : isTricolor ? "bg-orange-500 text-white" : "bg-violet-600 text-white"
-                      : isDark ? "bg-slate-700 text-slate-300 hover:bg-slate-600" : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-300"
+                      : isDark ? "bg-slate-700 text-slate-300 hover:bg-slate-600" : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
                   )}
                   style={templateId !== tpl.id ? { borderLeftColor: tpl.accent, borderLeftWidth: 2 } : {}}
                 >
@@ -520,7 +520,7 @@ export function ResumeEditorPage(): JSX.Element {
                   background: "#fff",
                   boxShadow: "0 12px 50px rgba(15,23,42,0.28), 0 2px 10px rgba(15,23,42,0.16)",
                   borderRadius: 3,
-                  overflow: "visible",
+                  overflow: "hidden",
                 }}
               >
                 <ResumePreview data={data} templateId={templateId} customization={customization} printMode={false} />
@@ -558,7 +558,7 @@ export function ResumeEditorPage(): JSX.Element {
           {/* Paper */}
           <div className="flex flex-1 overflow-auto px-3 py-5">
             <div className="mx-auto shrink-0" style={{ width: Math.round(paperWidth * 0.42), minHeight: Math.round(paperHeight * 0.42) }}>
-              <div style={{ transform: "scale(0.42)", transformOrigin: "top left", width: paperWidth, minHeight: paperHeight, background: "#fff", boxShadow: "0 8px 40px rgba(0,0,0,0.35)", borderRadius: 3, overflow: "visible" }}>
+              <div style={{ transform: "scale(0.42)", transformOrigin: "top left", width: paperWidth, minHeight: paperHeight, background: "#fff", boxShadow: "0 8px 40px rgba(0,0,0,0.35)", borderRadius: 3, overflow: "hidden" }}>
                 <ResumePreview data={data} templateId={templateId} customization={customization} printMode={false} />
               </div>
             </div>
