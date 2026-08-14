@@ -51,8 +51,9 @@ function useFitScale(enabled: boolean, mode: FillMode = "cover") {
 
       setLayout({
         scale,
+        // Center horizontally; pin to top vertically (no gap above resume)
         offsetX: (width - scaledWidth) / 2,
-        offsetY: (height - scaledHeight) / 2,
+        offsetY: mode === "contain" ? 0 : (height - scaledHeight) / 2,
       });
     };
 
