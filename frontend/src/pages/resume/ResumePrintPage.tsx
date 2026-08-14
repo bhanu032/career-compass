@@ -1,6 +1,6 @@
 /**
- * Dedicated print/PDF page — loads resume state from sessionStorage,
- * renders the full A4 resume, and triggers window.print() automatically.
+ * Dedicated print/PDF page — loads resume state from the Redux-persisted
+ * localStorage entry, renders the full A4 resume, and triggers window.print().
  * Opened via window.open() from the Download PDF button.
  */
 import { useEffect, useState } from "react";

@@ -5,6 +5,7 @@ import {
   CheckCircle2,
   ChevronDown,
   ChevronUp,
+  Cpu,
   Loader2,
   RefreshCw,
   Sparkles,
@@ -12,11 +13,12 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import type { ResumeData } from "@/types/resume";
 import type { SuggestedChange } from "@/services/resumeService";
 import { resumeService } from "@/services/resumeService";
 import { scoreResume } from "@/utils/ats";
+import { generateFrontendSuggestions } from "@/utils/atsOptimizer";
 import { classNames } from "@/utils/format";
 import { useTheme } from "@/hooks/useTheme";
 import { nanoid } from "@/utils/nanoid";
@@ -65,25 +67,50 @@ function gradeLabel(score: number): string {
   return "Poor";
 }
 
-function sectionIcon(section: string) {
-  const icons: Record<string, string> = {
-    summary: "📝",
-    skills: "🛠️",
-    experience: "💼",
-    jobTitle: "🏷️",
-  };
-  return icons[section] ?? "✏️";
+function sectionIcon(field: string) {
+  if (field === "summary") return "📝";
+  if (field === "jobTitle") return "🏷️";
+  if (field === "skill_add") return "🛠️";
+  if (field.startsWith("exp_")) return "💼";
+  if (field === "project_add") return "🚀";
+  if (field === "cert_add") return "🏆";
+  return "✏️";
 }
 
 function sectionLabel(field: string): string {
   if (field === "summary") return "Professional Summary";
   if (field === "jobTitle") return "Job Title";
   if (field === "skill_add") return "Add New Skill";
+  if (field === "project_add") return "Add New Project";
+  if (field === "cert_add") return "Add Certification";
   if (field.startsWith("exp_")) {
     const idx = parseInt(field.split("_")[1], 10) + 1;
     return `Experience #${idx} Description`;
   }
   return field;
+}
+
+/** Parse the display text for project_add / cert_add suggested values */
+function parseStructuredSuggested(change: SuggestedChange): string {
+  if (change.field === "project_add" || change.field === "cert_add") {
+    try {
+      const obj = JSON.parse(change.suggested) as Record<string, string>;
+      if (change.field === "project_add") {
+        return [
+          obj.name && `Name: ${obj.name}`,
+          obj.technologies && `Tech: ${obj.technologies}`,
+          obj.description && `Description: ${obj.description}`,
+        ].filter(Boolean).join("\n");
+      }
+      if (change.field === "cert_add") {
+        return [
+          obj.name && `Certificate: ${obj.name}`,
+          obj.issuer && `Issuer: ${obj.issuer}`,
+        ].filter(Boolean).join("\n");
+      }
+    } catch { /* fall through */ }
+  }
+  return change.suggested;
 }
 
 interface ChangeCardProps {
@@ -104,10 +131,13 @@ function ChangeCard({ change, accepted, onAccept, onReject }: ChangeCardProps) {
     ? isDark ? "border-red-800/40 bg-red-900/10 opacity-60" : "border-red-200 bg-red-50 opacity-60"
     : isDark ? "border-slate-700 bg-slate-800/50" : "border-slate-200 bg-white";
 
+  const displaySuggested = parseStructuredSuggested(change);
+  const isStructured = change.field === "project_add" || change.field === "cert_add";
+
   return (
     <div className={classNames("rounded-xl border transition-all", cardBg)}>
       <div className="flex items-start gap-3 p-4">
-        <span className="mt-0.5 text-lg shrink-0">{sectionIcon(change.section)}</span>
+        <span className="mt-0.5 text-lg shrink-0">{sectionIcon(change.field)}</span>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
             <p className={classNames("text-xs font-semibold uppercase tracking-wide", isDark ? "text-slate-400" : "text-slate-500")}>
@@ -128,7 +158,7 @@ function ChangeCard({ change, accepted, onAccept, onReject }: ChangeCardProps) {
           </p>
 
           {/* Diff — only show if expanded or it's short */}
-          {(expanded || change.suggested.length < 120) && (
+          {(expanded || displaySuggested.length < 120) && (
             <div className="mt-3 space-y-2">
               {change.original && (
                 <div>
@@ -143,13 +173,13 @@ function ChangeCard({ change, accepted, onAccept, onReject }: ChangeCardProps) {
               )}
               <div>
                 <p className="text-[10px] font-semibold uppercase text-emerald-500 mb-1">
-                  {change.field === "skill_add" ? "New Skill" : "After"}
+                  {change.field === "skill_add" ? "New Skill" : isStructured ? "New Entry" : "After"}
                 </p>
                 <p className={classNames(
-                  "rounded-lg p-2.5 text-xs leading-relaxed border",
+                  "rounded-lg p-2.5 text-xs leading-relaxed border whitespace-pre-line",
                   isDark ? "bg-emerald-950/30 border-emerald-900/30 text-slate-200" : "bg-emerald-50 border-emerald-200 text-slate-700"
                 )}>
-                  {change.suggested.slice(0, 400)}{change.suggested.length > 400 ? "…" : ""}
+                  {displaySuggested.slice(0, 500)}{displaySuggested.length > 500 ? "…" : ""}
                 </p>
               </div>
             </div>
@@ -207,7 +237,14 @@ function ChangeCard({ change, accepted, onAccept, onReject }: ChangeCardProps) {
 // ── Apply accepted changes to resume data ────────────────────────────────────
 
 function applyChanges(data: ResumeData, changes: SuggestedChange[], accepted: Record<number, boolean>): ResumeData {
-  let updated = { ...data, personal: { ...data.personal }, skills: [...data.skills], experience: data.experience.map((e) => ({ ...e })) };
+  let updated = {
+    ...data,
+    personal: { ...data.personal },
+    skills: [...data.skills],
+    experience: data.experience.map((e) => ({ ...e })),
+    projects: [...data.projects],
+    certificates: [...data.certificates],
+  };
 
   changes.forEach((change, i) => {
     if (!accepted[i]) return;
@@ -226,6 +263,28 @@ function applyChanges(data: ResumeData, changes: SuggestedChange[], accepted: Re
       if (updated.experience[idx]) {
         updated.experience[idx] = { ...updated.experience[idx], description: change.suggested };
       }
+    } else if (change.field === "project_add") {
+      try {
+        const p = JSON.parse(change.suggested) as { name?: string; description?: string; technologies?: string; link?: string };
+        const alreadyExists = updated.projects.some((proj) => proj.name.toLowerCase() === (p.name ?? "").toLowerCase());
+        if (!alreadyExists) {
+          updated.projects = [
+            ...updated.projects,
+            { id: nanoid(), name: p.name ?? "", description: p.description ?? "", technologies: p.technologies ?? "", link: p.link ?? "" },
+          ];
+        }
+      } catch { /* ignore malformed */ }
+    } else if (change.field === "cert_add") {
+      try {
+        const c = JSON.parse(change.suggested) as { name?: string; issuer?: string; date?: string };
+        const alreadyExists = updated.certificates.some((cert) => cert.name.toLowerCase() === (c.name ?? "").toLowerCase());
+        if (!alreadyExists) {
+          updated.certificates = [
+            ...updated.certificates,
+            { id: nanoid(), name: c.name ?? "", issuer: c.issuer ?? "", date: c.date ?? "" },
+          ];
+        }
+      } catch { /* ignore malformed */ }
     }
   });
 
@@ -257,12 +316,14 @@ export function StepATS({ data, onApply }: Props): JSX.Element {
 
   async function runAnalysis() {
     if (!jd.trim()) { setError("Please paste a job description first."); return; }
+    if (jd.trim().length < 20) { setError("Job description is too short. Paste at least 50 characters."); return; }
     setLoading(true);
     setError(null);
     setResult(null);
     setDecisions({});
     setApplied(false);
 
+    // Try backend AI first; fall back to frontend optimizer if unavailable
     try {
       const res = await resumeService.optimize(data, jd);
       setResult({
@@ -271,8 +332,18 @@ export function StepATS({ data, onApply }: Props): JSX.Element {
         scoreAfter: res.ats_score_after,
         aiPowered: res.ai_powered,
       });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Analysis failed. Try again.");
+    } catch {
+      // Backend unavailable — use powerful frontend optimizer
+      try {
+        const { changes, scoreBefore, scoreAfter } = generateFrontendSuggestions(data, jd);
+        if (changes.length === 0) {
+          setError("Your resume already looks well-optimised for this JD. Try a more detailed job description.");
+        } else {
+          setResult({ changes, scoreBefore, scoreAfter, aiPowered: false });
+        }
+      } catch (frontendErr) {
+        setError(frontendErr instanceof Error ? frontendErr.message : "Analysis failed. Try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -320,6 +391,15 @@ export function StepATS({ data, onApply }: Props): JSX.Element {
           )}>
             <Bot className="h-3.5 w-3.5" />
             AI Powered
+          </div>
+        )}
+        {result !== null && !result.aiPowered && (
+          <div className={classNames(
+            "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold shrink-0",
+            isDark ? "bg-emerald-900/50 text-emerald-300" : "bg-emerald-100 text-emerald-700"
+          )}>
+            <Cpu className="h-3.5 w-3.5" />
+            Smart Optimizer
           </div>
         )}
       </div>
@@ -457,6 +537,12 @@ export function StepATS({ data, onApply }: Props): JSX.Element {
                   <p className="mt-2 flex items-center gap-1 text-xs text-violet-500 font-medium">
                     <Zap className="h-3 w-3" />
                     Generated by ChatGPT — suggestions are tailored to this specific JD
+                  </p>
+                )}
+                {!result.aiPowered && (
+                  <p className="mt-2 flex items-center gap-1 text-xs text-emerald-600 font-medium">
+                    <Zap className="h-3 w-3" />
+                    Generated by Smart Optimizer — JD keywords, domain skills, projects & certifications added
                   </p>
                 )}
               </div>

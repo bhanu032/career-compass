@@ -16,7 +16,13 @@ import {
 } from "@/types/resume";
 import { TemplatePreviewThumbnail } from "@/pages/resume/TemplatePreviewThumbnail";
 import { customizationForTemplate } from "@/pages/resume/resumeTemplateUtils";
-import { loadResumeFlowState, saveResumeFlowState } from "@/pages/resume/resumeFlowState";
+import {
+  useAppDispatch,
+  useAppSelector,
+  setTemplateId as setTemplateIdAction,
+  setFromUpload,
+  selectResume,
+} from "@/store";
 
 interface LocationState {
   data?: ResumeData;
@@ -29,26 +35,32 @@ export function ResumeTemplateSelectionPage(): JSX.Element {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const isTricolor = theme === "tricolor";
+  const dispatch = useAppDispatch();
+  const resume = useAppSelector(selectResume);
 
   const locationState = (location.state as LocationState | null) ?? {};
-  const persisted = loadResumeFlowState();
-  const initialData = locationState.data ?? persisted?.data;
+  // Prefer navigation-state data (from upload flow), then Redux store
+  const initialData = locationState.data ?? resume.data;
 
   const [selectedCategory, setSelectedCategory] = useState<"all" | TemplateCategory>("all");
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateId>(
-    persisted?.templateId ?? "classic"
+    resume.templateId ?? "classic"
   );
 
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
   useEffect(() => {
-    saveResumeFlowState({
-      data: initialData,
-      templateId: selectedTemplate,
-      fromUpload: locationState.fromUpload ?? persisted?.fromUpload,
-    });
-  }, [initialData, selectedTemplate, locationState.fromUpload, persisted?.fromUpload]);
+    // Persist selected template to Redux so it survives navigation
+    dispatch(setTemplateIdAction(selectedTemplate));
+  }, [selectedTemplate, dispatch]);
+
+  useEffect(() => {
+    // Persist fromUpload flag if it was passed via navigation
+    if (typeof locationState.fromUpload === "boolean") {
+      dispatch(setFromUpload(locationState.fromUpload));
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const activeTab = tabRefs.current[selectedCategory];
@@ -92,13 +104,8 @@ export function ResumeTemplateSelectionPage(): JSX.Element {
     const customization = customizationForTemplate(selectedTemplate, DEFAULT_RESUME_CUSTOMIZATION);
     const data = initialData && hasResumeContent(initialData) ? initialData : SAMPLE_RESUME;
 
-    saveResumeFlowState({
-      data,
-      templateId: selectedTemplate,
-      customization,
-      fromUpload: locationState.fromUpload ?? persisted?.fromUpload,
-    });
-
+    // State already lives in Redux (persisted to localStorage automatically).
+    // Just pass it via navigation state so the editor seeds correctly.
     navigate("/resume-builder/edit", {
       state: { data, templateId: selectedTemplate, customization },
     });
