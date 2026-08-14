@@ -227,7 +227,11 @@ export function JobDetailsPage(): JSX.Element {
 
           {/* Web Mock Test Finder component */}
           <div className="mt-8">
-            <JobMockFinder jobTitle={job.title} organization={job.organization} category={job.category} />
+            <JobMockFinder
+              jobTitle={job.title}
+              organization={job.organization ?? undefined}
+              category={job.category ?? undefined}
+            />
           </div>
         </article>
 

@@ -1,4 +1,4 @@
-import { Send, Trash2, X } from "lucide-react";
+import { Check, Key, Send, Trash2, X } from "lucide-react";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
@@ -22,35 +22,36 @@ const SUGGESTED_QUESTIONS = [
 ];
 
 /** Small "GPT-4o" badge shown in the chat header */
-function GptBadge() {
+function GptBadge({ hasKey }: { hasKey?: boolean }) {
   return (
     <span
       style={{
         display: "inline-flex",
         alignItems: "center",
         gap: 3,
-        background: "rgba(255,255,255,0.12)",
-        border: "1px solid rgba(255,255,255,0.18)",
+        background: hasKey ? "rgba(16,163,127,0.25)" : "rgba(255,255,255,0.12)",
+        border: hasKey ? "1px solid rgba(16,163,127,0.6)" : "1px solid rgba(255,255,255,0.18)",
         borderRadius: 99,
         padding: "1px 7px",
         fontSize: 10,
         fontWeight: 600,
-        color: "rgba(255,255,255,0.85)",
+        color: "rgba(255,255,255,0.95)",
         letterSpacing: "0.02em",
         backdropFilter: "blur(4px)",
       }}
     >
-      {/* OpenAI sparkle-style dot */}
       <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#10a37f", display: "inline-block" }} />
-      GPT-4o
+      {hasKey ? "GPT-4o Live" : "GPT-4o"}
     </span>
   );
 }
 
 export function ChatWidget({ jobId }: ChatWidgetProps): JSX.Element {
   const [open, setOpen] = useState(false);
+  const [showKeyInput, setShowKeyInput] = useState(false);
   const [input, setInput] = useState("");
-  const { messages, isLoading, sendMessage, clearMessages } = useChat({ jobId });
+  const { messages, isLoading, apiKey, saveApiKey, sendMessage, clearMessages } = useChat({ jobId });
+  const [tempKey, setTempKey] = useState(apiKey);
   const { theme } = useTheme();
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -89,6 +90,12 @@ export function ChatWidget({ jobId }: ChatWidgetProps): JSX.Element {
       e.preventDefault();
       void handleSend();
     }
+  }
+
+  function handleSaveKeySubmit(e: React.FormEvent) {
+    e.preventDefault();
+    saveApiKey(tempKey);
+    setShowKeyInput(false);
   }
 
   /* ── Theme tokens ─────────────────────────────────────────────── */
@@ -207,15 +214,26 @@ export function ChatWidget({ jobId }: ChatWidgetProps): JSX.Element {
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   <p className="text-sm font-bold text-white leading-tight">David</p>
-                  <GptBadge />
+                  <GptBadge hasKey={Boolean(apiKey)} />
                 </div>
                 <p className="text-[11px] text-white/60 leading-tight truncate">
-                  {isTalking ? "Thinking…" : "DeshKiSeva AI · Powered by ChatGPT"}
+                  {isTalking ? "Thinking…" : apiKey ? "ChatGPT API Connected (Live)" : "DeshKiSeva AI · Powered by ChatGPT"}
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-1 shrink-0">
+              <button
+                type="button"
+                onClick={() => setShowKeyInput((v) => !v)}
+                className={classNames(
+                  "rounded-lg p-1.5 transition",
+                  apiKey ? "text-emerald-300 hover:bg-emerald-500/20" : "text-white/60 hover:bg-white/10 hover:text-white"
+                )}
+                title="Configure OpenAI API Key"
+              >
+                <Key className="h-3.5 w-3.5" />
+              </button>
               {messages.length > 0 && (
                 <button
                   type="button"
@@ -237,6 +255,33 @@ export function ChatWidget({ jobId }: ChatWidgetProps): JSX.Element {
               </button>
             </div>
           </div>
+
+          {/* Collapsible API Key Config Bar */}
+          {showKeyInput && (
+            <form onSubmit={handleSaveKeySubmit} className="bg-slate-900 p-3 text-xs text-white border-b border-slate-800 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-emerald-400 flex items-center gap-1">
+                  <Key className="h-3.5 w-3.5" /> OpenAI ChatGPT API Key
+                </span>
+                {apiKey && <span className="text-[10px] text-emerald-400 font-semibold">Active ✓</span>}
+              </div>
+              <p className="text-[11px] text-slate-400">
+                Paste your OpenAI Key (<code className="text-violet-300">sk-...</code>) to generate 100% live streaming ChatGPT responses directly from OpenAI:
+              </p>
+              <div className="flex gap-2">
+                <input
+                  type="password"
+                  value={tempKey}
+                  onChange={(e) => setTempKey(e.target.value)}
+                  placeholder="sk-proj-..."
+                  className="flex-1 rounded-lg bg-slate-800 border border-slate-700 px-2.5 py-1.5 text-xs text-white outline-none focus:border-violet-500"
+                />
+                <button type="submit" className="btn-primary text-xs px-3 py-1.5 shrink-0 gap-1 bg-emerald-600 hover:bg-emerald-500">
+                  <Check className="h-3.5 w-3.5" /> Save Key
+                </button>
+              </div>
+            </form>
+          )}
 
           {/* ── Messages ──────────────────────────────────────────── */}
           <div className={classNames("flex-1 overflow-y-auto p-4", bubbleBg)}>

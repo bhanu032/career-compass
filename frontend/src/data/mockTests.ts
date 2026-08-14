@@ -13,6 +13,11 @@ import { RRB_GROUPD_2024_CBT } from "@/data/papers/rrbGroupD";
 import { IBPS_CLERK_2024_PRE } from "@/data/papers/ibpsClerk";
 import { RRB_ALP_2024_CBT1 } from "@/data/papers/rrbAlp";
 import { BPSC_70TH_PRE_2024 } from "@/data/papers/bpsc";
+import { AFCAT_2025_SET1 } from "@/data/papers/afcat";
+import { CDS_2025_SET1 } from "@/data/papers/cds";
+import { SBI_CLERK_2025_PRE } from "@/data/papers/sbiClerk";
+import { RRB_JE_2025_CBT1 } from "@/data/papers/rrbJe";
+import { SSC_CPO_2025_PAPER1 } from "@/data/papers/sscCpo";
 import { generateExpandedPaperSets } from "@/utils/mockPaperGenerator";
 
 // ── SSC CGL 2025 — 12 Sept Shift 2 ──────────────────────────────────────────
@@ -726,14 +731,14 @@ export const EXAM_GROUPS: ExamGroup[] = [
     icon: "🏛️",
     color: "bg-violet-600",
     accentHex: "#7c3aed",
-    totalPapers: 150,
+    totalPapers: 200,
     exams: [
       {
         id: "ssc-cgl",
         examGroupId: "ssc",
         name: "SSC CGL",
         tier: "Tier-I",
-        description: "Combined Graduate Level — Tier I (Preliminary). 100 Qs, 60 mins, 200 marks. Negative marking: −0.5 per wrong answer.",
+        description: "Combined Graduate Level — Tier I (Preliminary). 100 Qs, 60 mins, 200 marks.",
         totalPapers: 50,
         papers: generateExpandedPaperSets("ssc-cgl", "SSC CGL", "Tier-I", SSC_CGL_2024_SET1, 50),
       },
@@ -742,7 +747,7 @@ export const EXAM_GROUPS: ExamGroup[] = [
         examGroupId: "ssc",
         name: "SSC CHSL",
         tier: "Tier-I",
-        description: "Combined Higher Secondary Level — Tier I. 100 Qs, 60 mins, 200 marks. Negative marking: −0.5 per wrong answer.",
+        description: "Combined Higher Secondary Level — Tier I. 100 Qs, 60 mins, 200 marks.",
         totalPapers: 50,
         papers: generateExpandedPaperSets("ssc-chsl", "SSC CHSL", "Tier-I", SSC_CHSL_2024_SET1, 50),
       },
@@ -751,9 +756,18 @@ export const EXAM_GROUPS: ExamGroup[] = [
         examGroupId: "ssc",
         name: "SSC MTS",
         tier: "CBT",
-        description: "Multi-Tasking Staff — Computer Based Test. 90 Qs, 90 mins, 150 marks. No negative marking.",
+        description: "Multi-Tasking Staff — Computer Based Test. 90 Qs, 90 mins, 150 marks.",
         totalPapers: 50,
         papers: generateExpandedPaperSets("ssc-mts", "SSC MTS", "CBT", SSC_MTS_2024_SET1, 50),
+      },
+      {
+        id: "ssc-cpo",
+        examGroupId: "ssc",
+        name: "SSC CPO",
+        tier: "Paper-I",
+        description: "Sub-Inspector in Delhi Police & CAPFs. 200 Qs, 120 mins, 200 marks.",
+        totalPapers: 50,
+        papers: generateExpandedPaperSets("ssc-cpo", "SSC CPO", "Paper-I", SSC_CPO_2025_PAPER1, 50),
       },
     ],
   },
@@ -761,11 +775,11 @@ export const EXAM_GROUPS: ExamGroup[] = [
     id: "banking",
     name: "Banking & Insurance",
     shortName: "Banking",
-    description: "IBPS PO, SBI PO, IBPS Clerk, RBI, LIC and more",
+    description: "IBPS PO, SBI PO, IBPS Clerk, SBI Clerk, RBI and more",
     icon: "🏦",
     color: "bg-blue-600",
     accentHex: "#2563eb",
-    totalPapers: 150,
+    totalPapers: 200,
     exams: [
       {
         id: "ibps-po",
@@ -794,6 +808,15 @@ export const EXAM_GROUPS: ExamGroup[] = [
         totalPapers: 50,
         papers: generateExpandedPaperSets("ibps-clerk", "IBPS Clerk", "Prelims", IBPS_CLERK_2024_PRE, 50),
       },
+      {
+        id: "sbi-clerk",
+        examGroupId: "banking",
+        name: "SBI Clerk",
+        tier: "Prelims",
+        description: "State Bank of India — Clerk Prelims. 100 Qs, 60 mins.",
+        totalPapers: 50,
+        papers: generateExpandedPaperSets("sbi-clerk", "SBI Clerk", "Prelims", SBI_CLERK_2025_PRE, 50),
+      },
     ],
   },
   {
@@ -804,7 +827,7 @@ export const EXAM_GROUPS: ExamGroup[] = [
     icon: "🚂",
     color: "bg-orange-600",
     accentHex: "#ea580c",
-    totalPapers: 150,
+    totalPapers: 200,
     exams: [
       {
         id: "rrb-ntpc",
@@ -832,6 +855,15 @@ export const EXAM_GROUPS: ExamGroup[] = [
         description: "Railway Recruitment Board — Assistant Loco Pilot CBT-1. 75 Qs, 60 mins.",
         totalPapers: 50,
         papers: generateExpandedPaperSets("rrb-alp", "RRB ALP", "CBT-1", RRB_ALP_2024_CBT1, 50),
+      },
+      {
+        id: "rrb-je",
+        examGroupId: "railways",
+        name: "RRB JE",
+        tier: "CBT-1",
+        description: "Railway Recruitment Board — Junior Engineer CBT-1. 100 Qs, 90 mins.",
+        totalPapers: 50,
+        papers: generateExpandedPaperSets("rrb-je", "RRB JE", "CBT-1", RRB_JE_2025_CBT1, 50),
       },
     ],
   },
@@ -894,7 +926,7 @@ export const EXAM_GROUPS: ExamGroup[] = [
     icon: "🪖",
     color: "bg-green-700",
     accentHex: "#15803d",
-    totalPapers: 50,
+    totalPapers: 150,
     exams: [
       {
         id: "nda-gat",
@@ -904,6 +936,24 @@ export const EXAM_GROUPS: ExamGroup[] = [
         description: "National Defence Academy — General Ability Test. 150 Qs, 150 mins.",
         totalPapers: 50,
         papers: generateExpandedPaperSets("nda-gat", "NDA", "GAT", NDA_2024_GAT, 50),
+      },
+      {
+        id: "afcat",
+        examGroupId: "defence",
+        name: "AFCAT",
+        tier: "Official",
+        description: "Air Force Common Admission Test. 100 Qs, 120 mins, 300 marks.",
+        totalPapers: 50,
+        papers: generateExpandedPaperSets("afcat", "AFCAT", "Official", AFCAT_2025_SET1, 50),
+      },
+      {
+        id: "cds",
+        examGroupId: "defence",
+        name: "CDS",
+        tier: "Official",
+        description: "Combined Defence Services Exam. 120 Qs, 120 mins.",
+        totalPapers: 50,
+        papers: generateExpandedPaperSets("cds", "CDS", "Official", CDS_2025_SET1, 50),
       },
     ],
   },
