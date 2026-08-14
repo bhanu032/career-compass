@@ -225,12 +225,8 @@ export function ResumeTemplateSelectionPage(): JSX.Element {
                         : "border-slate-200 hover:border-slate-300 hover:shadow-sm"
                     )}
                   >
-                    <div className="absolute inset-0 flex items-start justify-center overflow-hidden bg-white pt-1">
-                      <TemplatePreviewThumbnail
-                        templateId={tpl.id}
-                        scale={0.22}
-                        className="mx-auto shadow-sm"
-                      />
+                    <div className="absolute inset-0 overflow-hidden">
+                      <TemplatePreviewThumbnail templateId={tpl.id} fill fillMode="cover" />
                     </div>
 
                     {isSelected && (
@@ -269,11 +265,11 @@ export function ResumeTemplateSelectionPage(): JSX.Element {
         {/* Right: large preview */}
         <div
           className={classNames(
-            "hidden shrink-0 flex-col border-l p-5 lg:flex lg:w-[45%]",
+            "hidden min-h-0 flex-1 flex-col border-l p-4 lg:flex lg:w-[45%]",
             isDark ? "border-indigo-900/30 bg-slate-900/50" : isTricolor ? "border-orange-100 bg-orange-50/30" : "border-slate-200 bg-slate-100"
           )}
         >
-          <div className="mb-3">
+          <div className="mb-2 shrink-0">
             <p className={classNames("text-sm font-semibold", isDark ? "text-slate-200" : "text-slate-800")}>
               {selectedMeta?.name ?? "Preview"}
             </p>
@@ -284,17 +280,17 @@ export function ResumeTemplateSelectionPage(): JSX.Element {
 
           <div
             className={classNames(
-              "flex flex-1 items-start justify-center overflow-y-auto rounded-2xl border p-4",
+              "flex min-h-0 flex-1 overflow-hidden rounded-2xl border",
               isDark ? "border-slate-700 bg-slate-800/60" : "border-slate-200 bg-white shadow-inner"
             )}
           >
-            <div className="mx-auto shrink-0 overflow-hidden rounded-lg shadow-lg" style={{ width: Math.round(794 * 0.52) }}>
-              <TemplatePreviewThumbnail
-                templateId={selectedTemplate}
-                scale={0.52}
-                customization={previewCustomization}
-              />
-            </div>
+            <TemplatePreviewThumbnail
+              templateId={selectedTemplate}
+              fill
+              fillMode="contain"
+              customization={previewCustomization}
+              className="h-full w-full rounded-xl"
+            />
           </div>
         </div>
       </main>
