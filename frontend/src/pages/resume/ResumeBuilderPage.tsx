@@ -50,7 +50,7 @@ export function ResumeBuilderPage(): JSX.Element {
     customizationForTemplate("classic", DEFAULT_RESUME_CUSTOMIZATION)
   );
   const [data, setData] = useState<ResumeData>(EMPTY_RESUME);
-  const [zoomIdx, setZoomIdx] = useState(2);          // default 65%
+  const [zoomIdx, setZoomIdx] = useState(1);          // default 55% fits 40% pane
   const [showPreviewMobile, setShowPreviewMobile] = useState(false);
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -341,7 +341,7 @@ export function ResumeBuilderPage(): JSX.Element {
       <div className="flex flex-1 overflow-hidden">
 
         {/* ── Left: form ───────────────────────────────────────────────── */}
-        <div className={classNames("flex w-full flex-col overflow-hidden lg:w-[440px] xl:w-[480px] shrink-0", sidebarBg)}>
+        <div className={classNames("flex w-full flex-col overflow-hidden lg:w-[60%] shrink-0", sidebarBg)}>
           {/* Scrollable form area */}
           <div className="flex-1 overflow-y-auto p-5">
             {showSectionTools && (
@@ -452,7 +452,7 @@ export function ResumeBuilderPage(): JSX.Element {
         </div>
 
         {/* ── Right: live preview ───────────────────────────────────────── */}
-        <div className={classNames("hidden flex-1 flex-col overflow-hidden lg:flex", previewBg)}>
+        <div className={classNames("hidden w-[40%] flex-col overflow-hidden lg:flex shrink-0", previewBg)}>
           {/* Preview toolbar */}
           <div className={classNames(
             "flex h-10 items-center justify-between gap-3 px-4 shrink-0 border-b",

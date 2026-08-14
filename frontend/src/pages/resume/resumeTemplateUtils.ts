@@ -44,6 +44,23 @@ export const SKILL_STYLE_OPTIONS: Array<{ label: string; value: ResumeSkillStyle
   { label: "Comma list", value: "comma" },
 ];
 
+/** Base horizontal page margin in px (scales with pageMargin multiplier). */
+export const PAGE_MARGIN_H_BASE = 36;
+/** Base vertical page margin in px (scales with pageMargin multiplier). */
+export const PAGE_MARGIN_V_BASE = 28;
+
+/** Compute scaled page margins from customization. */
+export function pageMargins(customization?: ResumeCustomization): {
+  h: number;
+  v: number;
+} {
+  const scale = customization?.pageMargin ?? DEFAULT_RESUME_CUSTOMIZATION.pageMargin;
+  return {
+    h: Math.round(PAGE_MARGIN_H_BASE * scale),
+    v: Math.round(PAGE_MARGIN_V_BASE * scale),
+  };
+}
+
 export function customizationForTemplate(
   templateId: TemplateId,
   current?: ResumeCustomization
@@ -93,6 +110,16 @@ export function formatResumeDate(
   return `${shortMonths[month - 1]} ${year}`;
 }
 
+/**
+ * Returns the base wrapper style for any resume template.
+ *
+ * - In printMode the wrapper is exactly A4 (210mm × min 297mm) with margin:auto
+ *   so the browser/PDF engine renders one natural page width.
+ * - In preview mode the wrapper fills its container (the scaled preview pane).
+ * - `padded: true` means the template handles its own top-level padding here
+ *   (single-column layouts). Two-column templates with a full-bleed header
+ *   set padded:false and manage padding per-region themselves.
+ */
 export function resumeShellStyle(
   customization: ResumeCustomization | undefined,
   defaults: {
@@ -100,13 +127,14 @@ export function resumeShellStyle(
     fontSize: number;
     color: string;
     printMode?: boolean;
+    /** Apply scaled page margins as padding (single-column templates). */
     padded?: boolean;
     display?: CSSProperties["display"];
     flexDirection?: CSSProperties["flexDirection"];
   }
 ): CSSProperties {
   const settings = { ...DEFAULT_RESUME_CUSTOMIZATION, ...customization };
-  const baseMargin = defaults.padded ? Math.round(36 * settings.pageMargin) : undefined;
+  const { h, v } = pageMargins(customization);
 
   return {
     width: defaults.printMode ? "210mm" : "100%",
@@ -118,9 +146,9 @@ export function resumeShellStyle(
     color: defaults.color,
     background: "#fff",
     boxSizing: "border-box",
-    borderRadius: defaults.printMode ? undefined : 12,
-    overflow: "visible",
-    padding: baseMargin,
+    borderRadius: defaults.printMode ? undefined : 8,
+    overflow: "hidden",
+    padding: defaults.padded ? `${v}px ${h}px` : undefined,
     display: defaults.display,
     flexDirection: defaults.flexDirection,
   };

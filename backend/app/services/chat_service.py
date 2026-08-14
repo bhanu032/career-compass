@@ -12,6 +12,7 @@ Chat service — David AI assistant for the GovJobs Portal.
 from __future__ import annotations
 
 import json
+import logging
 import re
 from datetime import date
 from typing import Any, Dict, List, Optional
@@ -22,6 +23,8 @@ from app.core.config import settings
 from app.repositories.job_repository import JobRepository
 from app.schemas.job import JobRead
 
+logger = logging.getLogger(__name__)
+
 
 # ── OpenAI lazy import ────────────────────────────────────────────────────────
 def _openai_client():
@@ -31,7 +34,8 @@ def _openai_client():
     try:
         from openai import OpenAI  # type: ignore
         return OpenAI(api_key=settings.OPENAI_API_KEY)
-    except Exception:
+    except Exception as e:
+        logger.warning("Failed to initialise OpenAI client: %s", e)
         return None
 
 
@@ -93,8 +97,8 @@ class ChatService:
             try:
                 return self._openai_chat(client, messages, job_context_str)
             except Exception as exc:
-                # Fall back to rule-based on any OpenAI error
-                pass
+                # Log the error and fall back to rule-based
+                logger.error("OpenAI chat failed: %s", exc, exc_info=True)
 
         # Rule-based fallback
         last_user = ""
