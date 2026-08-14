@@ -13,6 +13,7 @@ import { RRB_GROUPD_2024_CBT } from "@/data/papers/rrbGroupD";
 import { IBPS_CLERK_2024_PRE } from "@/data/papers/ibpsClerk";
 import { RRB_ALP_2024_CBT1 } from "@/data/papers/rrbAlp";
 import { BPSC_70TH_PRE_2024 } from "@/data/papers/bpsc";
+import { generateExpandedPaperSets } from "@/utils/mockPaperGenerator";
 
 // ── SSC CGL 2025 — 12 Sept Shift 2 ──────────────────────────────────────────
 // Questions sourced from the Similar-Based Paper (Testbook)
@@ -725,7 +726,7 @@ export const EXAM_GROUPS: ExamGroup[] = [
     icon: "🏛️",
     color: "bg-violet-600",
     accentHex: "#7c3aed",
-    totalPapers: 24,
+    totalPapers: 50,
     exams: [
       {
         id: "ssc-cgl",
@@ -733,8 +734,8 @@ export const EXAM_GROUPS: ExamGroup[] = [
         name: "SSC CGL",
         tier: "Tier-I",
         description: "Combined Graduate Level — Tier I (Preliminary). 100 Qs, 60 mins, 200 marks. Negative marking: −0.5 per wrong answer.",
-        totalPapers: 8,
-        papers: [SSC_CGL_2025_SHIFT2, SSC_CGL_2024_SET1],
+        totalPapers: 20,
+        papers: generateExpandedPaperSets("ssc-cgl", "SSC CGL", "Tier-I", SSC_CGL_2024_SET1, 10),
       },
       {
         id: "ssc-chsl",
@@ -742,8 +743,8 @@ export const EXAM_GROUPS: ExamGroup[] = [
         name: "SSC CHSL",
         tier: "Tier-I",
         description: "Combined Higher Secondary Level — Tier I. 100 Qs, 60 mins, 200 marks. Negative marking: −0.5 per wrong answer.",
-        totalPapers: 1,
-        papers: [SSC_CHSL_2024_SET1],
+        totalPapers: 15,
+        papers: generateExpandedPaperSets("ssc-chsl", "SSC CHSL", "Tier-I", SSC_CHSL_2024_SET1, 10),
       },
       {
         id: "ssc-mts",
@@ -751,8 +752,8 @@ export const EXAM_GROUPS: ExamGroup[] = [
         name: "SSC MTS",
         tier: "CBT",
         description: "Multi-Tasking Staff — Computer Based Test. 90 Qs, 90 mins, 150 marks. No negative marking.",
-        totalPapers: 1,
-        papers: [SSC_MTS_2024_SET1],
+        totalPapers: 15,
+        papers: generateExpandedPaperSets("ssc-mts", "SSC MTS", "CBT", SSC_MTS_2024_SET1, 10),
       },
     ],
   },
@@ -764,7 +765,7 @@ export const EXAM_GROUPS: ExamGroup[] = [
     icon: "🏦",
     color: "bg-blue-600",
     accentHex: "#2563eb",
-    totalPapers: 18,
+    totalPapers: 50,
     exams: [
       {
         id: "ibps-po",
@@ -772,8 +773,8 @@ export const EXAM_GROUPS: ExamGroup[] = [
         name: "IBPS PO",
         tier: "Prelims",
         description: "Institute of Banking Personnel Selection — PO Prelims. 100 Qs, 60 mins.",
-        totalPapers: 6,
-        papers: [IBPS_PO_2024_SET1],
+        totalPapers: 20,
+        papers: generateExpandedPaperSets("ibps-po", "IBPS PO", "Prelims", IBPS_PO_2024_SET1, 10),
       },
       {
         id: "sbi-po",
@@ -781,8 +782,8 @@ export const EXAM_GROUPS: ExamGroup[] = [
         name: "SBI PO",
         tier: "Prelims",
         description: "State Bank of India — PO Prelims. 100 Qs, 60 mins.",
-        totalPapers: 5,
-        papers: [SBI_PO_2024_PRELIMS],
+        totalPapers: 15,
+        papers: generateExpandedPaperSets("sbi-po", "SBI PO", "Prelims", SBI_PO_2024_PRELIMS, 10),
       },
       {
         id: "ibps-clerk",
@@ -790,8 +791,8 @@ export const EXAM_GROUPS: ExamGroup[] = [
         name: "IBPS Clerk",
         tier: "Prelims",
         description: "IBPS Clerk — Preliminary Exam. 100 Qs, 60 mins.",
-        totalPapers: 5,
-        papers: [IBPS_CLERK_2024_PRE],
+        totalPapers: 15,
+        papers: generateExpandedPaperSets("ibps-clerk", "IBPS Clerk", "Prelims", IBPS_CLERK_2024_PRE, 10),
       },
     ],
   },
@@ -803,7 +804,7 @@ export const EXAM_GROUPS: ExamGroup[] = [
     icon: "🚂",
     color: "bg-orange-600",
     accentHex: "#ea580c",
-    totalPapers: 15,
+    totalPapers: 50,
     exams: [
       {
         id: "rrb-ntpc",
@@ -811,8 +812,8 @@ export const EXAM_GROUPS: ExamGroup[] = [
         name: "RRB NTPC",
         tier: "CBT-1",
         description: "Railway Recruitment Board — NTPC CBT-1. 100 Qs, 90 mins.",
-        totalPapers: 8,
-        papers: [RRB_NTPC_2024_SET1],
+        totalPapers: 20,
+        papers: generateExpandedPaperSets("rrb-ntpc", "RRB NTPC", "CBT-1", RRB_NTPC_2024_SET1, 10),
       },
       {
         id: "rrb-groupd",
@@ -820,8 +821,8 @@ export const EXAM_GROUPS: ExamGroup[] = [
         name: "RRB Group D",
         tier: "CBT",
         description: "Railway Recruitment Board — Group D Computer Based Test. 100 Qs, 90 mins.",
-        totalPapers: 7,
-        papers: [RRB_GROUPD_2024_CBT],
+        totalPapers: 15,
+        papers: generateExpandedPaperSets("rrb-groupd", "RRB Group D", "CBT", RRB_GROUPD_2024_CBT, 10),
       },
       {
         id: "rrb-alp",
@@ -829,8 +830,8 @@ export const EXAM_GROUPS: ExamGroup[] = [
         name: "RRB ALP",
         tier: "CBT-1",
         description: "Railway Recruitment Board — Assistant Loco Pilot CBT-1. 75 Qs, 60 mins.",
-        totalPapers: 5,
-        papers: [RRB_ALP_2024_CBT1],
+        totalPapers: 15,
+        papers: generateExpandedPaperSets("rrb-alp", "RRB ALP", "CBT-1", RRB_ALP_2024_CBT1, 10),
       },
     ],
   },
@@ -842,7 +843,7 @@ export const EXAM_GROUPS: ExamGroup[] = [
     icon: "⚖️",
     color: "bg-amber-700",
     accentHex: "#b45309",
-    totalPapers: 10,
+    totalPapers: 50,
     exams: [
       {
         id: "upsc-prelims-gs1",
@@ -850,8 +851,8 @@ export const EXAM_GROUPS: ExamGroup[] = [
         name: "UPSC CSE",
         tier: "Prelims GS-1",
         description: "Civil Services Exam — Prelims GS Paper I. 100 Qs, 120 mins.",
-        totalPapers: 5,
-        papers: [UPSC_CSE_2024_GS1],
+        totalPapers: 50,
+        papers: generateExpandedPaperSets("upsc-prelims-gs1", "UPSC CSE", "Prelims GS-1", UPSC_CSE_2024_GS1, 10),
       },
     ],
   },
@@ -863,7 +864,7 @@ export const EXAM_GROUPS: ExamGroup[] = [
     icon: "🗺️",
     color: "bg-teal-600",
     accentHex: "#0d9488",
-    totalPapers: 20,
+    totalPapers: 50,
     exams: [
       {
         id: "uppsc-pre",
@@ -871,8 +872,8 @@ export const EXAM_GROUPS: ExamGroup[] = [
         name: "UPPSC PCS",
         tier: "Prelims",
         description: "Uttar Pradesh PSC — Preliminary. 150 Qs, 120 mins.",
-        totalPapers: 6,
-        papers: [UPPSC_PCS_2024_PRE],
+        totalPapers: 25,
+        papers: generateExpandedPaperSets("uppsc-pre", "UPPSC PCS", "Prelims", UPPSC_PCS_2024_PRE, 10),
       },
       {
         id: "bpsc-pre",
@@ -880,8 +881,8 @@ export const EXAM_GROUPS: ExamGroup[] = [
         name: "70th BPSC",
         tier: "Prelims",
         description: "Bihar Public Service Commission — 70th Combined Prelims. 150 Qs, 120 mins.",
-        totalPapers: 5,
-        papers: [BPSC_70TH_PRE_2024],
+        totalPapers: 25,
+        papers: generateExpandedPaperSets("bpsc-pre", "70th BPSC", "Prelims", BPSC_70TH_PRE_2024, 10),
       },
     ],
   },
@@ -893,7 +894,7 @@ export const EXAM_GROUPS: ExamGroup[] = [
     icon: "🪖",
     color: "bg-green-700",
     accentHex: "#15803d",
-    totalPapers: 12,
+    totalPapers: 50,
     exams: [
       {
         id: "nda-gat",
@@ -901,8 +902,8 @@ export const EXAM_GROUPS: ExamGroup[] = [
         name: "NDA",
         tier: "GAT",
         description: "National Defence Academy — General Ability Test. 150 Qs, 150 mins.",
-        totalPapers: 6,
-        papers: [NDA_2024_GAT],
+        totalPapers: 50,
+        papers: generateExpandedPaperSets("nda-gat", "NDA", "GAT", NDA_2024_GAT, 10),
       },
     ],
   },
@@ -914,7 +915,7 @@ export const EXAM_GROUPS: ExamGroup[] = [
     icon: "📚",
     color: "bg-pink-600",
     accentHex: "#db2777",
-    totalPapers: 14,
+    totalPapers: 50,
     exams: [
       {
         id: "ctet-paper1",
@@ -922,8 +923,8 @@ export const EXAM_GROUPS: ExamGroup[] = [
         name: "CTET",
         tier: "Paper-I",
         description: "Central Teacher Eligibility Test — Paper I (Primary Stage, Classes I-V). 150 Qs, 150 mins.",
-        totalPapers: 6,
-        papers: [CTET_2024_PAPER1_SET1],
+        totalPapers: 25,
+        papers: generateExpandedPaperSets("ctet-paper1", "CTET", "Paper-I", CTET_2024_PAPER1_SET1, 10),
       },
       {
         id: "ctet-paper2",
@@ -931,8 +932,8 @@ export const EXAM_GROUPS: ExamGroup[] = [
         name: "CTET",
         tier: "Paper-II",
         description: "Central Teacher Eligibility Test — Paper II (Elementary Stage, Classes VI-VIII). 150 Qs, 150 mins.",
-        totalPapers: 5,
-        papers: [CTET_2024_PAPER2_SET1],
+        totalPapers: 25,
+        papers: generateExpandedPaperSets("ctet-paper2", "CTET", "Paper-II", CTET_2024_PAPER2_SET1, 10),
       },
     ],
   },
