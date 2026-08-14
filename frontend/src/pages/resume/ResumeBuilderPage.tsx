@@ -102,75 +102,87 @@ export function ResumeEditorPage(): JSX.Element {
 
     setIsDownloading(true);
     try {
-      const importRemote = new Function("url", "return import(url)") as (url: string) => Promise<any>;
-      const name = data.personal.fullName.trim().replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "") || "resume";
-      const html2pdfModule = await importRemote("https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/+esm");
-      const html2pdf = html2pdfModule.default ?? html2pdfModule;
+      const name =
+        data.personal.fullName.trim().replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "") ||
+        "resume";
 
-      await html2pdf()
-        .set({
-          filename: `${name}-resume.pdf`,
-          margin: [0, 0, 0, 0],
-          image: { type: "jpeg", quality: 0.98 },
-          html2canvas: {
-            backgroundColor: "#ffffff",
-            scale: 2,
-            useCORS: true,
-            logging: false,
-            letterRendering: true,
-            windowWidth: 794,
-          },
-          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-          pagebreak: {
-            mode: ["css", "legacy"],
-            avoid: [".resume-avoid-break", ".resume-section", ".resume-item", "table", "tr"],
-          },
-        })
-        .from(exportRef.current)
-        .save();
-    } catch (error) {
-      console.error("Paged PDF export failed, trying canvas fallback", error);
-      try {
-        const importRemote = new Function("url", "return import(url)") as (url: string) => Promise<any>;
-        const [{ default: html2canvas }, jspdfModule] = await Promise.all([
-          importRemote("https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm"),
-          importRemote("https://cdn.jsdelivr.net/npm/jspdf@2.5.1/+esm"),
-        ]);
-        const JsPdf = jspdfModule.jsPDF;
-        const canvas = await html2canvas(exportRef.current, {
-          backgroundColor: "#ffffff",
-          scale: 2,
-          useCORS: true,
-          logging: false,
-          windowWidth: 794,
-          windowHeight: Math.max(exportRef.current.scrollHeight, 1123),
-        });
+      // Collect all <style> and <link rel="stylesheet"> from the current document
+      // so fonts (Google Fonts etc.) are available in the print window.
+      const styleNodes = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'));
+      const stylesHtml = styleNodes
+        .map((node) => node.outerHTML)
+        .join("\n");
 
-        const pdf = new JsPdf("p", "mm", "a4");
-        const pageWidth = 210;
-        const pageHeight = 297;
-        const imgWidth = pageWidth;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        const imgData = canvas.toDataURL("image/png", 1);
-        let remainingHeight = imgHeight;
-        let position = 0;
+      const resumeHtml = exportRef.current.innerHTML;
 
-        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        remainingHeight -= pageHeight;
-
-        while (remainingHeight > 0) {
-          position -= pageHeight;
-          pdf.addPage();
-          pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-          remainingHeight -= pageHeight;
-        }
-
-        const name = data.personal.fullName.trim().replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "") || "resume";
-        pdf.save(`${name}-resume.pdf`);
-      } catch (fallbackError) {
-        console.error("Canvas PDF fallback failed", fallbackError);
+      const printWindow = window.open("", "_blank", "width=900,height=700");
+      if (!printWindow) {
+        // Popup blocked — fall back to in-page print
         window.print();
+        return;
       }
+
+      printWindow.document.write(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>${name}-resume</title>
+  ${stylesHtml}
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: #fff; }
+    @page { size: A4; margin: 0; }
+    @media print {
+      html, body { margin: 0; padding: 0; }
+    }
+    .resume-avoid-break,
+    .resume-section,
+    .resume-item,
+    table, tr {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .resume-section {
+      break-after: auto;
+      page-break-after: auto;
+    }
+    .resume-page-break {
+      break-before: page;
+      page-break-before: always;
+    }
+  </style>
+</head>
+<body>
+  <div style="width:210mm; min-height:297mm; background:#fff;">
+    ${resumeHtml}
+  </div>
+</body>
+</html>`);
+
+      printWindow.document.close();
+
+      // Wait for fonts/images to load, then print
+      printWindow.onload = () => {
+        setTimeout(() => {
+          printWindow.focus();
+          printWindow.print();
+          printWindow.close();
+        }, 400);
+      };
+
+      // Fallback if onload doesn't fire (some browsers)
+      setTimeout(() => {
+        try {
+          printWindow.focus();
+          printWindow.print();
+          printWindow.close();
+        } catch {
+          // already closed or printed
+        }
+      }, 1200);
+    } catch (error) {
+      console.error("Print export failed", error);
+      window.print();
     } finally {
       setIsDownloading(false);
     }
@@ -343,7 +355,7 @@ export function ResumeEditorPage(): JSX.Element {
             className={classNames("flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition", accentBtn)}
           >
             <Download className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">{isDownloading ? "Downloading..." : "Download PDF"}</span>
+            <span className="hidden sm:inline">{isDownloading ? "Opening..." : "Download PDF"}</span>
           </button>
         </div>
       </div>
@@ -558,7 +570,7 @@ export function ResumeEditorPage(): JSX.Element {
           <div className="flex gap-3 bg-slate-900 p-4">
             <button type="button" onClick={handleDownloadPdf} disabled={isDownloading} className="btn-primary flex flex-1 items-center justify-center gap-2">
               <Download className="h-4 w-4" />
-              {isDownloading ? "Downloading..." : "Download PDF"}
+              {isDownloading ? "Opening..." : "Download PDF"}
             </button>
           </div>
         </div>
