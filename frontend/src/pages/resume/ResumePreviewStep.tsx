@@ -142,7 +142,13 @@ export function ResumePreviewStep({ data, templateId, customization, onTemplateC
       </div>
 
       {/* ── A4 Canvas ───────────────────────────────────────────────── */}
-      <div className={classNames("flex flex-1 items-start justify-center overflow-auto py-8 px-4", canvasBg)}>
+      <div className={classNames("flex flex-1 flex-col items-center overflow-auto py-6 px-4", canvasBg)}>
+        {/* Word Margin Indicator Badge */}
+        <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-slate-800/90 text-slate-200 px-3.5 py-1 text-xs font-semibold shadow-md backdrop-blur-md">
+          <span className="h-2 w-2 rounded-full bg-emerald-400"></span>
+          MS Word Standard Margins &amp; Auto-Pagination Active (A4: 210 × 297 mm)
+        </div>
+
         <div
           style={{
             transform: `scale(${zoom})`,
@@ -152,9 +158,10 @@ export function ResumePreviewStep({ data, templateId, customization, onTemplateC
             width: 794,
             minHeight: 1123,
             background: "#fff",
-            boxShadow: "0 4px 60px rgba(0,0,0,0.25), 0 1px 8px rgba(0,0,0,0.15)",
+            boxShadow: "0 8px 50px rgba(0,0,0,0.28), 0 2px 10px rgba(0,0,0,0.15)",
             borderRadius: 4,
             overflow: "hidden",
+            position: "relative",
             marginBottom: zoom < 1 ? `${(1 - zoom) * -1123 * 0.5}px` : 0,
           }}
         >

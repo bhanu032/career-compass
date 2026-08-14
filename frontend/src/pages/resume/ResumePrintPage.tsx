@@ -48,10 +48,15 @@ export function ResumePrintPage(): JSX.Element {
       <style>{`
         * { box-sizing: border-box; }
         html, body { margin: 0; padding: 0; background: #fff; }
-        @page { size: A4; margin: 0; }
+        @page { size: A4 portrait; margin: 12mm 15mm 12mm 15mm; }
         @media print {
-          html, body { margin: 0; padding: 0; background: #fff; }
+          html, body { margin: 0; padding: 0; background: #fff !important; }
           #print-toolbar { display: none !important; }
+          #resume-print-root {
+            margin: 0 !important;
+            box-shadow: none !important;
+            width: 100% !important;
+          }
         }
         @media screen {
           body { background: #cbd5e1; display: flex; flex-direction: column; align-items: center; padding: 24px 0 60px; gap: 16px; }
@@ -90,12 +95,18 @@ export function ResumePrintPage(): JSX.Element {
             border-radius: 3px;
           }
         }
-        .resume-avoid-break, .resume-section, .resume-item, table, tr {
-          break-inside: avoid;
-          page-break-inside: avoid;
+        .resume-avoid-break, .resume-section, .resume-item, table, tr, li {
+          break-inside: avoid !important;
+          page-break-inside: avoid !important;
         }
+        h1, h2, h3, h4, .section-title, .section-header {
+          break-after: avoid !important;
+          page-break-after: avoid !important;
+          break-inside: avoid !important;
+        }
+        p, li { orphans: 3; widows: 3; }
         .resume-section { break-after: auto; page-break-after: auto; }
-        .resume-page-break { break-before: page; page-break-before: always; }
+        .resume-page-break { break-before: page !important; page-break-before: always !important; }
       `}</style>
 
       {/* Toolbar — only visible on screen, hidden on print */}

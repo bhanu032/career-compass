@@ -1,4 +1,10 @@
 import type { ExamGroup, MockPaper, PaperSection } from "@/types/mockTest";
+import { SSC_CHSL_2024_SET1 } from "@/data/papers/sscChsl";
+import { SSC_MTS_2024_SET1 } from "@/data/papers/sscMts";
+import { IBPS_PO_2024_SET1 } from "@/data/papers/ibpsPo";
+import { RRB_NTPC_2024_SET1 } from "@/data/papers/rrbNtpc";
+import { UPSC_CSE_2024_GS1 } from "@/data/papers/upsc";
+import { CTET_2024_PAPER1_SET1, CTET_2024_PAPER2_SET1 } from "@/data/papers/ctet";
 
 // ── SSC CGL 2025 — 12 Sept Shift 2 ──────────────────────────────────────────
 // Questions sourced from the Similar-Based Paper (Testbook)
@@ -727,18 +733,18 @@ export const EXAM_GROUPS: ExamGroup[] = [
         examGroupId: "ssc",
         name: "SSC CHSL",
         tier: "Tier-I",
-        description: "Combined Higher Secondary Level — Tier I. 100 Qs, 60 mins.",
-        totalPapers: 6,
-        papers: [],
+        description: "Combined Higher Secondary Level — Tier I. 100 Qs, 60 mins, 200 marks. Negative marking: −0.5 per wrong answer.",
+        totalPapers: 1,
+        papers: [SSC_CHSL_2024_SET1],
       },
       {
         id: "ssc-mts",
         examGroupId: "ssc",
         name: "SSC MTS",
         tier: "CBT",
-        description: "Multi-Tasking Staff — Computer Based Test. 90 Qs, 90 mins.",
-        totalPapers: 4,
-        papers: [],
+        description: "Multi-Tasking Staff — Computer Based Test. 90 Qs, 90 mins, 150 marks. No negative marking.",
+        totalPapers: 1,
+        papers: [SSC_MTS_2024_SET1],
       },
     ],
   },
@@ -759,7 +765,7 @@ export const EXAM_GROUPS: ExamGroup[] = [
         tier: "Prelims",
         description: "Institute of Banking Personnel Selection — PO Prelims. 100 Qs, 60 mins.",
         totalPapers: 6,
-        papers: [],
+        papers: [IBPS_PO_2024_SET1],
       },
       {
         id: "sbi-po",
@@ -789,7 +795,7 @@ export const EXAM_GROUPS: ExamGroup[] = [
         tier: "CBT-1",
         description: "Railway Recruitment Board — NTPC CBT-1. 100 Qs, 90 mins.",
         totalPapers: 8,
-        papers: [],
+        papers: [RRB_NTPC_2024_SET1],
       },
     ],
   },
@@ -810,7 +816,7 @@ export const EXAM_GROUPS: ExamGroup[] = [
         tier: "Prelims GS-1",
         description: "Civil Services Exam — Prelims GS Paper I. 100 Qs, 120 mins.",
         totalPapers: 5,
-        papers: [],
+        papers: [UPSC_CSE_2024_GS1],
       },
     ],
   },
@@ -871,9 +877,18 @@ export const EXAM_GROUPS: ExamGroup[] = [
         examGroupId: "teaching",
         name: "CTET",
         tier: "Paper-I",
-        description: "Central Teacher Eligibility Test — Paper I. 150 Qs, 150 mins.",
+        description: "Central Teacher Eligibility Test — Paper I (Primary Stage, Classes I-V). 150 Qs, 150 mins.",
         totalPapers: 6,
-        papers: [],
+        papers: [CTET_2024_PAPER1_SET1],
+      },
+      {
+        id: "ctet-paper2",
+        examGroupId: "teaching",
+        name: "CTET",
+        tier: "Paper-II",
+        description: "Central Teacher Eligibility Test — Paper II (Elementary Stage, Classes VI-VIII). 150 Qs, 150 mins.",
+        totalPapers: 5,
+        papers: [CTET_2024_PAPER2_SET1],
       },
     ],
   },

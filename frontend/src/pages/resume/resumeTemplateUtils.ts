@@ -44,10 +44,10 @@ export const SKILL_STYLE_OPTIONS: Array<{ label: string; value: ResumeSkillStyle
   { label: "Comma list", value: "comma" },
 ];
 
-/** Base horizontal page margin in px (scales with pageMargin multiplier). */
-export const PAGE_MARGIN_H_BASE = 28;
-/** Base vertical page margin in px (scales with pageMargin multiplier). */
-export const PAGE_MARGIN_V_BASE = 20;
+/** Base horizontal page margin in px (scales with pageMargin multiplier) — Standard MS Word ~22mm. */
+export const PAGE_MARGIN_H_BASE = 32;
+/** Base vertical page margin in px (scales with pageMargin multiplier) — Standard MS Word ~20mm. */
+export const PAGE_MARGIN_V_BASE = 28;
 
 /** Compute scaled page margins from customization. */
 export function pageMargins(customization?: ResumeCustomization): {
