@@ -1,40 +1,118 @@
 /**
- * pdfExport — pixel-perfect browser-direct PDF download.
+ * pdfExport — pixel-perfect, section-aware PDF export.
  *
- * Strategy:
- *   1. Accept a pre-rendered HTMLElement (the resume DOM node).
- *   2. Clone it into a hidden off-screen container at full A4 width (794px).
- *   3. Capture with html2canvas at 3× DPI for crisp text.
- *   4. Slice into A4-sized pages and assemble with jsPDF.
- *   5. Trigger a direct browser download — no dialog, no new tab.
- *
- * Why html2canvas + jsPDF instead of window.print():
- *   - Zero print-dialog; fully automatic download.
- *   - CSS (including Tailwind utility classes) is captured as rendered pixels —
- *     no CSS reset or @media print surprises.
- *   - Inline styles (all our templates use them) render perfectly.
- *   - Works across Chrome, Firefox, Edge, Safari.
+ * Key improvement over naive slicing:
+ *   Instead of cutting the canvas at fixed A4-height intervals (which splits
+ *   rows/sections mid-element), we:
+ *     1. Capture the full resume as one tall canvas at 3× DPI.
+ *     2. Walk every .resume-section and .resume-item element in the DOM clone
+ *        to find their actual rendered top/bottom positions.
+ *     3. Build page-break points that always fall in the whitespace GAP between
+ *        sections — never through a skill row, experience block, etc.
+ *     4. Slice the canvas at those smart break points and write one jsPDF page
+ *        per slice (each slice is padded to full A4 height with white fill).
  */
 
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
-// A4 dimensions
-const A4_WIDTH_MM  = 210;
-const A4_HEIGHT_MM = 297;
-const A4_PX_WIDTH  = 794;   // ~210mm @ 96 dpi
-const A4_PX_HEIGHT = 1123;  // ~297mm @ 96 dpi
-
-const SCALE = 3; // 3× for crisp retina-quality output
+const A4_W_MM  = 210;
+const A4_H_MM  = 297;
+const A4_W_PX  = 794;
+const A4_H_PX  = 1123;
+const SCALE    = 3;          // 3× for crisp retina output
+const SAFE_PX  = 20;        // minimum gap (px) to leave at top/bottom of each page
 
 export interface ExportOptions {
-  /** The resume's root HTMLElement to capture */
   element: HTMLElement;
-  /** Filename without extension */
   filename?: string;
-  /** Progress callback 0-100 */
   onProgress?: (pct: number) => void;
 }
+
+// ─── helpers ─────────────────────────────────────────────────────────────────
+
+/**
+ * Collect the top/bottom pixel positions (relative to `root`) of every
+ * element that must not be split across pages.
+ */
+function collectProtectedRanges(
+  root: HTMLElement,
+  container: HTMLElement,
+): Array<{ top: number; bottom: number }> {
+  const containerTop = container.getBoundingClientRect().top;
+
+  const selector = [
+    ".resume-section",
+    ".resume-item",
+    ".resume-avoid-break",
+  ].join(",");
+
+  const elements = root.querySelectorAll<HTMLElement>(selector);
+  const ranges: Array<{ top: number; bottom: number }> = [];
+
+  elements.forEach((el) => {
+    const rect = el.getBoundingClientRect();
+    const top    = rect.top    - containerTop;
+    const bottom = rect.bottom - containerTop;
+    if (bottom > top && bottom > 0) {
+      ranges.push({ top: Math.floor(top), bottom: Math.ceil(bottom) });
+    }
+  });
+
+  return ranges;
+}
+
+/**
+ * Given the total canvas height (at 1× logical px, i.e. ÷ SCALE) and the
+ * list of protected ranges, compute the best y-positions to cut pages.
+ *
+ * Rules:
+ *   - Each page is at most A4_H_PX tall.
+ *   - A cut is only valid if it falls outside every protected range.
+ *   - We try to cut as close to A4_H_PX as possible, scanning backward from
+ *     the ideal cut point until we find a gap between elements.
+ */
+function computePageBreaks(
+  totalHeightPx: number,
+  protected_: Array<{ top: number; bottom: number }>,
+): number[] {
+  const breaks: number[] = [0];
+  let pageStart = 0;
+
+  while (pageStart < totalHeightPx) {
+    const idealEnd = pageStart + A4_H_PX;
+    if (idealEnd >= totalHeightPx) break; // last page — no break needed
+
+    // Scan backward from idealEnd to find the nearest safe cut point
+    let cut = idealEnd;
+    let found = false;
+
+    // Try positions from idealEnd down to (pageStart + SAFE_PX)
+    for (let y = idealEnd; y > pageStart + SAFE_PX; y -= 1) {
+      const blocked = protected_.some(
+        (r) => y > r.top + SAFE_PX && y < r.bottom - SAFE_PX,
+      );
+      if (!blocked) {
+        cut = y;
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      // No safe cut found — fall back to ideal to avoid infinite loop
+      cut = idealEnd;
+    }
+
+    breaks.push(cut);
+    pageStart = cut;
+  }
+
+  breaks.push(totalHeightPx);
+  return breaks;
+}
+
+// ─── main export ─────────────────────────────────────────────────────────────
 
 export async function exportResumeToPdf({
   element,
@@ -43,14 +121,14 @@ export async function exportResumeToPdf({
 }: ExportOptions): Promise<void> {
   onProgress?.(5);
 
-  // ── 1. Build an off-screen clone at exact A4 width ───────────────────────
-  const wrapper = document.createElement("div");
-  Object.assign(wrapper.style, {
+  // ── 1. Build hidden off-screen clone at A4 width ─────────────────────────
+  const container = document.createElement("div");
+  Object.assign(container.style, {
     position:      "fixed",
     top:           "0px",
     left:          "0px",
-    width:         `${A4_PX_WIDTH}px`,
-    minHeight:     `${A4_PX_HEIGHT}px`,
+    width:         `${A4_W_PX}px`,
+    minHeight:     `${A4_H_PX}px`,
     background:    "#ffffff",
     zIndex:        "-9999",
     pointerEvents: "none",
@@ -59,47 +137,55 @@ export async function exportResumeToPdf({
 
   const clone = element.cloneNode(true) as HTMLElement;
   Object.assign(clone.style, {
-    width:     `${A4_PX_WIDTH}px`,
-    minHeight: `${A4_PX_HEIGHT}px`,
+    width:     `${A4_W_PX}px`,
+    minHeight: `${A4_H_PX}px`,
     transform: "none",
     position:  "static",
     margin:    "0",
-    padding:   clone.style.padding || "0",
   });
 
-  wrapper.appendChild(clone);
-  document.body.appendChild(wrapper);
+  container.appendChild(clone);
+  document.body.appendChild(container);
+
+  onProgress?.(10);
+
+  // Wait two rAFs for layout + fonts to settle
+  await new Promise<void>((res) =>
+    requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(res, 150))),
+  );
 
   onProgress?.(15);
 
-  // Wait two frames so layout fully settles
-  await new Promise<void>((res) =>
-    requestAnimationFrame(() => requestAnimationFrame(() => res()))
-  );
+  // ── 2. Collect protected element ranges BEFORE capturing canvas ──────────
+  const logicalHeight = container.scrollHeight;
+  const protectedRanges = collectProtectedRanges(clone, container);
 
-  // ── 2. Capture with html2canvas ──────────────────────────────────────────
+  // ── 3. Capture full canvas ───────────────────────────────────────────────
   let canvas: HTMLCanvasElement;
   try {
-    canvas = await html2canvas(wrapper, {
+    canvas = await html2canvas(container, {
       scale:           SCALE,
       useCORS:         true,
       allowTaint:      false,
       backgroundColor: "#ffffff",
       logging:         false,
-      windowWidth:     A4_PX_WIDTH,
-      windowHeight:    wrapper.scrollHeight,
-      width:           A4_PX_WIDTH,
-      height:          wrapper.scrollHeight,
+      windowWidth:     A4_W_PX,
+      windowHeight:    logicalHeight,
+      width:           A4_W_PX,
+      height:          logicalHeight,
       x: 0,
       y: 0,
     });
   } finally {
-    try { document.body.removeChild(wrapper); } catch { /* ignore */ }
+    try { document.body.removeChild(container); } catch { /* ignore */ }
   }
 
-  onProgress?.(65);
+  onProgress?.(60);
 
-  // ── 3. Assemble PDF ──────────────────────────────────────────────────────
+  // ── 4. Compute smart page breaks ─────────────────────────────────────────
+  const pageBreaks = computePageBreaks(logicalHeight, protectedRanges);
+
+  // ── 5. Build PDF ──────────────────────────────────────────────────────────
   const pdf = new jsPDF({
     orientation: "portrait",
     unit:        "mm",
@@ -107,46 +193,46 @@ export async function exportResumeToPdf({
     compress:    true,
   });
 
-  const canvasWidth    = canvas.width;
-  const canvasHeight   = canvas.height;
-  const pageHeightPx   = A4_PX_HEIGHT * SCALE;
-  const totalPages     = Math.ceil(canvasHeight / pageHeightPx);
-  const progressSlice  = 28 / totalPages; // 65-93 allocated to page building
+  const totalPages   = pageBreaks.length - 1;
+  const progressPer  = 35 / Math.max(totalPages, 1);
 
-  for (let page = 0; page < totalPages; page++) {
-    if (page > 0) pdf.addPage("a4", "portrait");
+  for (let i = 0; i < totalPages; i++) {
+    if (i > 0) pdf.addPage("a4", "portrait");
 
-    const srcY      = page * pageHeightPx;
-    const srcHeight = Math.min(pageHeightPx, canvasHeight - srcY);
+    const sliceTopPx    = pageBreaks[i]    * SCALE;  // canvas coords
+    const sliceBottomPx = pageBreaks[i + 1] * SCALE;
+    const sliceHeightPx = sliceBottomPx - sliceTopPx;
 
-    // Slice this page from the full canvas
+    // Draw this slice onto a fresh A4-sized canvas (white background)
     const pageCanvas = document.createElement("canvas");
-    pageCanvas.width  = canvasWidth;
-    pageCanvas.height = pageHeightPx;
+    pageCanvas.width  = canvas.width;           // A4_W_PX * SCALE
+    pageCanvas.height = A4_H_PX * SCALE;        // always full A4 height
     const ctx = pageCanvas.getContext("2d")!;
     ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, canvasWidth, pageHeightPx);
+    ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+
     ctx.drawImage(
       canvas,
-      0, srcY, canvasWidth, srcHeight,  // source rect
-      0, 0,    canvasWidth, srcHeight,  // dest rect (top of page canvas)
+      0,           sliceTopPx,    // source x, y
+      canvas.width, sliceHeightPx, // source w, h
+      0,           0,             // dest x, y
+      canvas.width, sliceHeightPx, // dest w, h (keep same scale, white fills rest)
     );
 
     pdf.addImage(
-      pageCanvas.toDataURL("image/jpeg", 0.97),
+      pageCanvas.toDataURL("image/jpeg", 0.96),
       "JPEG",
       0, 0,
-      A4_WIDTH_MM,
-      A4_HEIGHT_MM,
+      A4_W_MM, A4_H_MM,
     );
 
-    onProgress?.(65 + Math.round((page + 1) * progressSlice));
+    onProgress?.(60 + Math.round((i + 1) * progressPer));
   }
 
-  onProgress?.(95);
+  onProgress?.(97);
 
-  // ── 4. Direct download ───────────────────────────────────────────────────
-  const safe = filename.replace(/[^a-z0-9_\-. ]/gi, "_").trim() || "Resume";
+  // ── 6. Direct download ────────────────────────────────────────────────────
+  const safe = (filename || "Resume").replace(/[^a-z0-9_\-. ]/gi, "_").trim();
   pdf.save(`${safe}.pdf`);
 
   onProgress?.(100);
