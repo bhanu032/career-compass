@@ -13,5 +13,7 @@ export {
   setFromUpload,
   hydrateResume,
   resetResume,
+  moveSectionInOrder,
+  setSectionOrder,
 } from "./resumeSlice";
 export type { ResumeState } from "./resumeSlice";

@@ -7,28 +7,36 @@
  * - Back to edit
  */
 import { useState } from "react";
-import { ChevronLeft, Download, ZoomIn, ZoomOut, RotateCcw, Maximize2 } from "lucide-react";
-import type { ResumeData, TemplateId } from "@/types/resume";
+import { ChevronLeft, Download, ZoomIn, ZoomOut, RotateCcw, Loader2 } from "lucide-react";
+import type { ResumeCustomization, ResumeData, TemplateId } from "@/types/resume";
 import { RESUME_TEMPLATES } from "@/types/resume";
 import { ResumePreview } from "@/pages/resume/ResumePreview";
 import { useTheme } from "@/hooks/useTheme";
 import { classNames } from "@/utils/format";
+import { useResumeDownload } from "@/hooks/useResumeDownload";
 
 interface Props {
   data: ResumeData;
   templateId: TemplateId;
+  customization?: ResumeCustomization;
   onTemplateChange: (id: TemplateId) => void;
   onBack: () => void;
 }
 
 const ZOOM_LEVELS = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2];
 
-export function ResumePreviewStep({ data, templateId, onTemplateChange, onBack }: Props): JSX.Element {
+export function ResumePreviewStep({ data, templateId, customization, onTemplateChange, onBack }: Props): JSX.Element {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const isTricolor = theme === "tricolor";
   const [zoomIdx, setZoomIdx] = useState(4); // default 0.9
   const zoom = ZOOM_LEVELS[zoomIdx];
+
+  const { isDownloading, progress, triggerDownload } = useResumeDownload();
+
+  function handleDownload() {
+    void triggerDownload(data, templateId, customization);
+  }
 
   const accentBg = isDark
     ? "bg-[#0d0e1a] border-b border-indigo-900/30"
@@ -120,11 +128,15 @@ export function ResumePreviewStep({ data, templateId, onTemplateChange, onBack }
 
           <button
             type="button"
-            onClick={() => window.print()}
+            onClick={handleDownload}
+            disabled={isDownloading}
             className="btn-primary flex items-center gap-1.5 text-sm py-2"
           >
-            <Download className="h-4 w-4" />
-            Download PDF
+            {isDownloading
+              ? <Loader2 className="h-4 w-4 animate-spin" />
+              : <Download className="h-4 w-4" />
+            }
+            {isDownloading ? `${progress}%…` : "Download PDF"}
           </button>
         </div>
       </div>
@@ -150,14 +162,6 @@ export function ResumePreviewStep({ data, templateId, onTemplateChange, onBack }
         </div>
       </div>
 
-      {/* Print styles */}
-      <style>{`
-        @media print {
-          body > *:not(#resume-print-root) { display: none !important; }
-          #resume-print-root { display: block !important; position: fixed; inset: 0; z-index: 9999; }
-          @page { size: A4; margin: 0; }
-        }
-      `}</style>
     </div>
   );
 }

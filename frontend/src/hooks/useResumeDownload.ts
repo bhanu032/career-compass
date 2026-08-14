@@ -52,15 +52,19 @@ export function useResumeDownload() {
       setState({ isDownloading: true, progress: 0, error: null });
 
       // ── Create hidden container ─────────────────────────────────────────
+      // Width must match the A4 pixel equivalent so printMode:true templates
+      // (which use width:210mm) render at exactly 794px = 210mm @96dpi.
+      // Positioned far off-screen to the left — visible to html2canvas but
+      // never visible to the user.
       const container = document.createElement("div");
       Object.assign(container.style, {
         position:      "fixed",
         top:           "0",
-        left:          "0",
+        left:          "-9999px",
         width:         "794px",
         minHeight:     "1123px",
         background:    "#ffffff",
-        zIndex:        "-9999",
+        zIndex:        "9999",
         pointerEvents: "none",
         overflow:      "visible",
       });
@@ -70,18 +74,22 @@ export function useResumeDownload() {
 
       try {
         // ── Render ResumePreview into the hidden container ─────────────────
+        // printMode:true ensures templates use width:210mm / A4 inline styles
+        // so two-column layouts (Modern, Sidebar, etc.) render at full A4 width.
         await new Promise<void>((resolve) => {
           reactRoot.render(
             React.createElement(ResumePreview, {
               data,
               templateId,
               customization,
-              printMode: false,
+              printMode: true,
             })
           );
-          // Two rAFs + small delay to let React paint + fonts load
+          // Three rAFs + longer delay to let React fully paint AND custom fonts settle
           requestAnimationFrame(() =>
-            requestAnimationFrame(() => setTimeout(resolve, 250))
+            requestAnimationFrame(() =>
+              requestAnimationFrame(() => setTimeout(resolve, 600))
+            )
           );
         });
 

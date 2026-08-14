@@ -9,6 +9,7 @@ import {
   resumeShellStyle,
   sectionGap,
 } from "@/pages/resume/resumeTemplateUtils";
+import { getSectionOrder } from "@/pages/resume/useSectionOrder";
 
 interface Props {
   data: ResumeData;
@@ -21,9 +22,10 @@ const DEFAULT_ACCENT = "#54AFE4";
 export function TemplateLato({ data, customization, printMode }: Props): JSX.Element {
   const { personal: p, experience, education, skills, projects, certificates } = data;
   const accent = customization?.accentColor || DEFAULT_ACCENT;
-  const gap = sectionGap(customization, 20);  // was 32
+  const gap = sectionGap(customization, 20);
   const fmt = (d: string) => formatResumeDate(d, customization?.dateFormat);
   const { h, v } = pageMargins(customization);
+  const sectionOrder = getSectionOrder(customization);
 
   const shell = resumeShellStyle(customization, {
     fontFamily: "'Helvetica Neue', Arial, sans-serif",
@@ -156,109 +158,84 @@ export function TemplateLato({ data, customization, printMode }: Props): JSX.Ele
 
       {/* Details */}
       <div style={{ lineHeight: "20px" }}>
-        {/* Experience */}
-        {experience.length > 0 && (
-          <div className="resume-section" style={{ marginBottom: gap }}>
-            {sectionTitle("Experience")}
-            {experience.map((e) =>
-              rowItem(
-                <>
-                  <div style={{ fontWeight: 700 }}>{e.company}</div>
-                  {e.description?.split("\n")[0] && (
+        {sectionOrder.map((key) => {
+          if (key === "experience" && experience.length > 0) return (
+            <div key="experience" className="resume-section" style={{ marginBottom: gap }}>
+              {sectionTitle("Experience")}
+              {experience.map((e) =>
+                rowItem(
+                  <>
+                    <div style={{ fontWeight: 700 }}>{e.company}</div>
                     <div style={{ color: "#64748b", fontSize: 11 }}>{p.address}</div>
-                  )}
-                  <div style={{ color: "#64748b", fontSize: 11 }}>
-                    {fmt(e.startDate)} – {e.current ? "Present" : fmt(e.endDate)}
-                  </div>
-                </>,
-                <>
-                  <div style={{ fontWeight: 700 }}>{e.position}</div>
-                  {e.description && (
-                    <div style={{ color: "#555", marginTop: 4, whiteSpace: "pre-line", fontSize: 12 }}>
-                      {e.description}
+                    <div style={{ color: "#64748b", fontSize: 11 }}>
+                      {fmt(e.startDate)} – {e.current ? "Present" : fmt(e.endDate)}
                     </div>
-                  )}
-                </>,
-                e.id
-              )
-            )}
-          </div>
-        )}
-
-        {/* Education */}
-        {education.length > 0 && (
-          <div className="resume-section" style={{ marginBottom: gap }}>
-            {sectionTitle("Education")}
-            {education.map((e) =>
-              rowItem(
-                <>
-                  <div style={{ fontWeight: 700 }}>{e.institution}</div>
-                  {e.grade && <div style={{ color: "#64748b", fontSize: 11 }}>{e.grade}</div>}
-                  <div style={{ color: "#64748b", fontSize: 11 }}>
-                    {fmt(e.startDate)}{e.endDate ? ` – ${fmt(e.endDate)}` : ""}
-                  </div>
-                </>,
-                <>
-                  <div style={{ fontWeight: 700 }}>
-                    {e.degree}{e.field ? ` in ${e.field}` : ""}
-                  </div>
-                </>,
-                e.id
-              )
-            )}
-          </div>
-        )}
-
-        {/* Projects */}
-        {projects.length > 0 && (
-          <div className="resume-section" style={{ marginBottom: gap }}>
-            {sectionTitle("Projects")}
-            {projects.map((pr) => (
-              <div key={pr.id} className="resume-item resume-avoid-break" style={{ marginBottom: 14 }}>
-                <div style={{ fontWeight: 700 }}>{pr.name}</div>
-                {pr.technologies && (
-                  <div style={{ fontSize: 11, color: "#64748b", fontStyle: "italic" }}>{pr.technologies}</div>
-                )}
-                {pr.description && (
-                  <div style={{ color: "#555", marginTop: 3, fontSize: 12 }}>{pr.description}</div>
-                )}
-                {pr.link && (
-                  <div style={{ fontSize: 11, color: accent, marginTop: 2, fontStyle: "italic" }}>{pr.link}</div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Skills */}
-        {skills.length > 0 && (
-          <div className="resume-section" style={{ marginBottom: gap }}>
-            {sectionTitle("Skills")}
-            {skills.map((s) => (
-              <div
-                key={s.id}
-                className="resume-item"
-                style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}
-              >
-                <div style={{ fontWeight: 600, fontSize: 12.5 }}>{s.name}</div>
-                {customization?.showSkillLevels !== false && skillDots(s.level)}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Certificates */}
-        {certificates.length > 0 && (
-          <div className="resume-section" style={{ marginBottom: 0 }}>
-            {sectionTitle("Certifications")}
-            {certificates.map((c) => (
-              <div key={c.id} className="resume-item resume-avoid-break" style={{ marginBottom: 8, fontSize: 12 }}>
-                <span style={{ fontWeight: 600 }}>{c.name}</span>
-                {c.issuer && <span style={{ color: "#64748b", marginLeft: 10 }}>{c.issuer}{c.date ? ` · ${fmt(c.date)}` : ""}</span>}
-              </div>
-            ))}
-          </div>
-        )}
+                  </>,
+                  <>
+                    <div style={{ fontWeight: 700 }}>{e.position}</div>
+                    {e.description && <div style={{ color: "#555", marginTop: 4, whiteSpace: "pre-line", fontSize: 12 }}>{e.description}</div>}
+                  </>,
+                  e.id
+                )
+              )}
+            </div>
+          );
+          if (key === "education" && education.length > 0) return (
+            <div key="education" className="resume-section" style={{ marginBottom: gap }}>
+              {sectionTitle("Education")}
+              {education.map((e) =>
+                rowItem(
+                  <>
+                    <div style={{ fontWeight: 700 }}>{e.institution}</div>
+                    {e.grade && <div style={{ color: "#64748b", fontSize: 11 }}>{e.grade}</div>}
+                    <div style={{ color: "#64748b", fontSize: 11 }}>
+                      {fmt(e.startDate)}{e.endDate ? ` – ${fmt(e.endDate)}` : ""}
+                    </div>
+                  </>,
+                  <><div style={{ fontWeight: 700 }}>{e.degree}{e.field ? ` in ${e.field}` : ""}</div></>,
+                  e.id
+                )
+              )}
+            </div>
+          );
+          if (key === "projects" && projects.length > 0) return (
+            <div key="projects" className="resume-section" style={{ marginBottom: gap }}>
+              {sectionTitle("Projects")}
+              {projects.map((pr) => (
+                <div key={pr.id} className="resume-item resume-avoid-break" style={{ marginBottom: 14 }}>
+                  <div style={{ fontWeight: 700 }}>{pr.name}</div>
+                  {pr.technologies && <div style={{ fontSize: 11, color: "#64748b", fontStyle: "italic" }}>{pr.technologies}</div>}
+                  {pr.description && <div style={{ color: "#555", marginTop: 3, fontSize: 12 }}>{pr.description}</div>}
+                  {pr.link && <div style={{ fontSize: 11, color: accent, marginTop: 2, fontStyle: "italic" }}>{pr.link}</div>}
+                </div>
+              ))}
+            </div>
+          );
+          if (key === "skills" && skills.length > 0) return (
+            <div key="skills" className="resume-section" style={{ marginBottom: gap }}>
+              {sectionTitle("Skills")}
+              {skills.map((s) => (
+                <div key={s.id} className="resume-item" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                  <div style={{ fontWeight: 600, fontSize: 12.5 }}>{s.name}</div>
+                  {customization?.showSkillLevels !== false && skillDots(s.level)}
+                </div>
+              ))}
+            </div>
+          );
+          if (key === "certificates" && certificates.length > 0) return (
+            <div key="certificates" className="resume-section" style={{ marginBottom: 0 }}>
+              {sectionTitle("Certifications")}
+              {certificates.map((c) => (
+                <div key={c.id} className="resume-item resume-avoid-break" style={{ marginBottom: 8, fontSize: 12 }}>
+                  <span style={{ fontWeight: 600 }}>{c.name}</span>
+                  {c.issuer && <span style={{ color: "#64748b", marginLeft: 10 }}>{c.issuer}{c.date ? ` · ${fmt(c.date)}` : ""}</span>}
+                </div>
+              ))}
+            </div>
+          );
+          if (key === "summary") return null; // summary shown inline in header
+          return null;
+        })}
       </div>
     </div>
   );

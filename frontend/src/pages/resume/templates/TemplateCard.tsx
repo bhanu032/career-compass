@@ -10,6 +10,7 @@ import {
   resumeShellStyle,
   sectionGap,
 } from "@/pages/resume/resumeTemplateUtils";
+import { getSectionOrder } from "@/pages/resume/useSectionOrder";
 
 interface Props {
   data: ResumeData;
@@ -22,9 +23,10 @@ const DEFAULT_ACCENT = "#4682bf";
 export function TemplateCard({ data, customization, printMode }: Props): JSX.Element {
   const { personal: p, experience, education, skills, projects, certificates } = data;
   const accent = customization?.accentColor || DEFAULT_ACCENT;
-  const gap = sectionGap(customization, 14);  // was 20
+  const gap = sectionGap(customization, 14);
   const fmt = (d: string) => formatResumeDate(d, customization?.dateFormat);
   const { h, v } = pageMargins(customization);
+  const sectionOrder = getSectionOrder(customization);
 
   const shell = resumeShellStyle(customization, {
     fontFamily: "'Helvetica Neue', Arial, sans-serif",
@@ -213,93 +215,51 @@ export function TemplateCard({ data, customization, printMode }: Props): JSX.Ele
         </div>
       </div>
 
-      {/* Right panel */}
+      {/* Right panel — sections in user-defined order */}
       <div style={{ flex: 1, padding: `${v}px ${h}px`, background: "#fff" }}>
-        {/* Education timeline */}
-        {education.length > 0 &&
-          detailSection("🎓", "Education", education.map((e) => (
-            <div
-              key={e.id}
-              className="resume-item resume-avoid-break"
-              style={{
-                position: "relative",
-                paddingLeft: 20,
-                marginBottom: 14,
-              }}
-            >
-              {/* Timeline dot + line */}
-              <div
-                style={{
-                  position: "absolute",
-                  left: -1,
-                  top: 4,
-                  width: 10,
-                  height: 10,
-                  borderRadius: "50%",
-                  border: `2.5px solid #1e293b`,
-                  background: "#fff",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  left: 3.5,
-                  top: 16,
-                  width: 2,
-                  height: "calc(100% - 4px)",
-                  background: "#1e293b",
-                }}
-              />
-              <div style={{ fontWeight: 700, fontSize: 12.5 }}>
-                {e.degree}{e.field ? ` in ${e.field}` : ""}
+        {sectionOrder.map((key) => {
+          if (key === "education" && education.length > 0) return (
+            detailSection("🎓", "Education", education.map((e) => (
+              <div key={e.id} className="resume-item resume-avoid-break" style={{ position: "relative", paddingLeft: 20, marginBottom: 14 }}>
+                <div style={{ position: "absolute", left: -1, top: 4, width: 10, height: 10, borderRadius: "50%", border: "2.5px solid #1e293b", background: "#fff" }} />
+                <div style={{ position: "absolute", left: 3.5, top: 16, width: 2, height: "calc(100% - 4px)", background: "#1e293b" }} />
+                <div style={{ fontWeight: 700, fontSize: 12.5 }}>{e.degree}{e.field ? ` in ${e.field}` : ""}</div>
+                <div style={{ fontSize: 11.5, color: "#555" }}>{e.institution}</div>
+                <div style={{ fontSize: 11, color: "#888" }}>{fmt(e.startDate)}{e.endDate ? ` – ${fmt(e.endDate)}` : ""}{e.grade ? ` · ${e.grade}` : ""}</div>
               </div>
-              <div style={{ fontSize: 11.5, color: "#555" }}>{e.institution}</div>
-              <div style={{ fontSize: 11, color: "#888" }}>
-                {fmt(e.startDate)}{e.endDate ? ` – ${fmt(e.endDate)}` : ""}
-                {e.grade ? ` · ${e.grade}` : ""}
-              </div>
-            </div>
-          )))}
-
-        {/* Experience */}
-        {experience.length > 0 &&
-          detailSection("💼", "Experience", experience.map((e) => (
-            <div key={e.id} className="resume-item resume-avoid-break" style={{ marginBottom: 14 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: 12.5 }}>{e.position}</div>
-                  <div style={{ fontSize: 11.5, color: accent, fontWeight: 600 }}>{e.company}</div>
+            )))
+          );
+          if (key === "experience" && experience.length > 0) return (
+            detailSection("💼", "Experience", experience.map((e) => (
+              <div key={e.id} className="resume-item resume-avoid-break" style={{ marginBottom: 14 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: 12.5 }}>{e.position}</div>
+                    <div style={{ fontSize: 11.5, color: accent, fontWeight: 600 }}>{e.company}</div>
+                  </div>
+                  <div style={{ fontSize: 10.5, color: "#888", flexShrink: 0, marginLeft: 8 }}>
+                    {fmt(e.startDate)} – {e.current ? "Present" : fmt(e.endDate)}
+                  </div>
                 </div>
-                <div style={{ fontSize: 10.5, color: "#888", flexShrink: 0, marginLeft: 8 }}>
-                  {fmt(e.startDate)} – {e.current ? "Present" : fmt(e.endDate)}
-                </div>
+                {e.description && <div style={{ fontSize: 11.5, color: "#555", marginTop: 5, whiteSpace: "pre-line", lineHeight: 1.6 }}>{e.description}</div>}
               </div>
-              {e.description && (
-                <div style={{ fontSize: 11.5, color: "#555", marginTop: 5, whiteSpace: "pre-line", lineHeight: 1.6 }}>
-                  {e.description}
+            )))
+          );
+          if (key === "projects" && projects.length > 0) return (
+            detailSection("🚀", "Projects", projects.map((pr) => (
+              <div key={pr.id} className="resume-item resume-avoid-break" style={{ marginBottom: 12 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                  <div style={{ fontWeight: 700, fontSize: 12.5 }}>{pr.name}</div>
+                  {pr.technologies && <div style={{ fontSize: 10.5, color: "#888", fontStyle: "italic" }}>{pr.technologies}</div>}
                 </div>
-              )}
-            </div>
-          )))}
-
-        {/* Projects */}
-        {projects.length > 0 &&
-          detailSection("🚀", "Projects", projects.map((pr) => (
-            <div key={pr.id} className="resume-item resume-avoid-break" style={{ marginBottom: 12 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                <div style={{ fontWeight: 700, fontSize: 12.5 }}>{pr.name}</div>
-                {pr.technologies && (
-                  <div style={{ fontSize: 10.5, color: "#888", fontStyle: "italic" }}>{pr.technologies}</div>
-                )}
+                {pr.description && <div style={{ fontSize: 11.5, color: "#555", marginTop: 3, lineHeight: 1.6 }}>{pr.description}</div>}
+                {pr.link && <div style={{ fontSize: 11, color: accent, marginTop: 2, fontStyle: "italic" }}>{pr.link}</div>}
               </div>
-              {pr.description && (
-                <div style={{ fontSize: 11.5, color: "#555", marginTop: 3, lineHeight: 1.6 }}>{pr.description}</div>
-              )}
-              {pr.link && (
-                <div style={{ fontSize: 11, color: accent, marginTop: 2, fontStyle: "italic" }}>{pr.link}</div>
-              )}
-            </div>
-          )))}
+            )))
+          );
+          // summary, skills, certificates are in the left panel — skip in right
+          return null;
+        })}
       </div>
     </div>
   );

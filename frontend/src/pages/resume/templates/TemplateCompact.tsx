@@ -5,6 +5,7 @@
  */
 import type { ResumeCustomization, ResumeData } from "@/types/resume";
 import { formatResumeDate, pageMargins, resumeShellStyle, sectionGap } from "@/pages/resume/resumeTemplateUtils";
+import { getSectionOrder } from "@/pages/resume/useSectionOrder";
 
 interface Props { data: ResumeData; customization?: ResumeCustomization; printMode?: boolean; }
 
@@ -42,9 +43,10 @@ function SectionTitle({ children }: { children: string }) {
 
 export function TemplateCompact({ data, customization, printMode }: Props): JSX.Element {
   const { personal: p, experience, education, skills, projects, certificates } = data;
-  const gap = sectionGap(customization, 8);   // was 10
+  const gap = sectionGap(customization, 8);
   const fmt = (d: string) => formatResumeDate(d, customization?.dateFormat);
   const { h, v } = pageMargins(customization);
+  const sectionOrder = getSectionOrder(customization);
 
   const wrap = {
     ...resumeShellStyle(customization, {
@@ -59,34 +61,97 @@ export function TemplateCompact({ data, customization, printMode }: Props): JSX.
 
   const allSkillNames = skills.map((s) => s.name).filter(Boolean);
 
+  const sectionMap: Partial<Record<string, JSX.Element | null>> = {
+    summary: p.summary ? (
+      <div key="summary" className="resume-section resume-avoid-break" style={{ marginBottom: gap }}>
+        <SectionTitle>Objective / Summary</SectionTitle>
+        <p style={{ margin: 0, lineHeight: 1.65, fontSize: 11.5, color: "#374151" }}>{p.summary}</p>
+      </div>
+    ) : null,
+    experience: experience.length > 0 ? (
+      <div key="experience" className="resume-section resume-avoid-break" style={{ marginBottom: gap }}>
+        <SectionTitle>Work Experience</SectionTitle>
+        {experience.map((e, i) => (
+          <div key={e.id} className="resume-item resume-avoid-break" style={{ marginBottom: 7 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+              <span style={{ fontWeight: 700, fontSize: 11.5 }}>{e.position}</span>
+              <span style={{ fontSize: 10.5, color: "#6b7280", flexShrink: 0, marginLeft: 8 }}>
+                {fmt(e.startDate)} – {e.current ? "Present" : fmt(e.endDate)}
+              </span>
+            </div>
+            <p style={{ margin: "1px 0 0", fontSize: 11, color: ACC, fontWeight: 600 }}>{e.company}</p>
+            {e.description && <p style={{ margin: "3px 0 0", fontSize: 11, lineHeight: 1.65, color: "#4b5563", whiteSpace: "pre-line" }}>{e.description}</p>}
+            {i < experience.length - 1 && <HR />}
+          </div>
+        ))}
+      </div>
+    ) : null,
+    education: education.length > 0 ? (
+      <div key="education" className="resume-section resume-avoid-break" style={{ marginBottom: gap }}>
+        <SectionTitle>Education</SectionTitle>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
+          <thead>
+            <tr style={{ background: "#f9fafb" }}>
+              {["Degree / Course", "Institution", "Year", "Grade"].map((h) => (
+                <th key={h} style={{ textAlign: "left", padding: "4px 7px", fontSize: 10.5, fontWeight: 700, color: "#374151", borderBottom: "1px solid #e5e7eb" }}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {education.map((e) => (
+              <tr key={e.id} style={{ borderBottom: "1px solid #f3f4f6" }}>
+                <td style={{ padding: "4px 7px", fontWeight: 600 }}>{e.degree}{e.field ? ` (${e.field})` : ""}</td>
+                <td style={{ padding: "4px 7px", color: "#374151" }}>{e.institution}</td>
+                <td style={{ padding: "4px 7px", color: "#6b7280", whiteSpace: "nowrap" }}>{fmt(e.endDate) || fmt(e.startDate)}</td>
+                <td style={{ padding: "4px 7px", color: "#6b7280" }}>{e.grade}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    ) : null,
+    skills: allSkillNames.length > 0 ? (
+      <div key="skills" className="resume-section resume-avoid-break" style={{ marginBottom: gap }}>
+        <SectionTitle>Skills</SectionTitle>
+        <p style={{ margin: 0, fontSize: 11.5, lineHeight: 1.8, color: "#374151" }}>{allSkillNames.join(" • ")}</p>
+      </div>
+    ) : null,
+    projects: projects.length > 0 ? (
+      <div key="projects" className="resume-section resume-avoid-break" style={{ marginBottom: gap }}>
+        <SectionTitle>Projects</SectionTitle>
+        {projects.map((pr, i) => (
+          <div key={pr.id} className="resume-item resume-avoid-break" style={{ marginBottom: 5 }}>
+            <span style={{ fontWeight: 700, fontSize: 11.5 }}>{pr.name}</span>
+            {pr.technologies && <span style={{ fontSize: 11, color: "#6b7280" }}> — {pr.technologies}</span>}
+            {pr.description && <p style={{ margin: "2px 0 0", fontSize: 11, lineHeight: 1.6, color: "#4b5563" }}>{pr.description}</p>}
+            {pr.link && <p style={{ margin: "1px 0 0", fontSize: 10.5, color: ACC }}>{pr.link}</p>}
+            {i < projects.length - 1 && <HR />}
+          </div>
+        ))}
+      </div>
+    ) : null,
+    certificates: certificates.length > 0 ? (
+      <div key="certificates" className="resume-section resume-avoid-break">
+        <SectionTitle>Certifications</SectionTitle>
+        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          {certificates.map((c) => (
+            <div key={c.id} className="resume-item resume-avoid-break" style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", fontSize: 11.5 }}>
+              <span style={{ fontWeight: 600 }}>{c.name}</span>
+              <span style={{ color: "#6b7280", fontSize: 11 }}>{c.issuer}{c.date ? ` · ${fmt(c.date)}` : ""}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    ) : null,
+  };
+
   return (
     <div className="resume-template" style={wrap}>
-      {/* Name header */}
-      <div
-        style={{
-          borderBottom: `2px solid ${DARK}`,
-          paddingBottom: 9,
-          marginBottom: 10,
-        }}
-      >
-        <h1 style={{ margin: 0, fontSize: 21, fontWeight: 700, color: DARK, letterSpacing: 0.5 }}>
-          {p.fullName || "Your Name"}
-        </h1>
-        {p.jobTitle && (
-          <p style={{ margin: "3px 0 0", fontSize: 11.5, color: ACC, fontWeight: 600 }}>
-            {p.jobTitle}
-          </p>
-        )}
-        <div
-          style={{
-            marginTop: 5,
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "2px 14px",
-            fontSize: 11,
-            color: "#374151",
-          }}
-        >
+      {/* Name header — always pinned */}
+      <div style={{ borderBottom: `2px solid ${DARK}`, paddingBottom: 9, marginBottom: 10 }}>
+        <h1 style={{ margin: 0, fontSize: 21, fontWeight: 700, color: DARK, letterSpacing: 0.5 }}>{p.fullName || "Your Name"}</h1>
+        {p.jobTitle && <p style={{ margin: "3px 0 0", fontSize: 11.5, color: ACC, fontWeight: 600 }}>{p.jobTitle}</p>}
+        <div style={{ marginTop: 5, display: "flex", flexWrap: "wrap", gap: "2px 14px", fontSize: 11, color: "#374151" }}>
           {p.phone    && <span>{p.phone}</span>}
           {p.email    && <span>{p.email}</span>}
           {p.address  && <span>{p.address}</span>}
@@ -95,175 +160,8 @@ export function TemplateCompact({ data, customization, printMode }: Props): JSX.
         </div>
       </div>
 
-      {p.summary && (
-        <div className="resume-section resume-avoid-break" style={{ marginBottom: gap }}>
-          <SectionTitle>Objective / Summary</SectionTitle>
-          <p style={{ margin: 0, lineHeight: 1.65, fontSize: 11.5, color: "#374151" }}>
-            {p.summary}
-          </p>
-        </div>
-      )}
-
-      {experience.length > 0 && (
-        <div className="resume-section resume-avoid-break" style={{ marginBottom: gap }}>
-          <SectionTitle>Work Experience</SectionTitle>
-          {experience.map((e, i) => (
-            <div
-              key={e.id}
-              className="resume-item resume-avoid-break"
-              style={{ marginBottom: 7 }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "baseline",
-                }}
-              >
-                <span style={{ fontWeight: 700, fontSize: 11.5 }}>{e.position}</span>
-                <span
-                  style={{
-                    fontSize: 10.5,
-                    color: "#6b7280",
-                    flexShrink: 0,
-                    marginLeft: 8,
-                  }}
-                >
-                  {fmt(e.startDate)} – {e.current ? "Present" : fmt(e.endDate)}
-                </span>
-              </div>
-              <p style={{ margin: "1px 0 0", fontSize: 11, color: ACC, fontWeight: 600 }}>
-                {e.company}
-              </p>
-              {e.description && (
-                <p
-                  style={{
-                    margin: "3px 0 0",
-                    fontSize: 11,
-                    lineHeight: 1.65,
-                    color: "#4b5563",
-                    whiteSpace: "pre-line",
-                  }}
-                >
-                  {e.description}
-                </p>
-              )}
-              {i < experience.length - 1 && <HR />}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {education.length > 0 && (
-        <div className="resume-section resume-avoid-break" style={{ marginBottom: gap }}>
-          <SectionTitle>Education</SectionTitle>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
-            <thead>
-              <tr style={{ background: "#f9fafb" }}>
-                {["Degree / Course", "Institution", "Year", "Grade"].map((h) => (
-                  <th
-                    key={h}
-                    style={{
-                      textAlign: "left",
-                      padding: "4px 7px",
-                      fontSize: 10.5,
-                      fontWeight: 700,
-                      color: "#374151",
-                      borderBottom: "1px solid #e5e7eb",
-                    }}
-                  >
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {education.map((e) => (
-                <tr key={e.id} style={{ borderBottom: "1px solid #f3f4f6" }}>
-                  <td style={{ padding: "4px 7px", fontWeight: 600 }}>
-                    {e.degree}
-                    {e.field ? ` (${e.field})` : ""}
-                  </td>
-                  <td style={{ padding: "4px 7px", color: "#374151" }}>{e.institution}</td>
-                  <td style={{ padding: "4px 7px", color: "#6b7280", whiteSpace: "nowrap" }}>
-                    {fmt(e.endDate) || fmt(e.startDate)}
-                  </td>
-                  <td style={{ padding: "4px 7px", color: "#6b7280" }}>{e.grade}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {allSkillNames.length > 0 && (
-        <div className="resume-section resume-avoid-break" style={{ marginBottom: gap }}>
-          <SectionTitle>Skills</SectionTitle>
-          <p style={{ margin: 0, fontSize: 11.5, lineHeight: 1.8, color: "#374151" }}>
-            {allSkillNames.join(" • ")}
-          </p>
-        </div>
-      )}
-
-      {projects.length > 0 && (
-        <div className="resume-section resume-avoid-break" style={{ marginBottom: gap }}>
-          <SectionTitle>Projects</SectionTitle>
-          {projects.map((pr, i) => (
-            <div
-              key={pr.id}
-              className="resume-item resume-avoid-break"
-              style={{ marginBottom: 5 }}
-            >
-              <span style={{ fontWeight: 700, fontSize: 11.5 }}>{pr.name}</span>
-              {pr.technologies && (
-                <span style={{ fontSize: 11, color: "#6b7280" }}> — {pr.technologies}</span>
-              )}
-              {pr.description && (
-                <p
-                  style={{
-                    margin: "2px 0 0",
-                    fontSize: 11,
-                    lineHeight: 1.6,
-                    color: "#4b5563",
-                  }}
-                >
-                  {pr.description}
-                </p>
-              )}
-              {pr.link && (
-                <p style={{ margin: "1px 0 0", fontSize: 10.5, color: ACC }}>{pr.link}</p>
-              )}
-              {i < projects.length - 1 && <HR />}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {certificates.length > 0 && (
-        <div className="resume-section resume-avoid-break">
-          <SectionTitle>Certifications</SectionTitle>
-          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            {certificates.map((c) => (
-              <div
-                key={c.id}
-                className="resume-item resume-avoid-break"
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "baseline",
-                  fontSize: 11.5,
-                }}
-              >
-                <span style={{ fontWeight: 600 }}>{c.name}</span>
-                <span style={{ color: "#6b7280", fontSize: 11 }}>
-                  {c.issuer}
-                  {c.date ? ` · ${fmt(c.date)}` : ""}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Sections in user-defined order */}
+      {sectionOrder.map((key) => sectionMap[key] ?? null)}
     </div>
   );
 }

@@ -62,6 +62,25 @@ export interface ResumeData {
 export type ResumeDateFormat = "MMM YYYY" | "MMMM YYYY" | "MM/YYYY" | "YYYY";
 export type ResumeSkillStyle = "bars" | "chips" | "comma";
 
+/** The reorderable resume section keys (personal is always pinned to header) */
+export type ResumeSectionKey =
+  | "summary"
+  | "experience"
+  | "education"
+  | "skills"
+  | "projects"
+  | "certificates";
+
+/** Default render order for sections */
+export const DEFAULT_SECTION_ORDER: ResumeSectionKey[] = [
+  "summary",
+  "experience",
+  "education",
+  "skills",
+  "projects",
+  "certificates",
+];
+
 export interface ResumeCustomization {
   schemaVersion: 1;
   accentColor: string;
@@ -73,6 +92,8 @@ export interface ResumeCustomization {
   dateFormat: ResumeDateFormat;
   skillStyle: ResumeSkillStyle;
   showSkillLevels: boolean;
+  /** Ordered list of sections to render. Personal info is always pinned. */
+  sectionOrder: ResumeSectionKey[];
 }
 
 export type TemplateId =
@@ -260,6 +281,7 @@ export const DEFAULT_RESUME_CUSTOMIZATION: ResumeCustomization = {
   dateFormat: "MMM YYYY",
   skillStyle: "bars",
   showSkillLevels: true,
+  sectionOrder: [...DEFAULT_SECTION_ORDER],
 };
 
 export const EMPTY_RESUME: ResumeData = {

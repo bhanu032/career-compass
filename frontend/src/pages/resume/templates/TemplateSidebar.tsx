@@ -9,6 +9,7 @@ import {
   resumeShellStyle,
   sectionGap,
 } from "@/pages/resume/resumeTemplateUtils";
+import { getSectionOrder } from "@/pages/resume/useSectionOrder";
 
 interface Props {
   data: ResumeData;
@@ -22,9 +23,10 @@ export function TemplateSidebar({ data, customization, printMode }: Props): JSX.
   const { personal: p, experience, education, skills, projects, certificates } = data;
   const accent = customization?.accentColor || DEFAULT_ACCENT;
   const sidebarBg = "#2d2d2d";
-  const gap = sectionGap(customization, 16);  // was 24
+  const gap = sectionGap(customization, 16);
   const fmt = (d: string) => formatResumeDate(d, customization?.dateFormat);
   const { h, v } = pageMargins(customization);
+  const sectionOrder = getSectionOrder(customization);
 
   const shell = resumeShellStyle(customization, {
     fontFamily: "'Helvetica Neue', Arial, sans-serif",
@@ -53,8 +55,8 @@ export function TemplateSidebar({ data, customization, printMode }: Props): JSX.
     </div>
   );
 
-  const mainSection = (title: string, children: React.ReactNode) => (
-    <div className="resume-section" style={{ marginBottom: gap }}>
+  const mainSection = (key: string, title: string, children: React.ReactNode) => (
+    <div key={key} className="resume-section" style={{ marginBottom: gap }}>
       <div
         style={{
           fontSize: 10,
@@ -64,7 +66,7 @@ export function TemplateSidebar({ data, customization, printMode }: Props): JSX.
           textTransform: "uppercase",
           marginBottom: 12,
           paddingBottom: 4,
-          borderBottom: `1px solid #e2e8f0`,
+          borderBottom: "1px solid #e2e8f0",
         }}
       >
         {title}
@@ -76,9 +78,82 @@ export function TemplateSidebar({ data, customization, printMode }: Props): JSX.
   const skillLevelWidth = (level: string) =>
     level === "Expert" ? "95%" : level === "Advanced" ? "78%" : level === "Intermediate" ? "58%" : "35%";
 
+  // Build the main-column section map respecting sectionOrder
+  const mainSectionMap: Partial<Record<string, JSX.Element | null>> = {
+    summary: p.summary
+      ? mainSection("summary", "Profile",
+          <p style={{ margin: 0, color: "#444", lineHeight: 1.75, fontSize: 12 }}>{p.summary}</p>
+        )
+      : null,
+    experience: experience.length > 0
+      ? mainSection("experience", "Experience",
+          experience.map((e) => (
+            <div key={e.id} className="resume-item resume-avoid-break" style={{ marginBottom: 16 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 13 }}>{e.position}</div>
+                  <div style={{ fontSize: 11.5, color: accent, fontWeight: 600 }}>{e.company}</div>
+                </div>
+                <div style={{ fontSize: 11, color: "#888", flexShrink: 0, marginLeft: 8 }}>
+                  {fmt(e.startDate)} – {e.current ? "Present" : fmt(e.endDate)}
+                </div>
+              </div>
+              {e.description && (
+                <div style={{ marginTop: 6, fontSize: 11.5, color: "#444", whiteSpace: "pre-line", lineHeight: 1.65 }}>
+                  {e.description}
+                </div>
+              )}
+            </div>
+          ))
+        )
+      : null,
+    education: education.length > 0
+      ? mainSection("education", "Education",
+          education.map((e) => (
+            <div key={e.id} className="resume-item resume-avoid-break" style={{ marginBottom: 12 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 12.5 }}>
+                    {e.degree}{e.field ? ` in ${e.field}` : ""}
+                  </div>
+                  <div style={{ fontSize: 11.5, color: accent }}>{e.institution}</div>
+                </div>
+                <div style={{ fontSize: 11, color: "#888", flexShrink: 0, marginLeft: 8 }}>
+                  {fmt(e.startDate)}{e.endDate ? ` – ${fmt(e.endDate)}` : ""}
+                </div>
+              </div>
+              {e.grade && <div style={{ fontSize: 11, color: "#666", marginTop: 2 }}>Grade: {e.grade}</div>}
+            </div>
+          ))
+        )
+      : null,
+    projects: projects.length > 0
+      ? mainSection("projects", "Projects",
+          projects.map((pr) => (
+            <div key={pr.id} className="resume-item resume-avoid-break" style={{ marginBottom: 12 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                <div style={{ fontWeight: 700, fontSize: 12.5 }}>{pr.name}</div>
+                {pr.technologies && (
+                  <div style={{ fontSize: 10.5, color: "#888", fontStyle: "italic" }}>{pr.technologies}</div>
+                )}
+              </div>
+              {pr.description && (
+                <div style={{ fontSize: 11.5, color: "#444", marginTop: 3, lineHeight: 1.6 }}>{pr.description}</div>
+              )}
+              {pr.link && (
+                <div style={{ fontSize: 11, color: accent, marginTop: 2, fontStyle: "italic" }}>{pr.link}</div>
+              )}
+            </div>
+          ))
+        )
+      : null,
+    skills: null,       // rendered in sidebar
+    certificates: null, // rendered in sidebar
+  };
+
   return (
     <div className="resume-template" style={shell}>
-      {/* Top bar */}
+      {/* Top bar — always pinned */}
       <div
         style={{
           background: sidebarBg,
@@ -91,15 +166,7 @@ export function TemplateSidebar({ data, customization, printMode }: Props): JSX.
         }}
       >
         <div>
-          <div
-            style={{
-              fontSize: 30,
-              fontWeight: 100,
-              letterSpacing: 6,
-              textTransform: "uppercase",
-              lineHeight: 1.1,
-            }}
-          >
+          <div style={{ fontSize: 30, fontWeight: 100, letterSpacing: 6, textTransform: "uppercase", lineHeight: 1.1 }}>
             {p.fullName || "Your Name"}
           </div>
           {p.jobTitle && (
@@ -108,20 +175,12 @@ export function TemplateSidebar({ data, customization, printMode }: Props): JSX.
             </div>
           )}
         </div>
-        <div
-          style={{
-            width: 4,
-            height: 48,
-            background: accent,
-            borderRadius: 2,
-            flexShrink: 0,
-          }}
-        />
+        <div style={{ width: 4, height: 48, background: accent, borderRadius: 2, flexShrink: 0 }} />
       </div>
 
-      {/* Body: sidebar + content */}
+      {/* Body: sidebar + main */}
       <div style={{ display: "flex", flex: 1 }}>
-        {/* Sidebar */}
+        {/* Left sidebar — contact, skills, certs always here */}
         <div
           style={{
             width: "30%",
@@ -133,18 +192,15 @@ export function TemplateSidebar({ data, customization, printMode }: Props): JSX.
             lineHeight: 1.7,
           }}
         >
-          {/* Contact */}
           {(p.email || p.phone || p.address || p.linkedin || p.website) && (
             <>
-              {p.email && <div style={{ marginBottom: 4, wordBreak: "break-all" }}>{p.email}</div>}
-              {p.phone && <div style={{ marginBottom: 4 }}>{p.phone}</div>}
-              {p.address && <div style={{ marginBottom: 4 }}>{p.address}</div>}
+              {p.email    && <div style={{ marginBottom: 4, wordBreak: "break-all" }}>{p.email}</div>}
+              {p.phone    && <div style={{ marginBottom: 4 }}>{p.phone}</div>}
+              {p.address  && <div style={{ marginBottom: 4 }}>{p.address}</div>}
               {p.linkedin && <div style={{ marginBottom: 4, color: accent }}>{p.linkedin}</div>}
-              {p.website && <div style={{ marginBottom: 4, color: accent }}>{p.website}</div>}
+              {p.website  && <div style={{ marginBottom: 4, color: accent }}>{p.website}</div>}
             </>
           )}
-
-          {/* Skills */}
           {skills.length > 0 && (
             <>
               {sideHeader("Skills")}
@@ -154,21 +210,12 @@ export function TemplateSidebar({ data, customization, printMode }: Props): JSX.
                     <span style={{ color: "#ddd" }}>{s.name}</span>
                   </div>
                   <div style={{ height: 3, background: "#444", borderRadius: 99 }}>
-                    <div
-                      style={{
-                        width: skillLevelWidth(s.level),
-                        height: "100%",
-                        background: accent,
-                        borderRadius: 99,
-                      }}
-                    />
+                    <div style={{ width: skillLevelWidth(s.level), height: "100%", background: accent, borderRadius: 99 }} />
                   </div>
                 </div>
               ))}
             </>
           )}
-
-          {/* Certifications */}
           {certificates.length > 0 && (
             <>
               {sideHeader("Certifications")}
@@ -186,81 +233,9 @@ export function TemplateSidebar({ data, customization, printMode }: Props): JSX.
           )}
         </div>
 
-        {/* Main content */}
-        <div
-          style={{
-            flex: 1,
-            padding: `${v}px ${h}px`,
-            background: "#fff",
-          }}
-        >
-          {/* Summary */}
-          {p.summary && (
-            mainSection("Profile", (
-              <p style={{ margin: 0, color: "#444", lineHeight: 1.75, fontSize: 12 }}>{p.summary}</p>
-            ))
-          )}
-
-          {/* Experience */}
-          {experience.length > 0 &&
-            mainSection("Experience", experience.map((e) => (
-              <div key={e.id} className="resume-item resume-avoid-break" style={{ marginBottom: 16 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                  <div>
-                    <div style={{ fontWeight: 700, fontSize: 13 }}>{e.position}</div>
-                    <div style={{ fontSize: 11.5, color: accent, fontWeight: 600 }}>{e.company}</div>
-                  </div>
-                  <div style={{ fontSize: 11, color: "#888", flexShrink: 0, marginLeft: 8 }}>
-                    {fmt(e.startDate)} – {e.current ? "Present" : fmt(e.endDate)}
-                  </div>
-                </div>
-                {e.description && (
-                  <div style={{ marginTop: 6, fontSize: 11.5, color: "#444", whiteSpace: "pre-line", lineHeight: 1.65 }}>
-                    {e.description}
-                  </div>
-                )}
-              </div>
-            )))}
-
-          {/* Education */}
-          {education.length > 0 &&
-            mainSection("Education", education.map((e) => (
-              <div key={e.id} className="resume-item resume-avoid-break" style={{ marginBottom: 12 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                  <div>
-                    <div style={{ fontWeight: 700, fontSize: 12.5 }}>
-                      {e.degree}{e.field ? ` in ${e.field}` : ""}
-                    </div>
-                    <div style={{ fontSize: 11.5, color: accent }}>{e.institution}</div>
-                  </div>
-                  <div style={{ fontSize: 11, color: "#888", flexShrink: 0, marginLeft: 8 }}>
-                    {fmt(e.startDate)}{e.endDate ? ` – ${fmt(e.endDate)}` : ""}
-                  </div>
-                </div>
-                {e.grade && (
-                  <div style={{ fontSize: 11, color: "#666", marginTop: 2 }}>Grade: {e.grade}</div>
-                )}
-              </div>
-            )))}
-
-          {/* Projects */}
-          {projects.length > 0 &&
-            mainSection("Projects", projects.map((pr) => (
-              <div key={pr.id} className="resume-item resume-avoid-break" style={{ marginBottom: 12 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                  <div style={{ fontWeight: 700, fontSize: 12.5 }}>{pr.name}</div>
-                  {pr.technologies && (
-                    <div style={{ fontSize: 10.5, color: "#888", fontStyle: "italic" }}>{pr.technologies}</div>
-                  )}
-                </div>
-                {pr.description && (
-                  <div style={{ fontSize: 11.5, color: "#444", marginTop: 3, lineHeight: 1.6 }}>{pr.description}</div>
-                )}
-                {pr.link && (
-                  <div style={{ fontSize: 11, color: accent, marginTop: 2, fontStyle: "italic" }}>{pr.link}</div>
-                )}
-              </div>
-            )))}
+        {/* Main content — respects sectionOrder */}
+        <div style={{ flex: 1, padding: `${v}px ${h}px`, background: "#fff" }}>
+          {sectionOrder.map((key) => mainSectionMap[key] ?? null)}
         </div>
       </div>
     </div>

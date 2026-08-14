@@ -14,9 +14,10 @@
  */
 
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { ResumeCustomization, ResumeData, TemplateId } from "@/types/resume";
+import type { ResumeCustomization, ResumeData, TemplateId, ResumeSectionKey } from "@/types/resume";
 import {
   DEFAULT_RESUME_CUSTOMIZATION,
+  DEFAULT_SECTION_ORDER,
   SAMPLE_RESUME,
 } from "@/types/resume";
 import { customizationForTemplate } from "@/pages/resume/resumeTemplateUtils";
@@ -104,6 +105,37 @@ const resumeSlice = createSlice({
     resetResume() {
       return RESUME_INITIAL_STATE;
     },
+
+    /**
+     * Move a section up or down in sectionOrder.
+     * direction: -1 = up, +1 = down
+     */
+    moveSectionInOrder(
+      state,
+      action: PayloadAction<{ key: ResumeSectionKey; direction: -1 | 1 }>
+    ) {
+      const { key, direction } = action.payload;
+      const order: ResumeSectionKey[] = [
+        ...(state.customization.sectionOrder?.length
+          ? state.customization.sectionOrder
+          : DEFAULT_SECTION_ORDER),
+      ];
+      const idx = order.indexOf(key);
+      if (idx === -1) return;
+      const newIdx = idx + direction;
+      if (newIdx < 0 || newIdx >= order.length) return;
+      // Swap
+      [order[idx], order[newIdx]] = [order[newIdx], order[idx]];
+      state.customization = { ...state.customization, sectionOrder: order };
+    },
+
+    /** Directly set the full section order array */
+    setSectionOrder(state, action: PayloadAction<ResumeSectionKey[]>) {
+      state.customization = {
+        ...state.customization,
+        sectionOrder: action.payload,
+      };
+    },
   },
 });
 
@@ -118,6 +150,8 @@ export const {
   setFromUpload,
   hydrateResume,
   resetResume,
+  moveSectionInOrder,
+  setSectionOrder,
 } = resumeSlice.actions;
 
 export default resumeSlice.reducer;

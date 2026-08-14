@@ -4,6 +4,7 @@
  */
 import type { ResumeCustomization, ResumeData } from "@/types/resume";
 import { formatResumeDate, pageMargins, resumeShellStyle, sectionGap } from "@/pages/resume/resumeTemplateUtils";
+import { getSectionOrder } from "@/pages/resume/useSectionOrder";
 
 interface Props { data: ResumeData; customization?: ResumeCustomization; printMode?: boolean; }
 
@@ -55,9 +56,10 @@ function SideLabel({ children }: { children: string }) {
 export function TemplateSlate({ data, customization, printMode }: Props): JSX.Element {
   const { personal: p, experience, education, skills, projects, certificates } = data;
   const levelPct: Record<string, number> = { Beginner: 25, Intermediate: 50, Advanced: 75, Expert: 100 };
-  const gap = sectionGap(customization, 12);  // was 16
+  const gap = sectionGap(customization, 12);
   const fmt = (d: string) => formatResumeDate(d, customization?.dateFormat);
   const { h, v } = pageMargins(customization);
+  const sectionOrder = getSectionOrder(customization);
 
   const wrap = resumeShellStyle(customization, {
     fontFamily: "'Segoe UI', Arial, sans-serif",
@@ -67,6 +69,64 @@ export function TemplateSlate({ data, customization, printMode }: Props): JSX.El
     display: "flex",
     flexDirection: "column",
   });
+
+  const mainSectionMap: Partial<Record<string, JSX.Element | null>> = {
+    summary: p.summary ? (
+      <MainSection key="summary" title="Professional Summary" gap={gap}>
+        <p style={{ margin: 0, lineHeight: 1.8, fontSize: 12, color: SLATE_MID }}>{p.summary}</p>
+      </MainSection>
+    ) : null,
+    experience: experience.length > 0 ? (
+      <MainSection key="experience" title="Experience" gap={gap}>
+        {experience.map((e) => (
+          <div key={e.id} className="resume-item resume-avoid-break" style={{ marginBottom: 13, paddingBottom: 11, borderBottom: "1px solid #f1f5f9" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+              <div>
+                <p style={{ margin: 0, fontWeight: 700, fontSize: 12.5, color: SLATE_DARK }}>{e.position}</p>
+                <p style={{ margin: "2px 0 0", fontSize: 11.5, color: CYAN, fontWeight: 600 }}>{e.company}</p>
+              </div>
+              <span style={{ fontSize: 10.5, color: "#64748b", background: "#f1f5f9", padding: "2px 7px", borderRadius: 4, whiteSpace: "nowrap", marginLeft: 8, flexShrink: 0 }}>
+                {fmt(e.startDate)} – {e.current ? "Present" : fmt(e.endDate)}
+              </span>
+            </div>
+            {e.description && <p style={{ margin: "5px 0 0", fontSize: 11.5, lineHeight: 1.75, color: SLATE_MID, whiteSpace: "pre-line" }}>{e.description}</p>}
+          </div>
+        ))}
+      </MainSection>
+    ) : null,
+    education: education.length > 0 ? (
+      <MainSection key="education" title="Education" gap={gap}>
+        {education.map((e) => (
+          <div key={e.id} className="resume-item resume-avoid-break" style={{ marginBottom: 10, display: "flex", justifyContent: "space-between" }}>
+            <div>
+              <p style={{ margin: 0, fontWeight: 700, fontSize: 12.5 }}>{e.degree}{e.field ? ` in ${e.field}` : ""}</p>
+              <p style={{ margin: "2px 0 0", fontSize: 11.5, color: CYAN, fontWeight: 600 }}>{e.institution}</p>
+              {e.grade && <p style={{ margin: "1px 0 0", fontSize: 11, color: "#64748b" }}>Grade: {e.grade}</p>}
+            </div>
+            <span style={{ fontSize: 11, color: "#64748b", whiteSpace: "nowrap", marginLeft: 10, flexShrink: 0 }}>
+              {fmt(e.startDate)}{e.endDate ? ` – ${fmt(e.endDate)}` : ""}
+            </span>
+          </div>
+        ))}
+      </MainSection>
+    ) : null,
+    projects: projects.length > 0 ? (
+      <MainSection key="projects" title="Projects" gap={gap}>
+        {projects.map((pr) => (
+          <div key={pr.id} className="resume-item resume-avoid-break" style={{ marginBottom: 10 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <p style={{ margin: 0, fontWeight: 700, fontSize: 12.5 }}>{pr.name}</p>
+              {pr.technologies && <span style={{ fontSize: 10, background: `${CYAN}15`, color: CYAN, padding: "2px 7px", borderRadius: 99, fontWeight: 600 }}>{pr.technologies}</span>}
+            </div>
+            {pr.description && <p style={{ margin: "3px 0 0", fontSize: 11.5, lineHeight: 1.6, color: SLATE_MID }}>{pr.description}</p>}
+            {pr.link && <p style={{ margin: "2px 0 0", fontSize: 11, color: CYAN }}>{pr.link}</p>}
+          </div>
+        ))}
+      </MainSection>
+    ) : null,
+    skills: null,
+    certificates: null,
+  };
 
   return (
     <div className="resume-template" style={wrap}>
@@ -133,147 +193,7 @@ export function TemplateSlate({ data, customization, printMode }: Props): JSX.El
       <div style={{ display: "flex", flex: 1 }}>
         {/* Main content */}
         <div style={{ flex: 1, padding: `${v}px ${Math.round(h * 0.75)}px ${v}px ${h}px` }}>
-          {p.summary && (
-            <MainSection title="Professional Summary" gap={gap}>
-              <p style={{ margin: 0, lineHeight: 1.8, fontSize: 12, color: SLATE_MID }}>
-                {p.summary}
-              </p>
-            </MainSection>
-          )}
-
-          {experience.length > 0 && (
-            <MainSection title="Experience" gap={gap}>
-              {experience.map((e) => (
-                <div
-                  key={e.id}
-                  className="resume-item resume-avoid-break"
-                  style={{ marginBottom: 13, paddingBottom: 11, borderBottom: "1px solid #f1f5f9" }}
-                >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                    <div>
-                      <p style={{ margin: 0, fontWeight: 700, fontSize: 12.5, color: SLATE_DARK }}>
-                        {e.position}
-                      </p>
-                      <p style={{ margin: "2px 0 0", fontSize: 11.5, color: CYAN, fontWeight: 600 }}>
-                        {e.company}
-                      </p>
-                    </div>
-                    <span
-                      style={{
-                        fontSize: 10.5,
-                        color: "#64748b",
-                        background: "#f1f5f9",
-                        padding: "2px 7px",
-                        borderRadius: 4,
-                        whiteSpace: "nowrap",
-                        marginLeft: 8,
-                        flexShrink: 0,
-                      }}
-                    >
-                      {fmt(e.startDate)} – {e.current ? "Present" : fmt(e.endDate)}
-                    </span>
-                  </div>
-                  {e.description && (
-                    <p
-                      style={{
-                        margin: "5px 0 0",
-                        fontSize: 11.5,
-                        lineHeight: 1.75,
-                        color: SLATE_MID,
-                        whiteSpace: "pre-line",
-                      }}
-                    >
-                      {e.description}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </MainSection>
-          )}
-
-          {education.length > 0 && (
-            <MainSection title="Education" gap={gap}>
-              {education.map((e) => (
-                <div
-                  key={e.id}
-                  className="resume-item resume-avoid-break"
-                  style={{ marginBottom: 10, display: "flex", justifyContent: "space-between" }}
-                >
-                  <div>
-                    <p style={{ margin: 0, fontWeight: 700, fontSize: 12.5 }}>
-                      {e.degree}
-                      {e.field ? ` in ${e.field}` : ""}
-                    </p>
-                    <p style={{ margin: "2px 0 0", fontSize: 11.5, color: CYAN, fontWeight: 600 }}>
-                      {e.institution}
-                    </p>
-                    {e.grade && (
-                      <p style={{ margin: "1px 0 0", fontSize: 11, color: "#64748b" }}>
-                        Grade: {e.grade}
-                      </p>
-                    )}
-                  </div>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      color: "#64748b",
-                      whiteSpace: "nowrap",
-                      marginLeft: 10,
-                      flexShrink: 0,
-                    }}
-                  >
-                    {fmt(e.startDate)}
-                    {e.endDate ? ` – ${fmt(e.endDate)}` : ""}
-                  </span>
-                </div>
-              ))}
-            </MainSection>
-          )}
-
-          {projects.length > 0 && (
-            <MainSection title="Projects" gap={gap}>
-              {projects.map((pr) => (
-                <div
-                  key={pr.id}
-                  className="resume-item resume-avoid-break"
-                  style={{ marginBottom: 10 }}
-                >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <p style={{ margin: 0, fontWeight: 700, fontSize: 12.5 }}>{pr.name}</p>
-                    {pr.technologies && (
-                      <span
-                        style={{
-                          fontSize: 10,
-                          background: `${CYAN}15`,
-                          color: CYAN,
-                          padding: "2px 7px",
-                          borderRadius: 99,
-                          fontWeight: 600,
-                        }}
-                      >
-                        {pr.technologies}
-                      </span>
-                    )}
-                  </div>
-                  {pr.description && (
-                    <p
-                      style={{
-                        margin: "3px 0 0",
-                        fontSize: 11.5,
-                        lineHeight: 1.6,
-                        color: SLATE_MID,
-                      }}
-                    >
-                      {pr.description}
-                    </p>
-                  )}
-                  {pr.link && (
-                    <p style={{ margin: "2px 0 0", fontSize: 11, color: CYAN }}>{pr.link}</p>
-                  )}
-                </div>
-              ))}
-            </MainSection>
-          )}
+          {sectionOrder.map((key) => mainSectionMap[key] ?? null)}
         </div>
 
         {/* Right sidebar */}

@@ -5,6 +5,7 @@ import { DEFAULT_RESUME_CUSTOMIZATION } from "@/types/resume";
 import { classNames } from "@/utils/format";
 import { useTheme } from "@/hooks/useTheme";
 import { StepTemplate } from "@/pages/resume/steps/StepTemplate";
+import { SectionOrderPanel } from "@/pages/resume/steps/SectionOrderPanel";
 import {
   ACCENT_PALETTE,
   DATE_FORMAT_OPTIONS,
@@ -214,6 +215,19 @@ export function StepCustomize({
       </div>
 
       <StepTemplate selected={templateId} onSelect={selectTemplate} compact />
+
+      {/* Section Order */}
+      <div className={classNames("rounded-xl border p-4", panelClass)}>
+        <div className="mb-4">
+          <h3 className={classNames("text-base font-bold", isDark ? "text-white" : "text-slate-900")}>
+            Section Order
+          </h3>
+          <p className={classNames("mt-0.5 text-xs", isDark ? "text-slate-400" : "text-slate-500")}>
+            Use arrows to reorder sections on your resume.
+          </p>
+        </div>
+        <SectionOrderPanel />
+      </div>
     </div>
   );
 }

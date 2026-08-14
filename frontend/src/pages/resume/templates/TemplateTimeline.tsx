@@ -4,6 +4,7 @@
  */
 import type { ResumeCustomization, ResumeData } from "@/types/resume";
 import { formatResumeDate, pageMargins, resumeShellStyle, sectionGap } from "@/pages/resume/resumeTemplateUtils";
+import { getSectionOrder } from "@/pages/resume/useSectionOrder";
 
 interface Props { data: ResumeData; customization?: ResumeCustomization; printMode?: boolean; }
 
@@ -145,9 +146,10 @@ function TimelineItem({
 
 export function TemplateTimeline({ data, customization, printMode }: Props): JSX.Element {
   const { personal: p, experience, education, skills, projects, certificates } = data;
-  const gap = sectionGap(customization, 14);  // was 18
+  const gap = sectionGap(customization, 14);
   const fmt = (d: string) => formatResumeDate(d, customization?.dateFormat);
   const { h, v } = pageMargins(customization);
+  const sectionOrder = getSectionOrder(customization);
 
   const wrap = resumeShellStyle(customization, {
     fontFamily: "'Helvetica Neue', Arial, sans-serif",
@@ -157,6 +159,56 @@ export function TemplateTimeline({ data, customization, printMode }: Props): JSX
     display: "flex",
     flexDirection: "column",
   });
+
+  const mainSectionMap: Partial<Record<string, JSX.Element | null>> = {
+    summary: p.summary ? (
+      <div key="summary" className="resume-section resume-avoid-break" style={{ marginBottom: gap }}>
+        <SectionHeading>About Me</SectionHeading>
+        <p style={{ margin: 0, fontSize: 12, lineHeight: 1.8, color: GRAY, paddingLeft: 36 }}>{p.summary}</p>
+      </div>
+    ) : null,
+    experience: experience.length > 0 ? (
+      <div key="experience" className="resume-section resume-avoid-break" style={{ marginBottom: gap }}>
+        <SectionHeading>Experience</SectionHeading>
+        <div style={{ paddingLeft: 8 }}>
+          {experience.map((e, i) => (
+            <TimelineItem key={e.id} title={e.position} subtitle={e.company}
+              dateStr={`${fmt(e.startDate)} – ${e.current ? "Present" : fmt(e.endDate)}`}
+              description={e.description} isLast={i === experience.length - 1} />
+          ))}
+        </div>
+      </div>
+    ) : null,
+    education: education.length > 0 ? (
+      <div key="education" className="resume-section resume-avoid-break" style={{ marginBottom: gap }}>
+        <SectionHeading>Education</SectionHeading>
+        <div style={{ paddingLeft: 8 }}>
+          {education.map((e, i) => (
+            <TimelineItem key={e.id}
+              title={`${e.degree}${e.field ? ` in ${e.field}` : ""}`}
+              subtitle={e.institution}
+              dateStr={`${fmt(e.startDate)}${e.endDate ? ` – ${fmt(e.endDate)}` : ""}`}
+              description={e.grade ? `Grade: ${e.grade}` : undefined}
+              isLast={i === education.length - 1} />
+          ))}
+        </div>
+      </div>
+    ) : null,
+    projects: projects.length > 0 ? (
+      <div key="projects" className="resume-section resume-avoid-break">
+        <SectionHeading>Projects</SectionHeading>
+        <div style={{ paddingLeft: 8 }}>
+          {projects.map((pr, i) => (
+            <TimelineItem key={pr.id} title={pr.name} subtitle={pr.technologies || ""} dateStr=""
+              description={pr.description + (pr.link ? `\n${pr.link}` : "")}
+              isLast={i === projects.length - 1} />
+          ))}
+        </div>
+      </div>
+    ) : null,
+    skills: null,
+    certificates: null,
+  };
 
   return (
     <div className="resume-template" style={wrap}>
@@ -198,76 +250,7 @@ export function TemplateTimeline({ data, customization, printMode }: Props): JSX
       <div style={{ display: "flex", flex: 1 }}>
         {/* Main */}
         <div style={{ flex: 1, padding: `${v}px ${Math.round(h * 0.65)}px ${v}px ${h}px` }}>
-          {p.summary && (
-            <div className="resume-section resume-avoid-break" style={{ marginBottom: gap }}>
-              <SectionHeading>About Me</SectionHeading>
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: 12,
-                  lineHeight: 1.8,
-                  color: GRAY,
-                  paddingLeft: 36,
-                }}
-              >
-                {p.summary}
-              </p>
-            </div>
-          )}
-
-          {experience.length > 0 && (
-            <div className="resume-section resume-avoid-break" style={{ marginBottom: gap }}>
-              <SectionHeading>Experience</SectionHeading>
-              <div style={{ paddingLeft: 8 }}>
-                {experience.map((e, i) => (
-                  <TimelineItem
-                    key={e.id}
-                    title={e.position}
-                    subtitle={e.company}
-                    dateStr={`${fmt(e.startDate)} – ${e.current ? "Present" : fmt(e.endDate)}`}
-                    description={e.description}
-                    isLast={i === experience.length - 1}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {education.length > 0 && (
-            <div className="resume-section resume-avoid-break" style={{ marginBottom: gap }}>
-              <SectionHeading>Education</SectionHeading>
-              <div style={{ paddingLeft: 8 }}>
-                {education.map((e, i) => (
-                  <TimelineItem
-                    key={e.id}
-                    title={`${e.degree}${e.field ? ` in ${e.field}` : ""}`}
-                    subtitle={e.institution}
-                    dateStr={`${fmt(e.startDate)}${e.endDate ? ` – ${fmt(e.endDate)}` : ""}`}
-                    description={e.grade ? `Grade: ${e.grade}` : undefined}
-                    isLast={i === education.length - 1}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {projects.length > 0 && (
-            <div className="resume-section resume-avoid-break">
-              <SectionHeading>Projects</SectionHeading>
-              <div style={{ paddingLeft: 8 }}>
-                {projects.map((pr, i) => (
-                  <TimelineItem
-                    key={pr.id}
-                    title={pr.name}
-                    subtitle={pr.technologies || ""}
-                    dateStr=""
-                    description={pr.description + (pr.link ? `\n${pr.link}` : "")}
-                    isLast={i === projects.length - 1}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
+          {sectionOrder.map((key) => mainSectionMap[key] ?? null)}
         </div>
 
         {/* Sidebar */}

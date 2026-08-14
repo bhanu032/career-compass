@@ -101,18 +101,31 @@ export async function exportResumeToPdf({
   onProgress?.(5);
 
   // 1. Off-screen clone at A4 width
+  // Positioned far off-screen to the left so it's never visible to the user,
+  // but NOT visibility:hidden — html2canvas needs the element to be in the
+  // normal rendering pipeline to capture CSS correctly.
   const container = document.createElement("div");
   Object.assign(container.style, {
-    position: "fixed", top: "0px", left: "0px",
-    width: `${A4_W_PX}px`, minHeight: `${A4_H_PX}px`,
-    background: "#ffffff", zIndex: "-9999",
-    pointerEvents: "none", overflow: "visible",
+    position:      "fixed",
+    top:           "0px",
+    left:          "-9999px",
+    width:         `${A4_W_PX}px`,
+    minHeight:     `${A4_H_PX}px`,
+    background:    "#ffffff",
+    zIndex:        "9999",          // high z-index so it paints above everything
+    pointerEvents: "none",
+    overflow:      "visible",
   });
 
   const clone = element.cloneNode(true) as HTMLElement;
   Object.assign(clone.style, {
-    width: `${A4_W_PX}px`, minHeight: `${A4_H_PX}px`,
-    transform: "none", position: "static", margin: "0",
+    width:      `${A4_W_PX}px`,
+    minHeight:  `${A4_H_PX}px`,
+    transform:  "none",
+    position:   "static",
+    margin:     "0",
+    visibility: "visible",
+    opacity:    "1",
   });
   container.appendChild(clone);
   document.body.appendChild(container);
@@ -121,24 +134,38 @@ export async function exportResumeToPdf({
 
   // Wait for layout + fonts
   await new Promise<void>((res) =>
-    requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(res, 200))),
+    requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(res, 400))),
   );
 
   onProgress?.(15);
 
   // 2. Collect protected ranges from the LIVE clone (before canvas capture)
+  // getBoundingClientRect() returns coords relative to viewport.
+  // Since the container is position:fixed at top:0,left:-9999px,
+  // we need the container's rect to compute relative positions correctly.
   const containerRect = container.getBoundingClientRect();
   const protectedRanges = collectProtectedRanges(clone, containerRect.top);
   const logicalHeight   = container.scrollHeight;
 
   // 3. Capture full canvas
+  // scrollX/scrollY = 0 because our container is fixed and off-screen to the left;
+  // its getBoundingClientRect() already reflects its viewport position.
   let canvas: HTMLCanvasElement;
   try {
     canvas = await html2canvas(container, {
-      scale: SCALE, useCORS: true, allowTaint: false,
-      backgroundColor: "#ffffff", logging: false,
-      windowWidth: A4_W_PX, windowHeight: logicalHeight,
-      width: A4_W_PX, height: logicalHeight, x: 0, y: 0,
+      scale:         SCALE,
+      useCORS:       true,
+      allowTaint:    false,
+      backgroundColor: "#ffffff",
+      logging:       false,
+      scrollX:       0,
+      scrollY:       0,
+      windowWidth:   A4_W_PX,
+      windowHeight:  logicalHeight,
+      width:         A4_W_PX,
+      height:        logicalHeight,
+      x:             0,
+      y:             0,
     });
   } finally {
     try { document.body.removeChild(container); } catch { /* ignore */ }
