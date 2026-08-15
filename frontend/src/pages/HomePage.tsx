@@ -233,23 +233,24 @@ export function HomePage(): JSX.Element {
           className="mt-8 grid gap-8 lg:grid-cols-2"
         >
 
-          {/* PROJECT 1: Career Compass / DeshKiSeva Job Portal — Theme: Saffron-Gold National Portal */}
-          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-amber-300 dark:border-amber-500/40 bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-amber-600/10 shadow-lg hover:shadow-orange-500/10 transition-all">
+          {/* PROJECT 1: Career Compass / DeshKiSeva Job Portal — National Portal Layout */}
+          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-amber-400/50 dark:border-amber-500/40 bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-emerald-600/10 shadow-lg hover:shadow-orange-500/10 transition-all">
             <div className="p-6">
-              <div className="flex items-center justify-between gap-2">
+              {/* National Ribbon Header */}
+              <div className="flex items-center justify-between gap-2 border-b border-amber-200/60 dark:border-amber-800/40 pb-3">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300 px-3.5 py-1 text-xs font-bold border border-amber-300/40">
-                  <Landmark className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" /> Saffron-Gold Portal Template
+                  <Landmark className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" /> Government Career Hub
                 </span>
-                <span className="text-xs text-amber-600 dark:text-amber-400 font-bold">2026</span>
+                <span className="text-xs text-amber-600 dark:text-amber-400 font-bold">2026 Production</span>
               </div>
-              <h3 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+              <h3 className="mt-4 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
                 Career Compass — Government, Sarkari &amp; Private Jobs Portal
               </h3>
               <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 Full-featured career hub integrating live government job notifications, RSS-scraped feeds from <b>SarkariResult.com</b> &amp; <b>SarkariExam.com</b>, progressive private job streaming (LinkedIn/Indeed), Admit Cards, and Selection Results.
               </p>
 
-              {/* TEMPLATE GUI PREVIEW: Live Sarkari RSS Feed & Search Bar Mockup */}
+              {/* TEMPLATE GUI PREVIEW 1: Govt Portal Ticker & Notification Grid */}
               <div className="mt-4 rounded-xl border border-amber-300/40 bg-amber-950/20 p-3.5 space-y-2.5">
                 <div className="flex items-center justify-between text-[11px] font-bold text-amber-400">
                   <span className="flex items-center gap-1.5">
@@ -295,29 +296,35 @@ export function HomePage(): JSX.Element {
             </div>
           </motion.div>
 
-          {/* PROJECT 2: ATS Resume Builder — Theme: Cyber Neon Teal Studio */}
+          {/* PROJECT 2: ATS Resume Builder — IDE Document Studio Layout */}
           <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-emerald-300 dark:border-emerald-500/40 bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-cyan-500/10 shadow-lg hover:shadow-emerald-500/10 transition-all">
             <div className="p-6">
-              <div className="flex items-center justify-between gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 px-3.5 py-1 text-xs font-bold border border-emerald-300/40">
-                  <FileText className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" /> Cyber-Teal Studio Template
+              {/* IDE Header Dots */}
+              <div className="flex items-center justify-between gap-2 border-b border-emerald-200/60 dark:border-emerald-800/40 pb-3">
+                <div className="flex items-center gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-red-500/80"></span>
+                  <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/80"></span>
+                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-500/80"></span>
+                  <span className="ml-2 text-xs font-mono text-emerald-400 font-bold">resume_v1.pdf</span>
+                </div>
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 px-3 py-0.5 text-xs font-bold border border-emerald-300/40">
+                  <FileText className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" /> ATS Resume Studio
                 </span>
-                <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold">2026</span>
               </div>
-              <h3 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+              <h3 className="mt-4 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                 ATS Resume Builder &amp; Scanner Engine
               </h3>
               <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 ATS-friendly resume builder featuring multi-template rendering, live keyword compliance scoring, print-ready high-resolution PDF export using <code>jsPDF</code> and <code>react-to-print</code>.
               </p>
 
-              {/* TEMPLATE GUI PREVIEW: Live ATS Score Dial & Template Switcher Mockup */}
+              {/* TEMPLATE GUI PREVIEW 2: Live ATS Score Dial & Template Switcher Mockup */}
               <div className="mt-4 rounded-xl border border-emerald-300/40 bg-emerald-950/20 p-3.5 space-y-2.5">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
                     <Sparkles className="h-3.5 w-3.5 text-yellow-300" /> ATS Match Score: 98/100 (Optimal)
                   </span>
-                  <span className="rounded-full bg-emerald-500/20 text-emerald-300 px-2 py-0.5 text-[10px] font-bold">PDF Ready</span>
+                  <span className="rounded-full bg-emerald-500/20 text-emerald-300 px-2 py-0.5 text-[10px] font-bold">PDF Export Ready</span>
                 </div>
                 <div className="w-full bg-emerald-950/80 rounded-full h-2 overflow-hidden border border-emerald-500/30">
                   <div className="bg-gradient-to-r from-emerald-500 to-teal-400 h-2 rounded-full w-[98%]"></div>
@@ -354,26 +361,29 @@ export function HomePage(): JSX.Element {
             </div>
           </motion.div>
 
-          {/* PROJECT 3: Exam Mock Test Hub — Theme: Royal Electric Violet Arena */}
+          {/* PROJECT 3: Exam Mock Test Hub — Exam Hall Tablet Layout */}
           <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-purple-300 dark:border-purple-500/40 bg-gradient-to-br from-violet-600/15 via-purple-600/10 to-indigo-600/15 shadow-lg hover:shadow-purple-500/10 transition-all">
             <div className="p-6">
-              <div className="flex items-center justify-between gap-2">
+              {/* Exam Tablet Header */}
+              <div className="flex items-center justify-between gap-2 border-b border-purple-200/60 dark:border-purple-800/40 pb-3">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-100 text-purple-800 dark:bg-purple-950/80 dark:text-purple-300 px-3.5 py-1 text-xs font-bold border border-purple-300/40">
-                  <BookOpen className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" /> Royal-Violet Arena Template
+                  <BookOpen className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" /> Exam Prep Engine
                 </span>
-                <span className="text-xs text-purple-600 dark:text-purple-400 font-bold">2026</span>
+                <span className="text-xs font-bold text-emerald-400 bg-emerald-950/80 px-2.5 py-0.5 rounded-full border border-emerald-500/40">
+                  ⏱️ 00:58:24
+                </span>
               </div>
-              <h3 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+              <h3 className="mt-4 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
                 Exam Mock Test Engine — 100+ Free Papers
               </h3>
               <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 Official-pattern full-length mock tests for SSC CGL/CHSL/MTS, CTET Paper I &amp; II, IBPS PO, RRB NTPC, UPSC, and Defence with section timers, question palette navigation, and instant score breakdowns.
               </p>
 
-              {/* TEMPLATE GUI PREVIEW: Question Palette & Timer Mockup */}
+              {/* TEMPLATE GUI PREVIEW 3: Question Palette & Timer Mockup */}
               <div className="mt-4 rounded-xl border border-purple-300/40 bg-purple-950/20 p-3.5 space-y-2.5">
                 <div className="flex items-center justify-between text-[11px] font-bold text-purple-300">
-                  <span>⏱️ Section Timer: 00:58:24</span>
+                  <span>Question Palette Grid</span>
                   <span className="text-emerald-400 font-bold">Answered: 18 / 25</span>
                 </div>
                 <div className="grid grid-cols-8 gap-1">
@@ -409,23 +419,26 @@ export function HomePage(): JSX.Element {
             </div>
           </motion.div>
 
-          {/* PROJECT 4: InterviewGhost.ai — Theme: Futuristic AI Sapphire Blue */}
+          {/* PROJECT 4: InterviewGhost.ai — AI Video Proctoring Console Layout */}
           <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-blue-300 dark:border-blue-500/40 bg-gradient-to-br from-blue-600/15 via-sky-600/10 to-cyan-600/15 shadow-lg hover:shadow-blue-500/10 transition-all">
             <div className="p-6">
-              <div className="flex items-center justify-between gap-2">
+              {/* AI Chip Header */}
+              <div className="flex items-center justify-between gap-2 border-b border-blue-200/60 dark:border-blue-800/40 pb-3">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950/80 dark:text-blue-300 px-3.5 py-1 text-xs font-bold border border-blue-300/40">
-                  <Cpu className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" /> AI-Sapphire Template
+                  <Cpu className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" /> AI HRTech Platform
                 </span>
-                <span className="text-xs text-blue-600 dark:text-blue-400 font-bold">2025 – 2026</span>
+                <span className="text-xs font-mono text-cyan-400 font-bold bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-500/30">
+                  🤖 WebSockets Active
+                </span>
               </div>
-              <h3 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+              <h3 className="mt-4 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                 InterviewGhost.ai — AI-Powered Hiring Platform
               </h3>
               <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 AI hiring platform with automated interview simulation, WebSockets real-time transcription, proctoring with <code>face-api.js</code>, screen-sharing validation, and multi-role HR candidate dashboards.
               </p>
 
-              {/* TEMPLATE GUI PREVIEW: AI Proctoring & Waveform Monitor Mockup */}
+              {/* TEMPLATE GUI PREVIEW 4: AI Proctoring & Waveform Monitor Mockup */}
               <div className="mt-4 rounded-xl border border-blue-300/40 bg-blue-950/20 p-3.5 space-y-2.5">
                 <div className="flex items-center justify-between text-[11px] font-bold text-blue-300">
                   <span className="flex items-center gap-1">🤖 face-api.js Proctoring: Active</span>
@@ -455,27 +468,30 @@ export function HomePage(): JSX.Element {
             </div>
           </motion.div>
 
-          {/* PROJECT 5: Advertising Space Management System — Theme: Deep Magenta Financial */}
+          {/* PROJECT 5: Advertising Space Management System — Stripe Financial Layout */}
           <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-fuchsia-300 dark:border-fuchsia-500/40 bg-gradient-to-br from-fuchsia-600/15 via-pink-600/10 to-rose-600/15 shadow-lg hover:shadow-fuchsia-500/10 transition-all">
             <div className="p-6">
-              <div className="flex items-center justify-between gap-2">
+              {/* Stripe Header */}
+              <div className="flex items-center justify-between gap-2 border-b border-fuchsia-200/60 dark:border-fuchsia-800/40 pb-3">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-950/80 dark:text-fuchsia-300 px-3.5 py-1 text-xs font-bold border border-fuchsia-300/40">
-                  <Layers className="h-3.5 w-3.5 text-fuchsia-600 dark:text-fuchsia-400" /> Deep-Magenta Template
+                  <Layers className="h-3.5 w-3.5 text-fuchsia-600 dark:text-fuchsia-400" /> MERN Ad Space Platform
                 </span>
-                <span className="text-xs text-fuchsia-600 dark:text-fuchsia-400 font-bold">2024</span>
+                <span className="text-xs text-emerald-400 font-bold bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-500/40">
+                  💳 Stripe Verified
+                </span>
               </div>
-              <h3 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-fuchsia-600 dark:group-hover:text-fuchsia-400 transition-colors">
+              <h3 className="mt-4 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-fuchsia-600 dark:group-hover:text-fuchsia-400 transition-colors">
                 Advertising Space Management System
               </h3>
               <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 MERN platform connecting advertisers with ad-space owners. Features Stripe payment gateway integration and Google Maps API for location-based discovery.
               </p>
 
-              {/* TEMPLATE GUI PREVIEW: Stripe Checkout & Google Maps Grid Mockup */}
+              {/* TEMPLATE GUI PREVIEW 5: Stripe Checkout & Google Maps Grid Mockup */}
               <div className="mt-4 rounded-xl border border-fuchsia-300/40 bg-fuchsia-950/20 p-3.5 space-y-2.5">
                 <div className="flex items-center justify-between text-[11px] font-bold text-fuchsia-300">
                   <span>📍 Billboard Location: Connaught Place, Delhi</span>
-                  <span className="text-emerald-400 font-bold">Stripe Verified</span>
+                  <span className="text-emerald-400 font-bold">Google Maps API</span>
                 </div>
                 <div className="rounded-lg bg-fuchsia-900/40 p-2 flex items-center justify-between text-xs font-semibold text-fuchsia-200">
                   <span>Ad Space Slot #A4</span>
@@ -498,30 +514,33 @@ export function HomePage(): JSX.Element {
             </div>
           </motion.div>
 
-          {/* PROJECT 6: IntellectInn — Theme: Electric Ocean Cyan */}
+          {/* PROJECT 6: IntellectInn — Social Network Feed Layout */}
           <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-sky-300 dark:border-sky-500/40 bg-gradient-to-br from-sky-600/15 via-teal-600/10 to-blue-600/15 shadow-lg hover:shadow-sky-500/10 transition-all">
             <div className="p-6">
-              <div className="flex items-center justify-between gap-2">
+              {/* Social Network Header */}
+              <div className="flex items-center justify-between gap-2 border-b border-sky-200/60 dark:border-sky-800/40 pb-3">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-sky-100 text-sky-800 dark:bg-sky-950/80 dark:text-sky-300 px-3.5 py-1 text-xs font-bold border border-sky-300/40">
-                  <Users className="h-3.5 w-3.5 text-sky-600 dark:text-sky-400" /> Ocean-Cyan Template
+                  <Users className="h-3.5 w-3.5 text-sky-600 dark:text-sky-400" /> Student Network
                 </span>
-                <span className="text-xs text-sky-600 dark:text-sky-400 font-bold">2024</span>
+                <span className="text-xs text-sky-400 font-bold bg-sky-950/80 px-2 py-0.5 rounded border border-sky-500/40">
+                  🎓 JKLU Academic Network
+                </span>
               </div>
-              <h3 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
+              <h3 className="mt-4 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
                 IntellectInn — Student Networking Platform
               </h3>
               <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 Networking platform for students to showcase academic &amp; project achievements, connect with peers, and manage professional profiles via REST APIs.
               </p>
 
-              {/* TEMPLATE GUI PREVIEW: Student Profile & Achievements Feed Mockup */}
+              {/* TEMPLATE GUI PREVIEW 6: Student Profile & Achievements Feed Mockup */}
               <div className="mt-4 rounded-xl border border-sky-300/40 bg-sky-950/20 p-3.5 space-y-2.5">
                 <div className="flex items-center justify-between text-[11px] font-bold text-sky-300">
                   <span>🎓 Student Achievement Showcase</span>
                   <span className="text-sky-300">REST API Verified</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-sky-200">
-                  <span className="rounded-full bg-sky-600 text-white px-2 py-0.5 font-bold">JKLU Peer Network</span>
+                  <span className="rounded-full bg-sky-600 text-white px-2 py-0.5 font-bold">+24 Skill Endorsements</span>
                   <span className="rounded bg-sky-900/60 px-1.5 py-0.5">Project Portfolio</span>
                 </div>
               </div>
