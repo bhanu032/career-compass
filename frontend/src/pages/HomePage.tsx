@@ -238,7 +238,7 @@ export function HomePage(): JSX.Element {
             <div className="p-6">
               <div className="flex items-center justify-between gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300 px-3.5 py-1 text-xs font-bold border border-amber-300/40">
-                  <Landmark className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" /> Saffron-Gold Portal Theme
+                  <Landmark className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" /> Saffron-Gold Portal Template
                 </span>
                 <span className="text-xs text-amber-600 dark:text-amber-400 font-bold">2026</span>
               </div>
@@ -248,6 +248,29 @@ export function HomePage(): JSX.Element {
               <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 Full-featured career hub integrating live government job notifications, RSS-scraped feeds from <b>SarkariResult.com</b> &amp; <b>SarkariExam.com</b>, progressive private job streaming (LinkedIn/Indeed), Admit Cards, and Selection Results.
               </p>
+
+              {/* TEMPLATE GUI PREVIEW: Live Sarkari RSS Feed & Search Bar Mockup */}
+              <div className="mt-4 rounded-xl border border-amber-300/40 bg-amber-950/20 p-3.5 space-y-2.5">
+                <div className="flex items-center justify-between text-[11px] font-bold text-amber-400">
+                  <span className="flex items-center gap-1.5">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                    </span>
+                    Live Sarkari RSS Stream: Active ({sarkariData?.counts.total ?? "40+"} Jobs)
+                  </span>
+                  <span className="text-amber-300/80">SarkariResult.com &amp; SarkariExam.com</span>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div className="rounded-lg bg-amber-500/10 border border-amber-400/30 p-2 font-medium text-amber-200">
+                    🏛️ SBI Clerk 2024 (1,538 Posts)
+                  </div>
+                  <div className="rounded-lg bg-orange-500/10 border border-orange-400/30 p-2 font-medium text-orange-200">
+                    ⚡ UP Police Constable Result
+                  </div>
+                </div>
+              </div>
+
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {["React.js", "TypeScript", "Vite", "Tailwind CSS", "Sarkari RSS Scraper", "TanStack React Query", "Framer Motion"].map((tag) => (
                   <span key={tag} className="rounded-md bg-amber-100/60 dark:bg-amber-950/50 px-2.5 py-1 text-[11px] font-semibold text-amber-900 dark:text-amber-200 border border-amber-200/50 dark:border-amber-800/40">
@@ -277,7 +300,7 @@ export function HomePage(): JSX.Element {
             <div className="p-6">
               <div className="flex items-center justify-between gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 px-3.5 py-1 text-xs font-bold border border-emerald-300/40">
-                  <FileText className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" /> Cyber-Teal Studio Theme
+                  <FileText className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" /> Cyber-Teal Studio Template
                 </span>
                 <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold">2026</span>
               </div>
@@ -287,6 +310,26 @@ export function HomePage(): JSX.Element {
               <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 ATS-friendly resume builder featuring multi-template rendering, live keyword compliance scoring, print-ready high-resolution PDF export using <code>jsPDF</code> and <code>react-to-print</code>.
               </p>
+
+              {/* TEMPLATE GUI PREVIEW: Live ATS Score Dial & Template Switcher Mockup */}
+              <div className="mt-4 rounded-xl border border-emerald-300/40 bg-emerald-950/20 p-3.5 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
+                    <Sparkles className="h-3.5 w-3.5 text-yellow-300" /> ATS Match Score: 98/100 (Optimal)
+                  </span>
+                  <span className="rounded-full bg-emerald-500/20 text-emerald-300 px-2 py-0.5 text-[10px] font-bold">PDF Ready</span>
+                </div>
+                <div className="w-full bg-emerald-950/80 rounded-full h-2 overflow-hidden border border-emerald-500/30">
+                  <div className="bg-gradient-to-r from-emerald-500 to-teal-400 h-2 rounded-full w-[98%]"></div>
+                </div>
+                <div className="flex items-center gap-1 text-[10px] text-emerald-300 font-medium">
+                  <span className="rounded bg-emerald-900/60 px-1.5 py-0.5">Classic</span>
+                  <span className="rounded bg-emerald-600 text-white font-bold px-1.5 py-0.5">Modern</span>
+                  <span className="rounded bg-emerald-900/60 px-1.5 py-0.5">ATS Pro</span>
+                  <span className="rounded bg-emerald-900/60 px-1.5 py-0.5">Sidebar</span>
+                </div>
+              </div>
+
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {["React.js", "TypeScript", "jsPDF", "react-to-print", "ATS Scanner", "Tailwind CSS", "Redux Toolkit"].map((tag) => (
                   <span key={tag} className="rounded-md bg-emerald-100/60 dark:bg-emerald-950/50 px-2.5 py-1 text-[11px] font-semibold text-emerald-900 dark:text-emerald-200 border border-emerald-200/50 dark:border-emerald-800/40">
@@ -316,7 +359,7 @@ export function HomePage(): JSX.Element {
             <div className="p-6">
               <div className="flex items-center justify-between gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-100 text-purple-800 dark:bg-purple-950/80 dark:text-purple-300 px-3.5 py-1 text-xs font-bold border border-purple-300/40">
-                  <BookOpen className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" /> Royal-Violet Arena Theme
+                  <BookOpen className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" /> Royal-Violet Arena Template
                 </span>
                 <span className="text-xs text-purple-600 dark:text-purple-400 font-bold">2026</span>
               </div>
@@ -326,6 +369,27 @@ export function HomePage(): JSX.Element {
               <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 Official-pattern full-length mock tests for SSC CGL/CHSL/MTS, CTET Paper I &amp; II, IBPS PO, RRB NTPC, UPSC, and Defence with section timers, question palette navigation, and instant score breakdowns.
               </p>
+
+              {/* TEMPLATE GUI PREVIEW: Question Palette & Timer Mockup */}
+              <div className="mt-4 rounded-xl border border-purple-300/40 bg-purple-950/20 p-3.5 space-y-2.5">
+                <div className="flex items-center justify-between text-[11px] font-bold text-purple-300">
+                  <span>⏱️ Section Timer: 00:58:24</span>
+                  <span className="text-emerald-400 font-bold">Answered: 18 / 25</span>
+                </div>
+                <div className="grid grid-cols-8 gap-1">
+                  {[1,2,3,4,5,6,7,8].map((q) => (
+                    <div
+                      key={q}
+                      className={`h-6 rounded flex items-center justify-center text-[10px] font-bold text-white ${
+                        q <= 5 ? "bg-emerald-500" : q === 6 ? "bg-yellow-500" : "bg-purple-900/60"
+                      }`}
+                    >
+                      {q}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {["React.js", "TypeScript", "Full-length Engine", "Live Timers", "Analytics", "Palette Nav"].map((tag) => (
                   <span key={tag} className="rounded-md bg-purple-100/60 dark:bg-purple-950/50 px-2.5 py-1 text-[11px] font-semibold text-purple-900 dark:text-purple-200 border border-purple-200/50 dark:border-purple-800/40">
@@ -350,7 +414,7 @@ export function HomePage(): JSX.Element {
             <div className="p-6">
               <div className="flex items-center justify-between gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950/80 dark:text-blue-300 px-3.5 py-1 text-xs font-bold border border-blue-300/40">
-                  <Cpu className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" /> AI-Sapphire Theme
+                  <Cpu className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" /> AI-Sapphire Template
                 </span>
                 <span className="text-xs text-blue-600 dark:text-blue-400 font-bold">2025 – 2026</span>
               </div>
@@ -360,6 +424,20 @@ export function HomePage(): JSX.Element {
               <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 AI hiring platform with automated interview simulation, WebSockets real-time transcription, proctoring with <code>face-api.js</code>, screen-sharing validation, and multi-role HR candidate dashboards.
               </p>
+
+              {/* TEMPLATE GUI PREVIEW: AI Proctoring & Waveform Monitor Mockup */}
+              <div className="mt-4 rounded-xl border border-blue-300/40 bg-blue-950/20 p-3.5 space-y-2.5">
+                <div className="flex items-center justify-between text-[11px] font-bold text-blue-300">
+                  <span className="flex items-center gap-1">🤖 face-api.js Proctoring: Active</span>
+                  <span className="text-cyan-300">WebSockets Connected</span>
+                </div>
+                <div className="flex items-center gap-1 h-5 justify-center">
+                  {[30, 60, 90, 45, 80, 100, 50, 70, 40, 85, 95, 60, 40].map((h, idx) => (
+                    <div key={idx} className="w-1 bg-cyan-400 rounded-full animate-pulse" style={{ height: `${h}%` }}></div>
+                  ))}
+                </div>
+              </div>
+
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {["React.js", "Next.js", "TypeScript", "Redux Toolkit", "WebSockets", "face-api.js", "Speech Recognition API"].map((tag) => (
                   <span key={tag} className="rounded-md bg-blue-100/60 dark:bg-blue-950/50 px-2.5 py-1 text-[11px] font-semibold text-blue-900 dark:text-blue-200 border border-blue-200/50 dark:border-blue-800/40">
@@ -382,7 +460,7 @@ export function HomePage(): JSX.Element {
             <div className="p-6">
               <div className="flex items-center justify-between gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-950/80 dark:text-fuchsia-300 px-3.5 py-1 text-xs font-bold border border-fuchsia-300/40">
-                  <Layers className="h-3.5 w-3.5 text-fuchsia-600 dark:text-fuchsia-400" /> Deep-Magenta Theme
+                  <Layers className="h-3.5 w-3.5 text-fuchsia-600 dark:text-fuchsia-400" /> Deep-Magenta Template
                 </span>
                 <span className="text-xs text-fuchsia-600 dark:text-fuchsia-400 font-bold">2024</span>
               </div>
@@ -392,6 +470,19 @@ export function HomePage(): JSX.Element {
               <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 MERN platform connecting advertisers with ad-space owners. Features Stripe payment gateway integration and Google Maps API for location-based discovery.
               </p>
+
+              {/* TEMPLATE GUI PREVIEW: Stripe Checkout & Google Maps Grid Mockup */}
+              <div className="mt-4 rounded-xl border border-fuchsia-300/40 bg-fuchsia-950/20 p-3.5 space-y-2.5">
+                <div className="flex items-center justify-between text-[11px] font-bold text-fuchsia-300">
+                  <span>📍 Billboard Location: Connaught Place, Delhi</span>
+                  <span className="text-emerald-400 font-bold">Stripe Verified</span>
+                </div>
+                <div className="rounded-lg bg-fuchsia-900/40 p-2 flex items-center justify-between text-xs font-semibold text-fuchsia-200">
+                  <span>Ad Space Slot #A4</span>
+                  <span className="rounded bg-fuchsia-600 text-white px-2 py-0.5 font-bold">₹45,000 / Mo</span>
+                </div>
+              </div>
+
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {["MongoDB", "Express.js", "React.js", "Node.js", "Stripe API", "Google Maps API"].map((tag) => (
                   <span key={tag} className="rounded-md bg-fuchsia-100/60 dark:bg-fuchsia-950/50 px-2.5 py-1 text-[11px] font-semibold text-fuchsia-900 dark:text-fuchsia-200 border border-fuchsia-200/50 dark:border-fuchsia-800/40">
@@ -412,7 +503,7 @@ export function HomePage(): JSX.Element {
             <div className="p-6">
               <div className="flex items-center justify-between gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-sky-100 text-sky-800 dark:bg-sky-950/80 dark:text-sky-300 px-3.5 py-1 text-xs font-bold border border-sky-300/40">
-                  <Users className="h-3.5 w-3.5 text-sky-600 dark:text-sky-400" /> Ocean-Cyan Theme
+                  <Users className="h-3.5 w-3.5 text-sky-600 dark:text-sky-400" /> Ocean-Cyan Template
                 </span>
                 <span className="text-xs text-sky-600 dark:text-sky-400 font-bold">2024</span>
               </div>
@@ -422,6 +513,19 @@ export function HomePage(): JSX.Element {
               <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 Networking platform for students to showcase academic &amp; project achievements, connect with peers, and manage professional profiles via REST APIs.
               </p>
+
+              {/* TEMPLATE GUI PREVIEW: Student Profile & Achievements Feed Mockup */}
+              <div className="mt-4 rounded-xl border border-sky-300/40 bg-sky-950/20 p-3.5 space-y-2.5">
+                <div className="flex items-center justify-between text-[11px] font-bold text-sky-300">
+                  <span>🎓 Student Achievement Showcase</span>
+                  <span className="text-sky-300">REST API Verified</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-sky-200">
+                  <span className="rounded-full bg-sky-600 text-white px-2 py-0.5 font-bold">JKLU Peer Network</span>
+                  <span className="rounded bg-sky-900/60 px-1.5 py-0.5">Project Portfolio</span>
+                </div>
+              </div>
+
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {["React.js", "MongoDB", "Express.js", "REST APIs", "Node.js"].map((tag) => (
                   <span key={tag} className="rounded-md bg-sky-100/60 dark:bg-sky-950/50 px-2.5 py-1 text-[11px] font-semibold text-sky-900 dark:text-sky-200 border border-sky-200/50 dark:border-sky-800/40">
