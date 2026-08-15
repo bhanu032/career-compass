@@ -998,6 +998,10 @@ export function getPaperById(paperId: string): MockPaper | undefined {
         return {
           ...paper,
           totalQuestions: actualTotalQ > 0 ? actualTotalQ : paper.totalQuestions,
+          sections: paper.sections.map(s => ({
+            ...s,
+            questionCount: s.questions.length,
+          })),
         };
       }
     }
