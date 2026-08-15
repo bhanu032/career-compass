@@ -18,7 +18,7 @@ import { CDS_2025_SET1 } from "@/data/papers/cds";
 import { SBI_CLERK_2025_PRE } from "@/data/papers/sbiClerk";
 import { RRB_JE_2025_CBT1 } from "@/data/papers/rrbJe";
 import { SSC_CPO_2025_PAPER1 } from "@/data/papers/sscCpo";
-import { generateExpandedPaperSets } from "@/utils/mockPaperGenerator";
+import { ensureFullSectionQuestions, generateExpandedPaperSets } from "@/utils/mockPaperGenerator";
 
 // ── SSC CGL 2025 — 12 Sept Shift 2 ──────────────────────────────────────────
 // Questions sourced from the Similar-Based Paper (Testbook)
@@ -993,7 +993,15 @@ export function getPaperById(paperId: string): MockPaper | undefined {
   for (const group of EXAM_GROUPS) {
     for (const exam of group.exams) {
       const paper = exam.papers.find(p => p.id === paperId);
-      if (paper) return paper;
+      if (paper) {
+        const fullSections = paper.sections.map(ensureFullSectionQuestions);
+        const totalQ = fullSections.reduce((acc, s) => acc + s.questions.length, 0);
+        return {
+          ...paper,
+          totalQuestions: Math.max(paper.totalQuestions, totalQ),
+          sections: fullSections,
+        };
+      }
     }
   }
   return undefined;
