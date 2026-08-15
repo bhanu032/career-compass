@@ -100,9 +100,11 @@ export function MockTestPage(): JSX.Element {
     );
   }
 
-  const currentSection = paper.sections.find(s => s.id === attempt.currentSectionId)!;
-  const currentQuestion = currentSection.questions.find(q => q.id === attempt.currentQuestionId)!;
-  const currentAttempt  = attempt.answers[currentQuestion.id];
+  const currentSection = paper.sections.find(s => s.id === attempt.currentSectionId) || paper.sections[0];
+  const currentQuestion = (currentSection ? currentSection.questions.find(q => q.id === attempt.currentQuestionId) : undefined) || currentSection?.questions[0];
+  const currentAttempt  = currentQuestion
+    ? attempt.answers[currentQuestion.id] || { questionId: currentQuestion.id, selectedOption: null, state: "not_visited", timeSpentSeconds: 0, markedForReview: false }
+    : undefined;
 
   // Counts for palette legend
   const counts = Object.values(attempt.answers).reduce(
@@ -333,13 +335,13 @@ export function MockTestPage(): JSX.Element {
                 onClick={toggleMark}
                 className={classNames(
                   "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition",
-                  currentAttempt.markedForReview
+                  currentAttempt?.markedForReview
                     ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300"
                     : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300"
                 )}
               >
-                {currentAttempt.markedForReview ? <BookmarkCheck className="h-3.5 w-3.5" /> : <Flag className="h-3.5 w-3.5" />}
-                {currentAttempt.markedForReview ? "Marked" : "Mark for Review"}
+                {currentAttempt?.markedForReview ? <BookmarkCheck className="h-3.5 w-3.5" /> : <Flag className="h-3.5 w-3.5" />}
+                {currentAttempt?.markedForReview ? "Marked" : "Mark for Review"}
               </button>
             </div>
           </div>
@@ -347,11 +349,11 @@ export function MockTestPage(): JSX.Element {
           {/* Question text + options */}
           <div className="flex-1 px-6 py-6">
             <p className="mb-6 whitespace-pre-line text-base font-medium leading-relaxed text-slate-900 dark:text-white">
-              {currentQuestion.questionText}
+              {currentQuestion?.questionText}
             </p>
             <div className="space-y-3">
-              {currentQuestion.options.map((opt, i) => {
-                const selected = currentAttempt.selectedOption === i;
+              {(currentQuestion?.options || []).map((opt, i) => {
+                const selected = currentAttempt?.selectedOption === i;
                 return (
                   <button
                     key={i}
@@ -384,7 +386,7 @@ export function MockTestPage(): JSX.Element {
             <button
               type="button"
               onClick={clearResponse}
-              disabled={currentAttempt.selectedOption === null}
+              disabled={currentAttempt?.selectedOption === null || currentAttempt?.selectedOption === undefined}
               className="btn-secondary text-sm py-2 disabled:opacity-40"
             >
               Clear Response
