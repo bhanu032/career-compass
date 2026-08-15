@@ -233,16 +233,16 @@ export function HomePage(): JSX.Element {
           className="mt-8 grid gap-8 lg:grid-cols-2"
         >
 
-          {/* PROJECT 1: Career Compass / DeshKiSeva Job Portal */}
-          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-violet-200 dark:border-violet-800/40 bg-white dark:bg-[#0c0e1e]">
+          {/* PROJECT 1: Career Compass / DeshKiSeva Job Portal — Theme: Saffron-Gold National Portal */}
+          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-amber-300 dark:border-amber-500/40 bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-amber-600/10 shadow-lg hover:shadow-orange-500/10 transition-all">
             <div className="p-6">
               <div className="flex items-center justify-between gap-2">
-                <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 text-orange-700 dark:bg-orange-950/60 dark:text-orange-300 px-3 py-1 text-xs font-bold">
-                  <Landmark className="h-3.5 w-3.5" /> Live Production App
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300 px-3.5 py-1 text-xs font-bold border border-amber-300/40">
+                  <Landmark className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" /> Saffron-Gold Portal Theme
                 </span>
-                <span className="text-xs text-slate-400 font-semibold">2026</span>
+                <span className="text-xs text-amber-600 dark:text-amber-400 font-bold">2026</span>
               </div>
-              <h3 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+              <h3 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
                 Career Compass — Government, Sarkari &amp; Private Jobs Portal
               </h3>
               <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -250,36 +250,36 @@ export function HomePage(): JSX.Element {
               </p>
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {["React.js", "TypeScript", "Vite", "Tailwind CSS", "Sarkari RSS Scraper", "TanStack React Query", "Framer Motion"].map((tag) => (
-                  <span key={tag} className="rounded-md bg-slate-100 dark:bg-slate-800 px-2.5 py-1 text-[11px] font-semibold text-slate-700 dark:text-slate-300">
+                  <span key={tag} className="rounded-md bg-amber-100/60 dark:bg-amber-950/50 px-2.5 py-1 text-[11px] font-semibold text-amber-900 dark:text-amber-200 border border-amber-200/50 dark:border-amber-800/40">
                     {tag}
                   </span>
                 ))}
               </div>
             </div>
 
-            <div className="p-6 pt-0 border-t border-slate-100 dark:border-slate-800/60 mt-4 flex flex-wrap items-center justify-between gap-3 bg-slate-50/50 dark:bg-slate-900/30">
-              <span className="text-xs font-bold text-orange-600 dark:text-orange-400 flex items-center gap-1">
+            <div className="p-6 pt-0 border-t border-amber-200/50 dark:border-amber-800/40 mt-4 flex flex-wrap items-center justify-between gap-3 bg-amber-500/5 dark:bg-amber-950/20">
+              <span className="text-xs font-bold text-amber-700 dark:text-amber-400 flex items-center gap-1">
                 <CheckCircle2 className="h-3.5 w-3.5" /> Includes {sarkariData?.counts.total ?? "40+"} Live Sarkari Jobs
               </span>
               <div className="flex gap-2">
-                <Link to="/jobs?tab=sarkari" className="btn-secondary text-xs py-2 px-3">
+                <Link to="/jobs?tab=sarkari" className="btn-secondary text-xs py-2 px-3 border-amber-300 dark:border-amber-700">
                   Sarkari Feed
                 </Link>
-                <Link to="/jobs" className="btn-primary text-xs py-2 px-4 bg-orange-600 hover:bg-orange-500 text-white">
+                <Link to="/jobs" className="btn-primary text-xs py-2 px-4 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white shadow-md">
                   Launch Job Portal <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>
             </div>
           </motion.div>
 
-          {/* PROJECT 2: ATS Resume Builder */}
-          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-emerald-200 dark:border-emerald-800/40 bg-white dark:bg-[#0c0e1e]">
+          {/* PROJECT 2: ATS Resume Builder — Theme: Cyber Neon Teal Studio */}
+          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-emerald-300 dark:border-emerald-500/40 bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-cyan-500/10 shadow-lg hover:shadow-emerald-500/10 transition-all">
             <div className="p-6">
               <div className="flex items-center justify-between gap-2">
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 px-3 py-1 text-xs font-bold">
-                  <FileText className="h-3.5 w-3.5" /> Free Career Tool
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 px-3.5 py-1 text-xs font-bold border border-emerald-300/40">
+                  <FileText className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" /> Cyber-Teal Studio Theme
                 </span>
-                <span className="text-xs text-slate-400 font-semibold">2026</span>
+                <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold">2026</span>
               </div>
               <h3 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                 ATS Resume Builder &amp; Scanner Engine
@@ -289,36 +289,36 @@ export function HomePage(): JSX.Element {
               </p>
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {["React.js", "TypeScript", "jsPDF", "react-to-print", "ATS Scanner", "Tailwind CSS", "Redux Toolkit"].map((tag) => (
-                  <span key={tag} className="rounded-md bg-slate-100 dark:bg-slate-800 px-2.5 py-1 text-[11px] font-semibold text-slate-700 dark:text-slate-300">
+                  <span key={tag} className="rounded-md bg-emerald-100/60 dark:bg-emerald-950/50 px-2.5 py-1 text-[11px] font-semibold text-emerald-900 dark:text-emerald-200 border border-emerald-200/50 dark:border-emerald-800/40">
                     {tag}
                   </span>
                 ))}
               </div>
             </div>
 
-            <div className="p-6 pt-0 border-t border-slate-100 dark:border-slate-800/60 mt-4 flex flex-wrap items-center justify-between gap-3 bg-slate-50/50 dark:bg-slate-900/30">
-              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+            <div className="p-6 pt-0 border-t border-emerald-200/50 dark:border-emerald-800/40 mt-4 flex flex-wrap items-center justify-between gap-3 bg-emerald-500/5 dark:bg-emerald-950/20">
+              <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
                 <CheckCircle2 className="h-3.5 w-3.5" /> 98% ATS Pass Rate Templates
               </span>
               <div className="flex gap-2">
-                <Link to="/resume-builder/templates" className="btn-secondary text-xs py-2 px-3">
+                <Link to="/resume-builder/templates" className="btn-secondary text-xs py-2 px-3 border-emerald-300 dark:border-emerald-700">
                   Templates
                 </Link>
-                <Link to="/resume-builder" className="btn-primary text-xs py-2 px-4 bg-emerald-600 hover:bg-emerald-500 text-white">
+                <Link to="/resume-builder" className="btn-primary text-xs py-2 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-md">
                   Build Resume Free <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>
             </div>
           </motion.div>
 
-          {/* PROJECT 3: Exam Mock Test Hub */}
-          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-purple-200 dark:border-purple-800/40 bg-white dark:bg-[#0c0e1e]">
+          {/* PROJECT 3: Exam Mock Test Hub — Theme: Royal Electric Violet Arena */}
+          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-purple-300 dark:border-purple-500/40 bg-gradient-to-br from-violet-600/15 via-purple-600/10 to-indigo-600/15 shadow-lg hover:shadow-purple-500/10 transition-all">
             <div className="p-6">
               <div className="flex items-center justify-between gap-2">
-                <span className="inline-flex items-center gap-1 rounded-full bg-purple-100 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 px-3 py-1 text-xs font-bold">
-                  <BookOpen className="h-3.5 w-3.5" /> Exam Prep Platform
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-100 text-purple-800 dark:bg-purple-950/80 dark:text-purple-300 px-3.5 py-1 text-xs font-bold border border-purple-300/40">
+                  <BookOpen className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" /> Royal-Violet Arena Theme
                 </span>
-                <span className="text-xs text-slate-400 font-semibold">2026</span>
+                <span className="text-xs text-purple-600 dark:text-purple-400 font-bold">2026</span>
               </div>
               <h3 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
                 Exam Mock Test Engine — 100+ Free Papers
@@ -328,31 +328,31 @@ export function HomePage(): JSX.Element {
               </p>
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {["React.js", "TypeScript", "Full-length Engine", "Live Timers", "Analytics", "Palette Nav"].map((tag) => (
-                  <span key={tag} className="rounded-md bg-slate-100 dark:bg-slate-800 px-2.5 py-1 text-[11px] font-semibold text-slate-700 dark:text-slate-300">
+                  <span key={tag} className="rounded-md bg-purple-100/60 dark:bg-purple-950/50 px-2.5 py-1 text-[11px] font-semibold text-purple-900 dark:text-purple-200 border border-purple-200/50 dark:border-purple-800/40">
                     {tag}
                   </span>
                 ))}
               </div>
             </div>
 
-            <div className="p-6 pt-0 border-t border-slate-100 dark:border-slate-800/60 mt-4 flex flex-wrap items-center justify-between gap-3 bg-slate-50/50 dark:bg-slate-900/30">
-              <span className="text-xs font-bold text-purple-600 dark:text-purple-400 flex items-center gap-1">
+            <div className="p-6 pt-0 border-t border-purple-200/50 dark:border-purple-800/40 mt-4 flex flex-wrap items-center justify-between gap-3 bg-purple-500/5 dark:bg-purple-950/20">
+              <span className="text-xs font-bold text-purple-700 dark:text-purple-400 flex items-center gap-1">
                 <CheckCircle2 className="h-3.5 w-3.5" /> 100+ Free Official Paper Sets
               </span>
-              <Link to="/mock-tests" className="btn-primary text-xs py-2 px-4 bg-purple-600 hover:bg-purple-500 text-white">
+              <Link to="/mock-tests" className="btn-primary text-xs py-2 px-4 bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white shadow-md">
                 Attempt Mock Tests <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
           </motion.div>
 
-          {/* PROJECT 4: InterviewGhost.ai — AI-Powered HRTech Platform */}
-          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-blue-200 dark:border-blue-800/40 bg-white dark:bg-[#0c0e1e]">
+          {/* PROJECT 4: InterviewGhost.ai — Theme: Futuristic AI Sapphire Blue */}
+          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-blue-300 dark:border-blue-500/40 bg-gradient-to-br from-blue-600/15 via-sky-600/10 to-cyan-600/15 shadow-lg hover:shadow-blue-500/10 transition-all">
             <div className="p-6">
               <div className="flex items-center justify-between gap-2">
-                <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 px-3 py-1 text-xs font-bold">
-                  <Cpu className="h-3.5 w-3.5" /> AI HRTech Platform
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950/80 dark:text-blue-300 px-3.5 py-1 text-xs font-bold border border-blue-300/40">
+                  <Cpu className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" /> AI-Sapphire Theme
                 </span>
-                <span className="text-xs text-slate-400 font-semibold">2025 – 2026</span>
+                <span className="text-xs text-blue-600 dark:text-blue-400 font-bold">2025 – 2026</span>
               </div>
               <h3 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                 InterviewGhost.ai — AI-Powered Hiring Platform
@@ -362,31 +362,31 @@ export function HomePage(): JSX.Element {
               </p>
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {["React.js", "Next.js", "TypeScript", "Redux Toolkit", "WebSockets", "face-api.js", "Speech Recognition API"].map((tag) => (
-                  <span key={tag} className="rounded-md bg-slate-100 dark:bg-slate-800 px-2.5 py-1 text-[11px] font-semibold text-slate-700 dark:text-slate-300">
+                  <span key={tag} className="rounded-md bg-blue-100/60 dark:bg-blue-950/50 px-2.5 py-1 text-[11px] font-semibold text-blue-900 dark:text-blue-200 border border-blue-200/50 dark:border-blue-800/40">
                     {tag}
                   </span>
                 ))}
               </div>
             </div>
 
-            <div className="p-6 pt-0 border-t border-slate-100 dark:border-slate-800/60 mt-4 flex items-center justify-between bg-slate-50/50 dark:bg-slate-900/30">
-              <span className="text-xs font-bold text-blue-600 dark:text-blue-400">
+            <div className="p-6 pt-0 border-t border-blue-200/50 dark:border-blue-800/40 mt-4 flex items-center justify-between bg-blue-500/5 dark:bg-blue-950/20">
+              <span className="text-xs font-bold text-blue-700 dark:text-blue-400">
                 DarpanAI Technologies (Full-Time SDE)
               </span>
-              <span className="text-xs text-slate-500 font-semibold">Production Platform</span>
+              <span className="text-xs text-blue-500 font-bold">Production Platform</span>
             </div>
           </motion.div>
 
-          {/* PROJECT 5: Advertising Space Management System */}
-          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0c0e1e]">
+          {/* PROJECT 5: Advertising Space Management System — Theme: Deep Magenta Financial */}
+          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-fuchsia-300 dark:border-fuchsia-500/40 bg-gradient-to-br from-fuchsia-600/15 via-pink-600/10 to-rose-600/15 shadow-lg hover:shadow-fuchsia-500/10 transition-all">
             <div className="p-6">
               <div className="flex items-center justify-between gap-2">
-                <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 px-3 py-1 text-xs font-bold">
-                  <Layers className="h-3.5 w-3.5" /> Full Stack MERN
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-950/80 dark:text-fuchsia-300 px-3.5 py-1 text-xs font-bold border border-fuchsia-300/40">
+                  <Layers className="h-3.5 w-3.5 text-fuchsia-600 dark:text-fuchsia-400" /> Deep-Magenta Theme
                 </span>
-                <span className="text-xs text-slate-400 font-semibold">2024</span>
+                <span className="text-xs text-fuchsia-600 dark:text-fuchsia-400 font-bold">2024</span>
               </div>
-              <h3 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors">
+              <h3 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-fuchsia-600 dark:group-hover:text-fuchsia-400 transition-colors">
                 Advertising Space Management System
               </h3>
               <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -394,29 +394,29 @@ export function HomePage(): JSX.Element {
               </p>
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {["MongoDB", "Express.js", "React.js", "Node.js", "Stripe API", "Google Maps API"].map((tag) => (
-                  <span key={tag} className="rounded-md bg-slate-100 dark:bg-slate-800 px-2.5 py-1 text-[11px] font-semibold text-slate-700 dark:text-slate-300">
+                  <span key={tag} className="rounded-md bg-fuchsia-100/60 dark:bg-fuchsia-950/50 px-2.5 py-1 text-[11px] font-semibold text-fuchsia-900 dark:text-fuchsia-200 border border-fuchsia-200/50 dark:border-fuchsia-800/40">
                     {tag}
                   </span>
                 ))}
               </div>
             </div>
 
-            <div className="p-6 pt-0 border-t border-slate-100 dark:border-slate-800/60 mt-4 flex items-center justify-between bg-slate-50/50 dark:bg-slate-900/30">
-              <span className="text-xs font-semibold text-slate-500">Stripe Payments &amp; Map Discovery</span>
-              <span className="text-xs font-bold text-violet-600">Full Stack MERN</span>
+            <div className="p-6 pt-0 border-t border-fuchsia-200/50 dark:border-fuchsia-800/40 mt-4 flex items-center justify-between bg-fuchsia-500/5 dark:bg-fuchsia-950/20">
+              <span className="text-xs font-semibold text-fuchsia-600 dark:text-fuchsia-400">Stripe Payments &amp; Map Discovery</span>
+              <span className="text-xs font-bold text-fuchsia-600">Full Stack MERN</span>
             </div>
           </motion.div>
 
-          {/* PROJECT 6: IntellectInn */}
-          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0c0e1e]">
+          {/* PROJECT 6: IntellectInn — Theme: Electric Ocean Cyan */}
+          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-sky-300 dark:border-sky-500/40 bg-gradient-to-br from-sky-600/15 via-teal-600/10 to-blue-600/15 shadow-lg hover:shadow-sky-500/10 transition-all">
             <div className="p-6">
               <div className="flex items-center justify-between gap-2">
-                <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 px-3 py-1 text-xs font-bold">
-                  <Users className="h-3.5 w-3.5" /> Networking Platform
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-sky-100 text-sky-800 dark:bg-sky-950/80 dark:text-sky-300 px-3.5 py-1 text-xs font-bold border border-sky-300/40">
+                  <Users className="h-3.5 w-3.5 text-sky-600 dark:text-sky-400" /> Ocean-Cyan Theme
                 </span>
-                <span className="text-xs text-slate-400 font-semibold">2024</span>
+                <span className="text-xs text-sky-600 dark:text-sky-400 font-bold">2024</span>
               </div>
-              <h3 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-violet-600 transition-colors">
+              <h3 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
                 IntellectInn — Student Networking Platform
               </h3>
               <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -424,16 +424,16 @@ export function HomePage(): JSX.Element {
               </p>
               <div className="mt-4 flex flex-wrap gap-1.5">
                 {["React.js", "MongoDB", "Express.js", "REST APIs", "Node.js"].map((tag) => (
-                  <span key={tag} className="rounded-md bg-slate-100 dark:bg-slate-800 px-2.5 py-1 text-[11px] font-semibold text-slate-700 dark:text-slate-300">
+                  <span key={tag} className="rounded-md bg-sky-100/60 dark:bg-sky-950/50 px-2.5 py-1 text-[11px] font-semibold text-sky-900 dark:text-sky-200 border border-sky-200/50 dark:border-sky-800/40">
                     {tag}
                   </span>
                 ))}
               </div>
             </div>
 
-            <div className="p-6 pt-0 border-t border-slate-100 dark:border-slate-800/60 mt-4 flex items-center justify-between bg-slate-50/50 dark:bg-slate-900/30">
-              <span className="text-xs font-semibold text-slate-500">Student Achievements &amp; Profiles</span>
-              <span className="text-xs font-bold text-violet-600">React &amp; MongoDB</span>
+            <div className="p-6 pt-0 border-t border-sky-200/50 dark:border-sky-800/40 mt-4 flex items-center justify-between bg-sky-500/5 dark:bg-sky-950/20">
+              <span className="text-xs font-semibold text-sky-600 dark:text-sky-400">Student Achievements &amp; Profiles</span>
+              <span className="text-xs font-bold text-sky-600">React &amp; MongoDB</span>
             </div>
           </motion.div>
 
@@ -710,87 +710,87 @@ export function HomePage(): JSX.Element {
           className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
         >
 
-          {/* Hub 1: Job Search */}
+          {/* Hub 1: Job Search — Theme: Saffron Portal */}
           <motion.div variants={cardVariant}>
-            <Link to="/jobs" className="card p-6 block group hover:scale-[1.02] transition border-orange-200 dark:border-orange-900/30">
+            <Link to="/jobs" className="card p-6 block group hover:scale-[1.02] transition border-amber-300 dark:border-amber-500/40 bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-amber-600/10 shadow-lg hover:shadow-orange-500/20">
               <div className="flex items-center justify-between">
-                <div className="h-10 w-10 rounded-xl bg-orange-500 text-white flex items-center justify-center font-bold shadow-md">
+                <div className="h-10 w-10 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 text-white flex items-center justify-center font-bold shadow-md">
                   <Briefcase className="h-5 w-5" />
                 </div>
-                <ArrowRight className="h-4 w-4 text-orange-500 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="h-4 w-4 text-amber-600 dark:text-amber-400 group-hover:translate-x-1 transition-transform" />
               </div>
-              <h3 className="mt-4 font-bold text-slate-900 dark:text-white text-base">Job Search Portal</h3>
-              <p className="mt-1 text-xs text-slate-500">Government Jobs, Private Jobs Stream (LinkedIn &amp; Indeed).</p>
+              <h3 className="mt-4 font-extrabold text-slate-900 dark:text-white text-base group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">Job Search Portal</h3>
+              <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">Saffron National Theme • Government &amp; Private Jobs Stream (LinkedIn &amp; Indeed).</p>
             </Link>
           </motion.div>
 
-          {/* Hub 2: Sarkari Feed */}
+          {/* Hub 2: Sarkari Feed — Theme: Tricolor Saffron */}
           <motion.div variants={cardVariant}>
-            <Link to="/jobs?tab=sarkari" className="card p-6 block group hover:scale-[1.02] transition border-purple-200 dark:border-purple-900/30">
+            <Link to="/jobs?tab=sarkari" className="card p-6 block group hover:scale-[1.02] transition border-orange-300 dark:border-orange-500/40 bg-gradient-to-br from-orange-500/10 via-amber-500/5 to-emerald-600/10 shadow-lg hover:shadow-orange-500/20">
               <div className="flex items-center justify-between">
-                <div className="h-10 w-10 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold shadow-md">
+                <div className="h-10 w-10 rounded-xl bg-gradient-to-r from-orange-600 to-emerald-600 text-white flex items-center justify-center font-bold shadow-md">
                   <Landmark className="h-5 w-5" />
                 </div>
-                <ArrowRight className="h-4 w-4 text-purple-600 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="h-4 w-4 text-orange-600 dark:text-orange-400 group-hover:translate-x-1 transition-transform" />
               </div>
-              <h3 className="mt-4 font-bold text-slate-900 dark:text-white text-base">🏛️ Sarkari Jobs Live RSS</h3>
-              <p className="mt-1 text-xs text-slate-500">Live feeds from SarkariResult.com &amp; SarkariExam.com.</p>
+              <h3 className="mt-4 font-extrabold text-slate-900 dark:text-white text-base group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">🏛️ Sarkari Jobs Live RSS</h3>
+              <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">Tricolor Theme • Live feeds from SarkariResult.com &amp; SarkariExam.com.</p>
             </Link>
           </motion.div>
 
-          {/* Hub 3: ATS Resume Builder */}
+          {/* Hub 3: ATS Resume Builder — Theme: Cyber Neon Teal */}
           <motion.div variants={cardVariant}>
-            <Link to="/resume-builder" className="card p-6 block group hover:scale-[1.02] transition border-emerald-200 dark:border-emerald-900/30">
+            <Link to="/resume-builder" className="card p-6 block group hover:scale-[1.02] transition border-emerald-300 dark:border-emerald-500/40 bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-cyan-500/10 shadow-lg hover:shadow-emerald-500/20">
               <div className="flex items-center justify-between">
-                <div className="h-10 w-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold shadow-md">
+                <div className="h-10 w-10 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white flex items-center justify-center font-bold shadow-md">
                   <FileText className="h-5 w-5" />
                 </div>
-                <ArrowRight className="h-4 w-4 text-emerald-600 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="h-4 w-4 text-emerald-600 dark:text-emerald-400 group-hover:translate-x-1 transition-transform" />
               </div>
-              <h3 className="mt-4 font-bold text-slate-900 dark:text-white text-base">ATS Resume Builder</h3>
-              <p className="mt-1 text-xs text-slate-500">Resume templates, ATS score scanner &amp; instant PDF export.</p>
+              <h3 className="mt-4 font-extrabold text-slate-900 dark:text-white text-base group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">ATS Resume Builder</h3>
+              <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">Cyber-Teal Theme • Resume templates, ATS score scanner &amp; instant PDF export.</p>
             </Link>
           </motion.div>
 
-          {/* Hub 4: Mock Tests */}
+          {/* Hub 4: Mock Tests — Theme: Royal Electric Violet */}
           <motion.div variants={cardVariant}>
-            <Link to="/mock-tests" className="card p-6 block group hover:scale-[1.02] transition border-blue-200 dark:border-blue-900/30">
+            <Link to="/mock-tests" className="card p-6 block group hover:scale-[1.02] transition border-purple-300 dark:border-purple-500/40 bg-gradient-to-br from-violet-600/15 via-purple-600/10 to-indigo-600/15 shadow-lg hover:shadow-purple-500/20">
               <div className="flex items-center justify-between">
-                <div className="h-10 w-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shadow-md">
+                <div className="h-10 w-10 rounded-xl bg-gradient-to-r from-purple-600 to-violet-600 text-white flex items-center justify-center font-bold shadow-md">
                   <BookOpen className="h-5 w-5" />
                 </div>
-                <ArrowRight className="h-4 w-4 text-blue-600 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="h-4 w-4 text-purple-600 dark:text-purple-400 group-hover:translate-x-1 transition-transform" />
               </div>
-              <h3 className="mt-4 font-bold text-slate-900 dark:text-white text-base">Exam Mock Test Hub</h3>
-              <p className="mt-1 text-xs text-slate-500">100+ free paper sets for CTET, SSC, Banking, Railway, UPSC.</p>
+              <h3 className="mt-4 font-extrabold text-slate-900 dark:text-white text-base group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Exam Mock Test Hub</h3>
+              <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">Royal-Violet Theme • 100+ free paper sets for CTET, SSC, Banking, Railway, UPSC.</p>
             </Link>
           </motion.div>
 
-          {/* Hub 5: Admit Cards */}
+          {/* Hub 5: Admit Cards — Theme: Electric Cyan */}
           <motion.div variants={cardVariant}>
-            <Link to="/admit-cards" className="card p-6 block group hover:scale-[1.02] transition border-teal-200 dark:border-teal-900/30">
+            <Link to="/admit-cards" className="card p-6 block group hover:scale-[1.02] transition border-cyan-300 dark:border-cyan-500/40 bg-gradient-to-br from-cyan-600/15 via-sky-600/10 to-blue-600/15 shadow-lg hover:shadow-cyan-500/20">
               <div className="flex items-center justify-between">
-                <div className="h-10 w-10 rounded-xl bg-teal-600 text-white flex items-center justify-center font-bold shadow-md">
+                <div className="h-10 w-10 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white flex items-center justify-center font-bold shadow-md">
                   <FileCheck className="h-5 w-5" />
                 </div>
-                <ArrowRight className="h-4 w-4 text-teal-600 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="h-4 w-4 text-cyan-600 dark:text-cyan-400 group-hover:translate-x-1 transition-transform" />
               </div>
-              <h3 className="mt-4 font-bold text-slate-900 dark:text-white text-base">Admit Cards Portal</h3>
-              <p className="mt-1 text-xs text-slate-500">Latest hall tickets &amp; official exam download links.</p>
+              <h3 className="mt-4 font-extrabold text-slate-900 dark:text-white text-base group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">Admit Cards Portal</h3>
+              <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">Electric Cyan Theme • Latest hall tickets &amp; official exam download links.</p>
             </Link>
           </motion.div>
 
-          {/* Hub 6: Exam Results */}
+          {/* Hub 6: Exam Results — Theme: Trophy Gold */}
           <motion.div variants={cardVariant}>
-            <Link to="/results" className="card p-6 block group hover:scale-[1.02] transition border-yellow-200 dark:border-yellow-900/30">
+            <Link to="/results" className="card p-6 block group hover:scale-[1.02] transition border-yellow-300 dark:border-yellow-500/40 bg-gradient-to-br from-yellow-500/15 via-amber-500/10 to-orange-600/15 shadow-lg hover:shadow-yellow-500/20">
               <div className="flex items-center justify-between">
-                <div className="h-10 w-10 rounded-xl bg-yellow-600 text-white flex items-center justify-center font-bold shadow-md">
+                <div className="h-10 w-10 rounded-xl bg-gradient-to-r from-yellow-600 to-amber-600 text-white flex items-center justify-center font-bold shadow-md">
                   <Trophy className="h-5 w-5" />
                 </div>
-                <ArrowRight className="h-4 w-4 text-yellow-600 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="h-4 w-4 text-yellow-600 dark:text-yellow-400 group-hover:translate-x-1 transition-transform" />
               </div>
-              <h3 className="mt-4 font-bold text-slate-900 dark:text-white text-base">Exam Results Portal</h3>
-              <p className="mt-1 text-xs text-slate-500">Declared results, merit lists &amp; official selection lists.</p>
+              <h3 className="mt-4 font-extrabold text-slate-900 dark:text-white text-base group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors">Exam Results Portal</h3>
+              <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">Trophy Gold Theme • Declared results, merit lists &amp; official selection lists.</p>
             </Link>
           </motion.div>
 
