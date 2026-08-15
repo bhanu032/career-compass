@@ -206,6 +206,9 @@ export function JobsPage(): JSX.Element {
   const [sarkariPage, setSarkariPage] = useState(1);
   const SARKARI_PER_PAGE = 20;
 
+  const [privatePage, setPrivatePage] = useState(1);
+  const PRIVATE_PER_PAGE = 12;
+
   const { jobs: progressivePrivateJobs, isStreaming: isPrivateStreaming } =
     useProgressivePrivateJobs();
   const { jobs: scrapedPrivateJobs, isScraping: isScraperActive } =
@@ -715,19 +718,20 @@ export function JobsPage(): JSX.Element {
               >
                 <div className="flex items-center justify-between">
                   <h3 className="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
-                    <Briefcase className="h-5 w-5 text-blue-600" /> Private Jobs Stream
+                    <Briefcase className="h-5 w-5 text-blue-600" /> Private Jobs Stream (LinkedIn, Indeed &amp; Glassdoor)
                   </h3>
                   <span className="text-xs text-slate-500 font-semibold">
-                    {processedPrivateJobs.length} roles found
+                    Showing {Math.min(privatePage * PRIVATE_PER_PAGE, processedPrivateJobs.length)} of {processedPrivateJobs.length} roles found
                   </span>
                 </div>
+
                 <motion.div
                   variants={staggerContainer}
                   initial="hidden"
                   animate="visible"
                   className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
                 >
-                  {processedPrivateJobs.map((job) => (
+                  {processedPrivateJobs.slice(0, privatePage * PRIVATE_PER_PAGE).map((job) => (
                     <motion.div key={job.id} variants={cardVariant}>
                       <PrivateJobCard
                         job={job}
@@ -736,6 +740,22 @@ export function JobsPage(): JSX.Element {
                     </motion.div>
                   ))}
                 </motion.div>
+
+                {/* Load More Button */}
+                {privatePage * PRIVATE_PER_PAGE < processedPrivateJobs.length && (
+                  <div className="flex justify-center mt-8 pt-4">
+                    <motion.button
+                      whileHover={{ scale: 1.04, y: -2 }}
+                      whileTap={{ scale: 0.96 }}
+                      onClick={() => setPrivatePage((p) => p + 1)}
+                      className="inline-flex items-center gap-2 rounded-2xl px-8 py-3 text-sm font-bold text-white shadow-lg"
+                      style={{ background: "linear-gradient(135deg,#2563eb,#4f46e5)" }}
+                    >
+                      <Briefcase className="h-4 w-4" />
+                      Load More Private Jobs ({processedPrivateJobs.length - privatePage * PRIVATE_PER_PAGE} Remaining)
+                    </motion.button>
+                  </div>
+                )}
               </motion.div>
             )}
 
