@@ -233,15 +233,17 @@ export function HomePage(): JSX.Element {
           className="mt-8 grid gap-8 lg:grid-cols-2"
         >
 
-          {/* PROJECT 1: Career Compass / DeshKiSeva Job Portal — National Portal Layout */}
-          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-amber-400/50 dark:border-amber-500/40 bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-emerald-600/10 shadow-lg hover:shadow-orange-500/10 transition-all">
+          {/* PROJECT 1: Career Compass / DeshKiSeva Job Portal — National Portal Layout + Saffron Beacon Animation */}
+          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-amber-400/50 dark:border-amber-500/40 bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-emerald-600/10 shadow-lg animate-saffron-beacon hover:shadow-orange-500/20 transition-all">
             <div className="p-6">
               {/* National Ribbon Header */}
               <div className="flex items-center justify-between gap-2 border-b border-amber-200/60 dark:border-amber-800/40 pb-3">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300 px-3.5 py-1 text-xs font-bold border border-amber-300/40">
                   <Landmark className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" /> Government Career Hub
                 </span>
-                <span className="text-xs text-amber-600 dark:text-amber-400 font-bold">2026 Production</span>
+                <span className="text-xs text-amber-600 dark:text-amber-400 font-bold flex items-center gap-1">
+                  <span className="h-2 w-2 rounded-full bg-amber-500 animate-ping"></span> 2026 Live
+                </span>
               </div>
               <h3 className="mt-4 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
                 Career Compass — Government, Sarkari &amp; Private Jobs Portal
@@ -250,8 +252,8 @@ export function HomePage(): JSX.Element {
                 Full-featured career hub integrating live government job notifications, RSS-scraped feeds from <b>SarkariResult.com</b> &amp; <b>SarkariExam.com</b>, progressive private job streaming (LinkedIn/Indeed), Admit Cards, and Selection Results.
               </p>
 
-              {/* TEMPLATE GUI PREVIEW 1: Govt Portal Ticker & Notification Grid */}
-              <div className="mt-4 rounded-xl border border-amber-300/40 bg-amber-950/20 p-3.5 space-y-2.5">
+              {/* TEMPLATE GUI PREVIEW 1: Live Ticker & Saffron Pulse Accent */}
+              <div className="mt-4 rounded-xl border border-amber-300/40 bg-amber-950/20 p-3.5 space-y-2.5 relative overflow-hidden">
                 <div className="flex items-center justify-between text-[11px] font-bold text-amber-400">
                   <span className="flex items-center gap-1.5">
                     <span className="relative flex h-2 w-2">
@@ -296,8 +298,8 @@ export function HomePage(): JSX.Element {
             </div>
           </motion.div>
 
-          {/* PROJECT 2: ATS Resume Builder — IDE Document Studio Layout */}
-          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-emerald-300 dark:border-emerald-500/40 bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-cyan-500/10 shadow-lg hover:shadow-emerald-500/10 transition-all">
+          {/* PROJECT 2: ATS Resume Builder — IDE Studio + Laser Beam Scanline Animation */}
+          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-emerald-300 dark:border-emerald-500/40 bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-cyan-500/10 shadow-lg hover:shadow-emerald-500/20 transition-all">
             <div className="p-6">
               {/* IDE Header Dots */}
               <div className="flex items-center justify-between gap-2 border-b border-emerald-200/60 dark:border-emerald-800/40 pb-3">
@@ -318,8 +320,11 @@ export function HomePage(): JSX.Element {
                 ATS-friendly resume builder featuring multi-template rendering, live keyword compliance scoring, print-ready high-resolution PDF export using <code>jsPDF</code> and <code>react-to-print</code>.
               </p>
 
-              {/* TEMPLATE GUI PREVIEW 2: Live ATS Score Dial & Template Switcher Mockup */}
-              <div className="mt-4 rounded-xl border border-emerald-300/40 bg-emerald-950/20 p-3.5 space-y-2.5">
+              {/* TEMPLATE GUI PREVIEW 2: Laser Scanline Beam Animation */}
+              <div className="mt-4 rounded-xl border border-emerald-300/40 bg-emerald-950/20 p-3.5 space-y-2.5 relative overflow-hidden">
+                {/* Moving Scanline Overlay */}
+                <div className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-scanline pointer-events-none"></div>
+
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
                     <Sparkles className="h-3.5 w-3.5 text-yellow-300" /> ATS Match Score: 98/100 (Optimal)
@@ -361,8 +366,8 @@ export function HomePage(): JSX.Element {
             </div>
           </motion.div>
 
-          {/* PROJECT 3: Exam Mock Test Hub — Exam Hall Tablet Layout */}
-          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-purple-300 dark:border-purple-500/40 bg-gradient-to-br from-violet-600/15 via-purple-600/10 to-indigo-600/15 shadow-lg hover:shadow-purple-500/10 transition-all">
+          {/* PROJECT 3: Exam Mock Test Hub — Exam Tablet + Radar Sweep Animation */}
+          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-purple-300 dark:border-purple-500/40 bg-gradient-to-br from-violet-600/15 via-purple-600/10 to-indigo-600/15 shadow-lg hover:shadow-purple-500/20 transition-all">
             <div className="p-6">
               {/* Exam Tablet Header */}
               <div className="flex items-center justify-between gap-2 border-b border-purple-200/60 dark:border-purple-800/40 pb-3">
@@ -380,8 +385,12 @@ export function HomePage(): JSX.Element {
                 Official-pattern full-length mock tests for SSC CGL/CHSL/MTS, CTET Paper I &amp; II, IBPS PO, RRB NTPC, UPSC, and Defence with section timers, question palette navigation, and instant score breakdowns.
               </p>
 
-              {/* TEMPLATE GUI PREVIEW 3: Question Palette & Timer Mockup */}
-              <div className="mt-4 rounded-xl border border-purple-300/40 bg-purple-950/20 p-3.5 space-y-2.5">
+              {/* TEMPLATE GUI PREVIEW 3: Rotating Radar Sweep Overlay Animation */}
+              <div className="mt-4 rounded-xl border border-purple-300/40 bg-purple-950/20 p-3.5 space-y-2.5 relative overflow-hidden">
+                <div className="absolute -right-10 -bottom-10 h-32 w-32 rounded-full border border-purple-400/20 pointer-events-none flex items-center justify-center">
+                  <div className="h-full w-full rounded-full border border-dashed border-purple-400/30 animate-radar-sweep"></div>
+                </div>
+
                 <div className="flex items-center justify-between text-[11px] font-bold text-purple-300">
                   <span>Question Palette Grid</span>
                   <span className="text-emerald-400 font-bold">Answered: 18 / 25</span>
@@ -419,8 +428,8 @@ export function HomePage(): JSX.Element {
             </div>
           </motion.div>
 
-          {/* PROJECT 4: InterviewGhost.ai — AI Video Proctoring Console Layout */}
-          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-blue-300 dark:border-blue-500/40 bg-gradient-to-br from-blue-600/15 via-sky-600/10 to-cyan-600/15 shadow-lg hover:shadow-blue-500/10 transition-all">
+          {/* PROJECT 4: InterviewGhost.ai — AI Proctoring Console + 13-Bar Equalizer Animation */}
+          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-blue-300 dark:border-blue-500/40 bg-gradient-to-br from-blue-600/15 via-sky-600/10 to-cyan-600/15 shadow-lg hover:shadow-blue-500/20 transition-all">
             <div className="p-6">
               {/* AI Chip Header */}
               <div className="flex items-center justify-between gap-2 border-b border-blue-200/60 dark:border-blue-800/40 pb-3">
@@ -438,16 +447,23 @@ export function HomePage(): JSX.Element {
                 AI hiring platform with automated interview simulation, WebSockets real-time transcription, proctoring with <code>face-api.js</code>, screen-sharing validation, and multi-role HR candidate dashboards.
               </p>
 
-              {/* TEMPLATE GUI PREVIEW 4: AI Proctoring & Waveform Monitor Mockup */}
+              {/* TEMPLATE GUI PREVIEW 4: Dynamic 13-Bar Audio Equalizer Animation */}
               <div className="mt-4 rounded-xl border border-blue-300/40 bg-blue-950/20 p-3.5 space-y-2.5">
                 <div className="flex items-center justify-between text-[11px] font-bold text-blue-300">
                   <span className="flex items-center gap-1">🤖 face-api.js Proctoring: Active</span>
                   <span className="text-cyan-300">WebSockets Connected</span>
                 </div>
-                <div className="flex items-center gap-1 h-5 justify-center">
-                  {[30, 60, 90, 45, 80, 100, 50, 70, 40, 85, 95, 60, 40].map((h, idx) => (
-                    <div key={idx} className="w-1 bg-cyan-400 rounded-full animate-pulse" style={{ height: `${h}%` }}></div>
-                  ))}
+                <div className="flex items-center gap-1 h-6 justify-center">
+                  <div className="w-1 bg-cyan-400 rounded-full animate-sound-bar-1"></div>
+                  <div className="w-1 bg-cyan-400 rounded-full animate-sound-bar-2"></div>
+                  <div className="w-1 bg-cyan-400 rounded-full animate-sound-bar-3"></div>
+                  <div className="w-1 bg-cyan-400 rounded-full animate-sound-bar-4"></div>
+                  <div className="w-1 bg-cyan-400 rounded-full animate-sound-bar-1"></div>
+                  <div className="w-1 bg-cyan-400 rounded-full animate-sound-bar-2"></div>
+                  <div className="w-1 bg-cyan-400 rounded-full animate-sound-bar-3"></div>
+                  <div className="w-1 bg-cyan-400 rounded-full animate-sound-bar-4"></div>
+                  <div className="w-1 bg-cyan-400 rounded-full animate-sound-bar-1"></div>
+                  <div className="w-1 bg-cyan-400 rounded-full animate-sound-bar-2"></div>
                 </div>
               </div>
 
@@ -468,8 +484,8 @@ export function HomePage(): JSX.Element {
             </div>
           </motion.div>
 
-          {/* PROJECT 5: Advertising Space Management System — Stripe Financial Layout */}
-          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-fuchsia-300 dark:border-fuchsia-500/40 bg-gradient-to-br from-fuchsia-600/15 via-pink-600/10 to-rose-600/15 shadow-lg hover:shadow-fuchsia-500/10 transition-all">
+          {/* PROJECT 5: Advertising Space Management System — Metallic Shimmer Animation */}
+          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-fuchsia-300 dark:border-fuchsia-500/40 bg-gradient-to-br from-fuchsia-600/15 via-pink-600/10 to-rose-600/15 shadow-lg hover:shadow-fuchsia-500/20 transition-all">
             <div className="p-6">
               {/* Stripe Header */}
               <div className="flex items-center justify-between gap-2 border-b border-fuchsia-200/60 dark:border-fuchsia-800/40 pb-3">
@@ -487,15 +503,16 @@ export function HomePage(): JSX.Element {
                 MERN platform connecting advertisers with ad-space owners. Features Stripe payment gateway integration and Google Maps API for location-based discovery.
               </p>
 
-              {/* TEMPLATE GUI PREVIEW 5: Stripe Checkout & Google Maps Grid Mockup */}
-              <div className="mt-4 rounded-xl border border-fuchsia-300/40 bg-fuchsia-950/20 p-3.5 space-y-2.5">
+              {/* TEMPLATE GUI PREVIEW 5: Metallic Shimmer Beam Animation */}
+              <div className="mt-4 rounded-xl border border-fuchsia-300/40 bg-fuchsia-950/20 p-3.5 space-y-2.5 relative overflow-hidden">
                 <div className="flex items-center justify-between text-[11px] font-bold text-fuchsia-300">
                   <span>📍 Billboard Location: Connaught Place, Delhi</span>
                   <span className="text-emerald-400 font-bold">Google Maps API</span>
                 </div>
-                <div className="rounded-lg bg-fuchsia-900/40 p-2 flex items-center justify-between text-xs font-semibold text-fuchsia-200">
+                <div className="rounded-lg bg-fuchsia-900/40 p-2 flex items-center justify-between text-xs font-semibold text-fuchsia-200 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-metallic-shimmer pointer-events-none"></div>
                   <span>Ad Space Slot #A4</span>
-                  <span className="rounded bg-fuchsia-600 text-white px-2 py-0.5 font-bold">₹45,000 / Mo</span>
+                  <span className="rounded bg-fuchsia-600 text-white px-2 py-0.5 font-bold shadow-md">₹45,000 / Mo</span>
                 </div>
               </div>
 
@@ -514,8 +531,8 @@ export function HomePage(): JSX.Element {
             </div>
           </motion.div>
 
-          {/* PROJECT 6: IntellectInn — Social Network Feed Layout */}
-          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-sky-300 dark:border-sky-500/40 bg-gradient-to-br from-sky-600/15 via-teal-600/10 to-blue-600/15 shadow-lg hover:shadow-sky-500/10 transition-all">
+          {/* PROJECT 6: IntellectInn — Social Network + Water Ripple Animation */}
+          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-sky-300 dark:border-sky-500/40 bg-gradient-to-br from-sky-600/15 via-teal-600/10 to-blue-600/15 shadow-lg hover:shadow-sky-500/20 transition-all">
             <div className="p-6">
               {/* Social Network Header */}
               <div className="flex items-center justify-between gap-2 border-b border-sky-200/60 dark:border-sky-800/40 pb-3">
@@ -533,14 +550,14 @@ export function HomePage(): JSX.Element {
                 Networking platform for students to showcase academic &amp; project achievements, connect with peers, and manage professional profiles via REST APIs.
               </p>
 
-              {/* TEMPLATE GUI PREVIEW 6: Student Profile & Achievements Feed Mockup */}
-              <div className="mt-4 rounded-xl border border-sky-300/40 bg-sky-950/20 p-3.5 space-y-2.5">
+              {/* TEMPLATE GUI PREVIEW 6: Water Ripple Pulsating Skill Endorsements */}
+              <div className="mt-4 rounded-xl border border-sky-300/40 bg-sky-950/20 p-3.5 space-y-2.5 relative overflow-hidden">
                 <div className="flex items-center justify-between text-[11px] font-bold text-sky-300">
                   <span>🎓 Student Achievement Showcase</span>
                   <span className="text-sky-300">REST API Verified</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-sky-200">
-                  <span className="rounded-full bg-sky-600 text-white px-2 py-0.5 font-bold">+24 Skill Endorsements</span>
+                  <span className="rounded-full bg-sky-600 text-white px-2 py-0.5 font-bold animate-water-ripple">+24 Skill Endorsements</span>
                   <span className="rounded bg-sky-900/60 px-1.5 py-0.5">Project Portfolio</span>
                 </div>
               </div>

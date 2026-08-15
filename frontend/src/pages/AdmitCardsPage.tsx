@@ -135,7 +135,7 @@ export function AdmitCardsPage(): JSX.Element {
                     <Calendar className="h-3.5 w-3.5" /> Released Live
                   </span>
                   <a
-                    href={job.link || "#"}
+                    href={job.application_url || `/jobs/${job.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-primary text-xs py-2 px-3.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold shadow-md flex items-center gap-1.5"

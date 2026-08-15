@@ -133,7 +133,7 @@ export function ResultsPage(): JSX.Element {
                     <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /> Result Declared
                   </span>
                   <a
-                    href={job.link || "#"}
+                    href={job.application_url || `/jobs/${job.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-primary text-xs py-2 px-3.5 bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-600 hover:from-yellow-400 hover:to-orange-500 text-slate-950 font-bold shadow-md flex items-center gap-1.5"
