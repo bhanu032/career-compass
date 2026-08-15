@@ -131,13 +131,13 @@ export function HomePage(): JSX.Element {
             rankush248@gmail.com
           </a>
           <a
-            href="https://www.linkedin.com"
+            href="https://www.linkedin.com/in/bhanu032"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600/40 px-3.5 py-1.5 hover:bg-blue-600/60 transition border border-blue-300/30 text-white"
           >
             <Linkedin className="h-3.5 w-3.5 text-blue-300" />
-            LinkedIn Profile
+            linkedin.com/in/bhanu032
           </a>
         </motion.div>
 
