@@ -124,25 +124,44 @@ export function MockTestPage(): JSX.Element {
 
     setAttempt(prev => {
       if (!prev) return prev;
-      const cur = prev.answers[prev.currentQuestionId];
-      const updated = {
+      const curQId = prev.currentQuestionId;
+      const cur = prev.answers[curQId] || {
+        questionId: curQId,
+        selectedOption: null,
+        state: "not_visited",
+        timeSpentSeconds: 0,
+        markedForReview: false,
+      };
+
+      const updatedCur: QuestionAttempt = {
         ...cur,
-        timeSpentSeconds: cur.timeSpentSeconds + elapsed,
-        state: cur.state === "not_visited" ? "skipped" : cur.state,
-      } as QuestionAttempt;
-      const newSection = paper!.sections.find(s => s.id === sectionId)!;
-      const newQ = newSection.questions.find(q => q.id === questionId)!;
-      const newQAttempt = prev.answers[newQ.id];
+        timeSpentSeconds: (cur.timeSpentSeconds || 0) + elapsed,
+        state: cur.selectedOption !== null 
+          ? (cur.markedForReview ? "marked" : "answered") 
+          : (cur.state === "not_visited" ? "skipped" : cur.state),
+      };
+
+      const targetAttempt = prev.answers[questionId] || {
+        questionId,
+        selectedOption: null,
+        state: "not_visited",
+        timeSpentSeconds: 0,
+        markedForReview: false,
+      };
+
+      const updatedTarget: QuestionAttempt = {
+        ...targetAttempt,
+        state: targetAttempt.state === "not_visited" ? "skipped" : targetAttempt.state,
+      };
+
       return {
         ...prev,
         currentSectionId: sectionId,
         currentQuestionId: questionId,
         answers: {
           ...prev.answers,
-          [prev.currentQuestionId]: updated,
-          [questionId]: newQAttempt.state === "not_visited"
-            ? { ...newQAttempt, state: "skipped" as const }
-            : newQAttempt,
+          [curQId]: updatedCur,
+          [questionId]: updatedTarget,
         },
       };
     });
@@ -152,12 +171,19 @@ export function MockTestPage(): JSX.Element {
   function selectOption(optIdx: number) {
     setAttempt(prev => {
       if (!prev) return prev;
-      const cur = prev.answers[currentQuestion.id];
+      const qId = prev.currentQuestionId;
+      const cur = prev.answers[qId] || {
+        questionId: qId,
+        selectedOption: null,
+        state: "not_visited",
+        timeSpentSeconds: 0,
+        markedForReview: false,
+      };
       return {
         ...prev,
         answers: {
           ...prev.answers,
-          [currentQuestion.id]: {
+          [qId]: {
             ...cur,
             selectedOption: optIdx,
             state: cur.markedForReview ? "marked" : "answered",
@@ -170,12 +196,19 @@ export function MockTestPage(): JSX.Element {
   function clearResponse() {
     setAttempt(prev => {
       if (!prev) return prev;
-      const cur = prev.answers[currentQuestion.id];
+      const qId = prev.currentQuestionId;
+      const cur = prev.answers[qId] || {
+        questionId: qId,
+        selectedOption: null,
+        state: "not_visited",
+        timeSpentSeconds: 0,
+        markedForReview: false,
+      };
       return {
         ...prev,
         answers: {
           ...prev.answers,
-          [currentQuestion.id]: { ...cur, selectedOption: null, state: "skipped" },
+          [qId]: { ...cur, selectedOption: null, state: "skipped" },
         },
       };
     });
@@ -184,7 +217,14 @@ export function MockTestPage(): JSX.Element {
   function toggleMark() {
     setAttempt(prev => {
       if (!prev) return prev;
-      const cur = prev.answers[currentQuestion.id];
+      const qId = prev.currentQuestionId;
+      const cur = prev.answers[qId] || {
+        questionId: qId,
+        selectedOption: null,
+        state: "not_visited",
+        timeSpentSeconds: 0,
+        markedForReview: false,
+      };
       const newMark = !cur.markedForReview;
       const newState = newMark
         ? "marked"
@@ -193,34 +233,40 @@ export function MockTestPage(): JSX.Element {
         ...prev,
         answers: {
           ...prev.answers,
-          [currentQuestion.id]: { ...cur, markedForReview: newMark, state: newState },
+          [qId]: { ...cur, markedForReview: newMark, state: newState },
         },
       };
     });
   }
 
   function goNext() {
+    if (!currentSection || !currentQuestion || !paper) return;
     const qIdx = currentSection.questions.findIndex(q => q.id === currentQuestion.id);
-    if (qIdx < currentSection.questions.length - 1) {
+    if (qIdx >= 0 && qIdx < currentSection.questions.length - 1) {
       navigateTo(currentSection.id, currentSection.questions[qIdx + 1].id);
     } else {
-      const sIdx = paper!.sections.findIndex(s => s.id === currentSection.id);
-      if (sIdx < paper!.sections.length - 1) {
-        const nextSec = paper!.sections[sIdx + 1];
-        navigateTo(nextSec.id, nextSec.questions[0].id);
+      const sIdx = paper.sections.findIndex(s => s.id === currentSection.id);
+      if (sIdx >= 0 && sIdx < paper.sections.length - 1) {
+        const nextSec = paper.sections[sIdx + 1];
+        if (nextSec.questions.length > 0) {
+          navigateTo(nextSec.id, nextSec.questions[0].id);
+        }
       }
     }
   }
 
   function goPrev() {
+    if (!currentSection || !currentQuestion || !paper) return;
     const qIdx = currentSection.questions.findIndex(q => q.id === currentQuestion.id);
     if (qIdx > 0) {
       navigateTo(currentSection.id, currentSection.questions[qIdx - 1].id);
     } else {
-      const sIdx = paper!.sections.findIndex(s => s.id === currentSection.id);
+      const sIdx = paper.sections.findIndex(s => s.id === currentSection.id);
       if (sIdx > 0) {
-        const prevSec = paper!.sections[sIdx - 1];
-        navigateTo(prevSec.id, prevSec.questions[prevSec.questions.length - 1].id);
+        const prevSec = paper.sections[sIdx - 1];
+        if (prevSec.questions.length > 0) {
+          navigateTo(prevSec.id, prevSec.questions[prevSec.questions.length - 1].id);
+        }
       }
     }
   }
