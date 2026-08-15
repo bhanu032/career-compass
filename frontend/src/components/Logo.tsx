@@ -35,29 +35,17 @@ export function Logo(): JSX.Element {
         <Landmark className="h-5 w-5 text-white" />
       </span>
 
-      <span
-        className="text-lg font-bold tracking-tight"
-        style={{ color: isTricolor ? "#1a1a2e" : isDark ? "#fff" : "#0f172a" }}
-      >
-        DeshKi
-        {isTricolor ? (
-          <span
-            className="bg-clip-text text-transparent"
-            style={{ backgroundImage: "linear-gradient(135deg, #FF9933, #138808)" }}
-          >
-            Seva
-          </span>
-        ) : isDark ? (
-          <span
-            className="bg-clip-text text-transparent"
-            style={{ backgroundImage: "linear-gradient(135deg, #a78bfa, #00d4ff)" }}
-          >
-            Seva
-          </span>
-        ) : (
-          <span className="text-brand-600">Seva</span>
-        )}
-      </span>
+      <div className="flex flex-col">
+        <span
+          className="text-base sm:text-lg font-extrabold tracking-tight leading-none"
+          style={{ color: isTricolor ? "#1a1a2e" : isDark ? "#fff" : "#0f172a" }}
+        >
+          Bhanu Pratap Singh
+        </span>
+        <span className="text-[10px] font-bold text-violet-600 dark:text-violet-400">
+          SDE | Portfolio &amp; Apps
+        </span>
+      </div>
     </Link>
   );
 }
