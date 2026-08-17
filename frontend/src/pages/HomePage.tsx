@@ -18,6 +18,7 @@ import {
   GraduationCap,
   Globe,
   Landmark,
+  Languages,
   Layers,
   Linkedin,
   Mail,
@@ -232,6 +233,40 @@ export function HomePage(): JSX.Element {
           viewport={{ once: true, amount: 0.1 }}
           className="mt-8 grid gap-8 lg:grid-cols-2"
         >
+
+          {/* FLAGSHIP PROJECT: Translify AI Translation & Transliteration Engine */}
+          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-violet-300 dark:border-violet-700/60 bg-gradient-to-br from-violet-500/5 via-indigo-500/5 to-cyan-500/10 shadow-md hover:shadow-violet-500/10 transition-all">
+            <div className="p-6">
+              <div className="flex items-center justify-between gap-2">
+                <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 text-violet-800 dark:bg-violet-950/80 dark:text-violet-300 px-3 py-1 text-xs font-bold border border-violet-300/40">
+                  <Languages className="h-3.5 w-3.5 text-violet-600 dark:text-violet-400" /> AI Language Platform
+                </span>
+                <span className="text-xs text-violet-600 dark:text-violet-400 font-bold">2026 New Release</span>
+              </div>
+              <h3 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">
+                Translify — AI Multilingual Translation &amp; Transliteration Studio
+              </h3>
+              <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                AI translation &amp; Hinglish-to-Hindi Devanagari transliteration engine with voice speech-to-text input, text-to-speech audio playback, contextual tone adjustment (Professional, Casual, Academic), and multi-language exports.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-1.5">
+                {["React.js", "TypeScript", "Node.js", "Express.js", "Phonetic Engine", "Speech Recognition API", "Tailwind CSS", "i18n"].map((tag) => (
+                  <span key={tag} className="rounded-md bg-violet-100/70 dark:bg-violet-950/60 px-2.5 py-1 text-[11px] font-semibold text-violet-900 dark:text-violet-200 border border-violet-200/50 dark:border-violet-800/40">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-6 pt-0 border-t border-violet-200/60 dark:border-violet-800/40 mt-4 flex flex-wrap items-center justify-between gap-3 bg-violet-500/5 dark:bg-violet-950/20">
+              <span className="text-xs font-bold text-violet-700 dark:text-violet-300 flex items-center gap-1">
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" /> Speech Mic &amp; Audio Playback Ready
+              </span>
+              <Link to="/translify" className="btn-primary text-xs py-2 px-4 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white shadow-md">
+                Launch Translify AI <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+          </motion.div>
 
           {/* PROJECT 1: Career Compass / DeshKiSeva Job Portal */}
           <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-violet-200 dark:border-violet-800/40 bg-white dark:bg-[#0c0e1e]">

@@ -14,6 +14,7 @@ import { ProfilePage } from "@/pages/ProfilePage";
 import { ResultDetailPage } from "@/pages/ResultDetailPage";
 import { ResultsPage } from "@/pages/ResultsPage";
 import { SearchPage } from "@/pages/SearchPage";
+import { TranslifyPage } from "@/pages/TranslifyPage";
 import { ResumeLandingPage } from "@/pages/resume/ResumeLandingPage";
 import { ResumeTemplateSelectionPage } from "@/pages/resume/ResumeTemplateSelectionPage";
 import { ResumeEditorPage } from "@/pages/resume/ResumeBuilderPage";
@@ -53,6 +54,8 @@ export const router = createBrowserRouter([
       { path: "/resume-builder", element: <ResumeLandingPage /> },
       { path: "/resume-builder/templates", element: <ResumeTemplateSelectionPage /> },
       { path: "/resume-builder/edit", element: <ResumeEditorPage /> },
+      // Translify AI Studio
+      { path: "/translify", element: <TranslifyPage /> },
       // Redirect old auth routes to home — login/register are removed
       { path: "/login",    element: <Navigate to="/" replace /> },
       { path: "/register", element: <Navigate to="/" replace /> },
