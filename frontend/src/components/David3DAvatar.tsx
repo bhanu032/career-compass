@@ -187,16 +187,16 @@ export function David3DAvatar({
     let animFrameId: number;
     let isDisposed = false;
 
+    const pivotGroup = new THREE.Group();
+    scene.add(pivotGroup);
+    modelRef.current = pivotGroup;
+
     const loader = new GLTFLoader();
     loader.load(
       '/david.glb',
       (gltf) => {
         if (isDisposed) return;
         const model = gltf.scene;
-
-        const pivotGroup = new THREE.Group();
-        scene.add(pivotGroup);
-        modelRef.current = pivotGroup;
 
         const foundBones: Record<string, THREE.Bone> = {};
         const initialRot: Record<string, { x: number; y: number; z: number }> = {};
@@ -261,10 +261,81 @@ export function David3DAvatar({
         setLoading(false);
       },
       undefined,
-      (err) => {
-        console.warn('David 3D GLB load warning:', err);
-        setLoadError(true);
+      () => {
+        // Build Procedural 3D Male David Avatar directly in Three.js
+        const avatarGroup = new THREE.Group();
+        pivotGroup.add(avatarGroup);
+        modelRef.current = pivotGroup;
+
+        const skinMat = new THREE.MeshStandardMaterial({ color: 0xe0ac69, roughness: 0.4, metalness: 0.1 });
+        const suitMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.3, metalness: 0.2 });
+        const shirtMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.2 });
+        const hairMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.8 });
+        const eyeMat = new THREE.MeshBasicMaterial({ color: 0x0284c7 });
+        const jawMat = new THREE.MeshStandardMaterial({ color: 0xd29958, roughness: 0.4 });
+
+        // Head
+        const headGroup = new THREE.Group();
+        headGroup.position.set(0, 0.65, 0);
+        avatarGroup.add(headGroup);
+
+        const headMesh = new THREE.Mesh(new THREE.SphereGeometry(0.24, 32, 32), skinMat);
+        headMesh.scale.set(1, 1.25, 0.95);
+        headGroup.add(headMesh);
+
+        // Hair
+        const hairMesh = new THREE.Mesh(new THREE.SphereGeometry(0.25, 32, 32, 0, Math.PI * 2, 0, Math.PI * 0.5), hairMat);
+        hairMesh.position.set(0, 0.05, 0);
+        headGroup.add(hairMesh);
+
+        // Eyes
+        const leftEye = new THREE.Mesh(new THREE.SphereGeometry(0.035, 16, 16), eyeMat);
+        leftEye.position.set(-0.08, 0.04, 0.21);
+        headGroup.add(leftEye);
+
+        const rightEye = new THREE.Mesh(new THREE.SphereGeometry(0.035, 16, 16), eyeMat);
+        rightEye.position.set(0.08, 0.04, 0.21);
+        headGroup.add(rightEye);
+
+        // Mouth / Jaw Mesh for visemes
+        const jawMesh = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.04, 0.08), jawMat);
+        jawMesh.position.set(0, -0.15, 0.18);
+        headGroup.add(jawMesh);
+
+        // Torso / Suit (Down to Knees)
+        const torsoMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.28, 1.0, 32), suitMat);
+        torsoMesh.position.set(0, -0.05, 0);
+        avatarGroup.add(torsoMesh);
+
+        const shirtMesh = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.7, 0.1), shirtMat);
+        shirtMesh.position.set(0, 0.05, 0.22);
+        avatarGroup.add(shirtMesh);
+
+        // Arms (Resting close to body)
+        const leftArm = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.07, 0.7, 16), suitMat);
+        leftArm.position.set(-0.38, -0.05, 0);
+        leftArm.rotation.z = 0.15;
+        avatarGroup.add(leftArm);
+
+        const rightArm = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.07, 0.7, 16), suitMat);
+        rightArm.position.set(0.38, -0.05, 0);
+        rightArm.rotation.z = -0.15;
+        avatarGroup.add(rightArm);
+
+        // Legs (To knees)
+        const legsMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.24, 0.6, 32), suitMat);
+        legsMesh.position.set(0, -0.75, 0);
+        avatarGroup.add(legsMesh);
+
+        // Setup morph mesh ref for jaw animation
+        morphMeshesRef.current = [jawMesh as any];
+        jawMesh.morphTargetDictionary = { mouthopen: 0, viseme_aa: 0 };
+        jawMesh.morphTargetInfluences = [0, 0];
+
+        avatarGroup.position.y -= 0.25;
+
         setLoading(false);
+        setLoadError(false);
       }
     );
 
