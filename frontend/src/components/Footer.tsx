@@ -35,6 +35,8 @@ export function Footer(): JSX.Element {
       links: [
         { to: "/jobs",   label: t("footer.latestJobs") },
         { to: "/search", label: t("footer.advancedSearch") },
+        { to: "/amobile", label: "aMobile PC Bridge" },
+        { to: "/translify", label: "Translify Extension" },
       ],
     },
     {

@@ -33,6 +33,10 @@ import {
   User,
   Users,
   Zap,
+  Smartphone,
+  Bluetooth,
+  Usb,
+  Keyboard,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -233,6 +237,55 @@ export function HomePage(): JSX.Element {
           viewport={{ once: true, amount: 0.1 }}
           className="mt-8 grid gap-8 lg:grid-cols-2"
         >
+
+          {/* FLAGSHIP PROJECT: aMobile — Phone to PC Hardware Keyboard & Bridge */}
+          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-orange-300 dark:border-orange-700/60 bg-gradient-to-br from-orange-500/5 via-amber-500/5 to-purple-500/10 shadow-md hover:shadow-orange-500/10 transition-all">
+            <div className="p-6">
+              <div className="flex items-center justify-between gap-2">
+                <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-950/80 dark:text-orange-300 px-3 py-1 text-xs font-bold border border-orange-300/40">
+                  <Smartphone className="h-3.5 w-3.5 text-orange-600 dark:text-orange-400" /> Android Hardware HID &amp; PC Bridge
+                </span>
+                <span className="text-xs text-orange-600 dark:text-orange-400 font-bold">v2.4 Live</span>
+              </div>
+              <h3 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+                aMobile — Phone to PC Physical Hardware Keyboard &amp; File Bridge
+              </h3>
+              <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Transform Android phones into true 104-key Physical Bluetooth HID Keyboards for Windows with 0 PC software required (<code className="text-orange-700 dark:text-orange-300">kbdhid.sys</code> driver, SEB / BIOS compatible). Includes high-speed PC File Drop, Unicode broadcaster, and Task Manager stealth process cloaking.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-1.5">
+                {["Android Bluetooth HID", "Windows kbdhid.sys", "Zero PC Software Mode", "ADB Reverse Tunnel (58888)", "SEB Exam Compatible", "Swipe File Drop", "64-bit Trampoline Hooking"].map((tag) => (
+                  <span key={tag} className="rounded-md bg-orange-100/70 dark:bg-orange-950/60 px-2.5 py-1 text-[11px] font-semibold text-orange-900 dark:text-orange-200 border border-orange-200/50 dark:border-orange-800/40">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-6 pt-0 border-t border-orange-200/60 dark:border-orange-800/40 mt-4 flex flex-wrap items-center justify-between gap-3 bg-orange-500/5 dark:bg-orange-950/20">
+              <div className="flex items-center gap-3">
+                <a
+                  href="/amobile.apk"
+                  download="amobile.apk"
+                  className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1"
+                >
+                  <Download className="h-3.5 w-3.5" /> APK (80 KB)
+                </a>
+                <a
+                  href="/amobile-windows-bridge.zip"
+                  download="amobile-windows-bridge.zip"
+                  className="text-xs font-bold text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1"
+                >
+                  <Download className="h-3.5 w-3.5" /> Windows Suite (ZIP)
+                </a>
+              </div>
+              <div className="flex gap-2">
+                <Link to="/amobile" className="btn-primary text-xs py-2 px-4 bg-gradient-to-r from-orange-600 to-purple-600 hover:from-orange-500 hover:to-purple-500 text-white shadow-md">
+                  Explore &amp; Setup Guide <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
+          </motion.div>
 
           {/* FLAGSHIP PROJECT: A-Translator / Translify Chrome Extension & Live Translator */}
           <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-violet-300 dark:border-violet-700/60 bg-gradient-to-br from-violet-500/5 via-indigo-500/5 to-cyan-500/10 shadow-md hover:shadow-violet-500/10 transition-all">
