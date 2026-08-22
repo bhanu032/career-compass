@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
+  Mic,
   Search,
   Star,
   Trophy,
@@ -45,6 +46,7 @@ export function Navbar(): JSX.Element {
 
   // Secondary Quick Links
   const QUICK_LINKS = [
+    { to: "/avoice", label: "AuraVoice AI", icon: Mic },
     { to: "/admit-cards", label: "Admit Cards", icon: FileCheck },
     { to: "/results", label: "Results", icon: Trophy },
     { to: "/search", label: "Search", icon: Search },

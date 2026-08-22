@@ -37,6 +37,9 @@ import {
   Bluetooth,
   Usb,
   Keyboard,
+  Mic,
+  Music,
+  Waves,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -235,8 +238,44 @@ export function HomePage(): JSX.Element {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
-          className="mt-8 grid gap-8 lg:grid-cols-2"
+          className="mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-3"
         >
+
+          {/* FLAGSHIP PROJECT: AuraVoice AI — 3D David Avatar & Voice Studio */}
+          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-cyan-300 dark:border-cyan-700/60 bg-gradient-to-br from-cyan-500/5 via-violet-500/5 to-pink-500/10 shadow-md hover:shadow-cyan-500/10 transition-all">
+            <div className="p-6">
+              <div className="flex items-center justify-between gap-2">
+                <span className="inline-flex items-center gap-1 rounded-full bg-cyan-100 text-cyan-800 dark:bg-cyan-950/80 dark:text-cyan-300 px-3 py-1 text-xs font-bold border border-cyan-300/40">
+                  <Mic className="h-3.5 w-3.5 text-cyan-600 dark:text-cyan-400" /> 3D Avatar &amp; Voice Intelligence
+                </span>
+                <span className="text-xs text-cyan-600 dark:text-cyan-400 font-bold">v3.5 Live</span>
+              </div>
+              <h3 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
+                AuraVoice AI — 3D David Avatar &amp; 22 Indic Languages Studio
+              </h3>
+              <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Native Devanagari Hindi &amp; Indian English real-time conversational voice AI with 3D WebGL David Avatar (viseme lip-sync, head tracking), AI4Bharat 22 official Indian languages dataset, 15D acoustic voice cloner (F0, formants, MOS 4.88+), and Indian Classical Sargam synthesizer.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-1.5">
+                {["3D WebGL Avatar (david.glb)", "AI4Bharat IndicVoices (22 Langs)", "15D Voice Cloner", "Indian Classical Sargam", "Real-Time Lip Sync", "Devanagari TTS & Normalizer", "Web Audio DSP"].map((tag) => (
+                  <span key={tag} className="rounded-md bg-cyan-100/70 dark:bg-cyan-950/60 px-2.5 py-1 text-[11px] font-semibold text-cyan-900 dark:text-cyan-200 border border-cyan-200/50 dark:border-cyan-800/40">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-6 pt-0 border-t border-cyan-200/60 dark:border-cyan-800/40 mt-4 flex flex-wrap items-center justify-between gap-3 bg-cyan-500/5 dark:bg-cyan-950/20">
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                <Sparkles className="h-3.5 w-3.5 text-cyan-500" /> Gemini 3.5 Intelligence
+              </span>
+              <div className="flex gap-2">
+                <Link to="/avoice" className="btn-primary text-xs py-2 px-4 bg-gradient-to-r from-cyan-600 to-violet-600 hover:from-cyan-500 hover:to-violet-500 text-white shadow-md">
+                  Launch Studio <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
+          </motion.div>
 
           {/* FLAGSHIP PROJECT: aMobile — Phone to PC Hardware Keyboard & Bridge */}
           <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-orange-300 dark:border-orange-700/60 bg-gradient-to-br from-orange-500/5 via-amber-500/5 to-purple-500/10 shadow-md hover:shadow-orange-500/10 transition-all">
