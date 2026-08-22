@@ -114,7 +114,7 @@ export function HomePage(): JSX.Element {
           transition={{ delay: 0.2, duration: 0.45 }}
           className="mt-3 max-w-3xl text-white/90 text-sm sm:text-lg font-medium leading-relaxed"
         >
-          Software Development Engineer (MERN Stack) with 1+ years of experience building scalable, AI-powered HRTech platforms across React.js, Node.js, Express.js, and MongoDB.
+          ReactJS Developer | MERN Stack Developer with 2+ years of experience in Reactive Programming (React JS) and TypeScript, building scalable, AI-powered HRTech platforms across React.js, Node.js, Express.js, and MongoDB.
         </motion.p>
 
         {/* Contact Links Bar */}
@@ -146,6 +146,15 @@ export function HomePage(): JSX.Element {
           >
             <Linkedin className="h-3.5 w-3.5 text-blue-300" />
             linkedin.com/in/bhanu032
+          </a>
+          <a
+            href="https://career-compass-topaz.vercel.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-purple-600/40 px-3.5 py-1.5 hover:bg-purple-600/60 transition border border-purple-300/30 text-white"
+          >
+            <Globe className="h-3.5 w-3.5 text-purple-300" />
+            career-compass-topaz.vercel.app
           </a>
         </motion.div>
 
@@ -195,14 +204,15 @@ export function HomePage(): JSX.Element {
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
                   Professional Summary
                   <span className="rounded-full bg-violet-100 text-violet-800 dark:bg-violet-900/60 dark:text-violet-200 text-xs font-semibold px-2.5 py-0.5">
-                    Full-Stack MERN SDE
+                    2+ Years Exp | ReactJS &amp; MERN Stack
                   </span>
                 </h3>
                 <p className="mt-1 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                  Software Development Engineer (MERN Stack) with 1+ years of experience building scalable, AI-powered HRTech platforms across React.js, Node.js, Express.js, and MongoDB. Delivers end-to-end features spanning REST APIs, WebSocket-based real-time systems, and production-grade React/TypeScript interfaces. Strong background in state management (Redux Toolkit, React Query), design systems (Tailwind CSS, Radix UI), and CI/CD deployment (Docker, Nginx, Vercel, GitHub Actions).
+                  Software Development Engineer with 2+ years of experience in Reactive Programming (React JS) and UI &amp; Markup Language (TypeScript), building scalable, AI-powered HRTech platforms across React.js, Node.js, Express.js, and MongoDB, deployed on Linux (Ubuntu) servers with Docker and Nginx. Skilled across the full Software Development Life Cycle (SDLC) — from understanding design specifications and writing test cases/scenarios to implementing designs, developing high-quality programs, and responding to production issues. Delivers end-to-end features spanning REST APIs, WebSocket-based real-time systems, and production-grade React/TypeScript interfaces.
                 </p>
               </div>
             </div>
+
           </motion.div>
         </div>
       </div>
@@ -618,19 +628,19 @@ export function HomePage(): JSX.Element {
                 </div>
                 <div className="text-left sm:text-right">
                   <span className="inline-block rounded-full bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 text-xs font-bold px-3 py-1">
-                    Jan 2025 – Jul 2026
+                    Jul 2024 – Present
                   </span>
-                  <p className="text-xs text-slate-500 mt-1">Remote | Converted to full-time May 2025</p>
+                  <p className="text-xs text-slate-500 mt-1">Remote | Converted to full-time Nov 2024 (4-mo internship)</p>
                 </div>
               </div>
 
               <ul className="mt-4 space-y-2.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300 list-disc list-inside leading-relaxed">
-                <li>Built and maintained <b>InterviewGhost.ai</b>, an AI-powered hiring platform, using React.js, TypeScript, Next.js, Node.js/Express REST APIs, Vite, and Tailwind CSS.</li>
-                <li>Developed ATS-focused resume workflows: dashboard (create/edit/preview/upload/download/delete), ATS keyword analysis, cover-letter generation, and print-ready PDF export via <b>jsPDF</b>, <b>react-to-print</b>, and <b>html2canvas</b>.</li>
-                <li>Implemented real-time AI interview experiences using WebSockets, speech recognition, live transcription, audio capture, screen sharing, and candidate proctoring using <b>face-api.js</b>.</li>
-                <li>Built dynamic HRTech candidate, HR, and executive dashboards for screening, onboarding, job matching, and interview feedback.</li>
-                <li>Managed global state with Redux Toolkit and React Query; built reusable UI design layer with Radix UI, shadcn-style components, and Lucide icons.</li>
-                <li>Owned production delivery: Docker multi-stage builds, Nginx, Vercel SPA routing, and GitHub Actions CI/CD.</li>
+                <li>Built and maintained <b>InterviewGhost.ai</b>, an AI-powered hiring and career-automation platform, using React.js, TypeScript, Next.js, Node.js/Express REST APIs, Vite, and Tailwind CSS across B2C, B2B/HR, and scheduling route groups following SDLC practices.</li>
+                <li>Developed ATS-focused resume workflows: dashboard (create/edit/preview/upload/download/delete), template rendering, ATS score and keyword analysis, cover-letter generation, and print-ready PDF export via <b>jsPDF</b>, <b>react-to-print</b>, and <b>html2canvas</b>.</li>
+                <li>Implemented real-time AI interview experiences using WebSockets, speech recognition, live transcription, audio capture, and candidate verification/hardware-check flows; integrated screen sharing, fullscreen monitoring, and candidate proctoring workflows using <b>face-api.js</b>.</li>
+                <li>Built dynamic HRTech candidate, HR, and executive dashboards for screening, onboarding, job creation/matching, interview scheduling, and interviewer feedback.</li>
+                <li>Managed application state with Redux Toolkit, React Query, and Context API; built reusable UI design layer with Radix UI, shadcn-style components, and Lucide icons.</li>
+                <li>Wrote and executed test cases/scenarios with Vitest &amp; Testing Library; owned production delivery via Docker multi-stage builds with Nginx, Vercel SPA routing, and GitHub Actions CI/CD.</li>
               </ul>
             </motion.div>
 
