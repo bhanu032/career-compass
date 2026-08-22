@@ -29,6 +29,7 @@ interface ChatMessage {
 export function AVoicePage(): JSX.Element {
   useDocumentTitle("David 3D — Live Voice AI Companion & Gemini Conversation");
 
+  const [avatarGender, setAvatarGender] = useState<"male" | "female">("male");
   const [selectedPersona, setSelectedPersona] = useState<VoicePersona>(PRESET_PERSONAS[0]);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -233,10 +234,10 @@ export function AVoicePage(): JSX.Element {
             </div>
 
             <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white">
-              David 3D — <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-violet-400 to-pink-400">Live Voice AI</span>
+              {avatarGender === "female" ? "Aura 3D" : "David 3D"} — <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-violet-400 to-pink-400">Live Voice AI</span>
             </h1>
             <p className="mt-2.5 max-w-2xl text-sm sm:text-base text-slate-300 leading-relaxed">
-              Real-time duplex voice conversation with David 3D avatar powered by Google Gemini AI, hands-free speech recognition, and lip-sync audio synthesis.
+              Real-time duplex voice conversation with {avatarGender === "female" ? "Aura 3D Female Avatar" : "David 3D Male Avatar"} powered by Google Gemini AI, hands-free speech recognition, and lip-sync audio synthesis.
             </p>
           </div>
 
@@ -256,7 +257,7 @@ export function AVoicePage(): JSX.Element {
         </div>
       </div>
 
-      {/* ── 3-COLUMN WORKSPACE: INFO LEFT | CHAT MIDDLE | DAVID RIGHT ───── */}
+      {/* ── 3-COLUMN WORKSPACE: INFO LEFT | CHAT MIDDLE | AVATAR RIGHT ───── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Info & Controls */}
         <div className="lg:col-span-3 flex flex-col gap-5">
@@ -266,8 +267,46 @@ export function AVoicePage(): JSX.Element {
               <h3 className="font-bold text-white text-sm">Assistant Info</h3>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
-              David is your 3D Gemini AI Companion. Ask about Government Jobs, Exam Preparation, or Resume Building in natural Hindi or English.
+              {avatarGender === "female" ? "Aura" : "David"} is your 3D Gemini AI Companion. Ask about Government Jobs, Exam Preparation, or Resume Building in natural Hindi or English.
             </p>
+
+            {/* Avatar Gender Conversion Switcher */}
+            <div className="space-y-2 pt-2 border-t border-slate-800">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">3D Avatar Gender Switcher</span>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAvatarGender("male");
+                    setSelectedPersona(PRESET_PERSONAS[0]);
+                  }}
+                  className={`flex items-center justify-center gap-1.5 p-2.5 rounded-xl border font-bold text-xs transition-all ${
+                    avatarGender === "male"
+                      ? "bg-cyan-950/60 border-cyan-500 text-cyan-300 shadow-md shadow-cyan-500/20"
+                      : "bg-slate-900/60 border-slate-800 text-slate-400 hover:bg-slate-800"
+                  }`}
+                >
+                  <span>👨</span>
+                  <span>David (Male)</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAvatarGender("female");
+                    setSelectedPersona(PRESET_PERSONAS[1] || PRESET_PERSONAS[0]);
+                  }}
+                  className={`flex items-center justify-center gap-1.5 p-2.5 rounded-xl border font-bold text-xs transition-all ${
+                    avatarGender === "female"
+                      ? "bg-purple-950/60 border-purple-500 text-purple-300 shadow-md shadow-purple-500/20"
+                      : "bg-slate-900/60 border-slate-800 text-slate-400 hover:bg-slate-800"
+                  }`}
+                >
+                  <span>👩</span>
+                  <span>Aura (Female)</span>
+                </button>
+              </div>
+            </div>
 
             {/* Persona Selector */}
             <div className="space-y-2 pt-2 border-t border-slate-800">
@@ -441,21 +480,23 @@ export function AVoicePage(): JSX.Element {
           </div>
         </div>
 
-        {/* Right Column: 3D David Avatar Viewport */}
+        {/* Right Column: 3D Avatar Viewport */}
         <div className="lg:col-span-4 flex flex-col">
-          <div className="card overflow-hidden border-cyan-500/30 bg-slate-950 p-4 relative flex flex-col items-center h-[580px] justify-center">
+          <div className="card overflow-hidden border-cyan-500/30 bg-slate-950 p-2 relative flex flex-col items-center h-[580px] w-full justify-center">
             <David3DAvatar
               isSpeaking={isSpeaking}
               isListening={isListening}
               isThinking={isThinking}
               speakingWord={speakingWord}
-              className="h-[520px] w-full"
+              gender={avatarGender}
+              className="h-full w-full"
             />
-            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/80 border border-slate-800 text-xs backdrop-blur-md">
+            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/85 border border-slate-800 text-xs backdrop-blur-md">
               <span className="flex items-center gap-1.5 text-cyan-400 font-bold">
-                <Activity className="h-3.5 w-3.5" /> David 3D Avatar
+                <Activity className="h-3.5 w-3.5" />
+                {avatarGender === "female" ? "Aura 3D Female Avatar" : "David 3D Male Avatar"}
               </span>
-              <span className="text-[10px] text-slate-400">Face to Knee · Rested Arms</span>
+              <span className="text-[10px] text-slate-400">Full Coverage · Pocket Hands</span>
             </div>
           </div>
         </div>

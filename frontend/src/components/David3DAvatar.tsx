@@ -48,6 +48,7 @@ interface David3DAvatarProps {
   isThinking?: boolean;
   speakingWord?: string;
   className?: string;
+  gender?: "male" | "female";
 }
 
 export function David3DAvatar({
@@ -55,7 +56,8 @@ export function David3DAvatar({
   isListening = false,
   isThinking = false,
   speakingWord = '',
-  className = ''
+  className = '',
+  gender = 'male'
 }: David3DAvatarProps) {
   const mountRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
@@ -122,13 +124,13 @@ export function David3DAvatar({
     const container = mountRef.current;
     if (!container) return;
 
-    const width = container.clientWidth || 340;
-    const height = container.clientHeight || 480;
+    const width = container.clientWidth || 400;
+    const height = container.clientHeight || 560;
 
     // Scene & Camera
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 100);
-    camera.position.set(0, 0.15, 3.1);
+    const camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
+    camera.position.set(0, -0.05, 2.35);
 
     let renderer: THREE.WebGLRenderer | null = null;
     try {
@@ -236,12 +238,14 @@ export function David3DAvatar({
           };
         }
 
-        // Adjust arm bones so hands stay close to body
+        // Adjust arm bones so hands rest in front of body near front pockets
         if (foundBones.leftArm) {
-          foundBones.leftArm.rotation.z = Math.min(foundBones.leftArm.rotation.z, -1.2);
+          foundBones.leftArm.rotation.x = 0.38;
+          foundBones.leftArm.rotation.z = Math.min(foundBones.leftArm.rotation.z, -1.1);
         }
         if (foundBones.rightArm) {
-          foundBones.rightArm.rotation.z = Math.max(foundBones.rightArm.rotation.z, 1.2);
+          foundBones.rightArm.rotation.x = 0.38;
+          foundBones.rightArm.rotation.z = Math.max(foundBones.rightArm.rotation.z, 1.1);
         }
 
         bonesRef.current = foundBones;
@@ -262,17 +266,21 @@ export function David3DAvatar({
       },
       undefined,
       () => {
-        // Build Procedural 3D Male David Avatar directly in Three.js
+        // Build Procedural 3D Male / Female Avatar directly in Three.js
         const avatarGroup = new THREE.Group();
         pivotGroup.add(avatarGroup);
         modelRef.current = pivotGroup;
 
-        const skinMat = new THREE.MeshStandardMaterial({ color: 0xe0ac69, roughness: 0.4, metalness: 0.1 });
-        const suitMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.3, metalness: 0.2 });
+        const skinColor = gender === 'female' ? 0xf5d0a9 : 0xe0ac69;
+        const suitColor = gender === 'female' ? 0x6b21a8 : 0x1e293b;
+        const hairColor = gender === 'female' ? 0x4a154b : 0x1a1a1a;
+
+        const skinMat = new THREE.MeshStandardMaterial({ color: skinColor, roughness: 0.4, metalness: 0.1 });
+        const suitMat = new THREE.MeshStandardMaterial({ color: suitColor, roughness: 0.3, metalness: 0.2 });
         const shirtMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.2 });
-        const hairMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.8 });
-        const eyeMat = new THREE.MeshBasicMaterial({ color: 0x0284c7 });
-        const jawMat = new THREE.MeshStandardMaterial({ color: 0xd29958, roughness: 0.4 });
+        const hairMat = new THREE.MeshStandardMaterial({ color: hairColor, roughness: 0.7 });
+        const eyeMat = new THREE.MeshBasicMaterial({ color: gender === 'female' ? 0x9333ea : 0x0284c7 });
+        const jawMat = new THREE.MeshStandardMaterial({ color: skinColor, roughness: 0.4 });
 
         // Head
         const headGroup = new THREE.Group();
@@ -283,10 +291,20 @@ export function David3DAvatar({
         headMesh.scale.set(1, 1.25, 0.95);
         headGroup.add(headMesh);
 
-        // Hair
-        const hairMesh = new THREE.Mesh(new THREE.SphereGeometry(0.25, 32, 32, 0, Math.PI * 2, 0, Math.PI * 0.5), hairMat);
-        hairMesh.position.set(0, 0.05, 0);
+        // Hair (Male Short / Female Elegant Ponytail)
+        const hairMesh = new THREE.Mesh(
+          new THREE.SphereGeometry(0.255, 32, 32, 0, Math.PI * 2, 0, gender === 'female' ? Math.PI * 0.65 : Math.PI * 0.5),
+          hairMat
+        );
+        hairMesh.position.set(0, 0.05, -0.01);
         headGroup.add(hairMesh);
+
+        if (gender === 'female') {
+          const ponytail = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.1, 0.4, 16), hairMat);
+          ponytail.position.set(0, -0.1, -0.26);
+          ponytail.rotation.x = -0.3;
+          headGroup.add(ponytail);
+        }
 
         // Eyes
         const leftEye = new THREE.Mesh(new THREE.SphereGeometry(0.035, 16, 16), eyeMat);
@@ -303,7 +321,7 @@ export function David3DAvatar({
         headGroup.add(jawMesh);
 
         // Torso / Suit (Down to Knees)
-        const torsoMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.28, 1.0, 32), suitMat);
+        const torsoMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.31, 0.27, 1.0, 32), suitMat);
         torsoMesh.position.set(0, -0.05, 0);
         avatarGroup.add(torsoMesh);
 
@@ -311,19 +329,35 @@ export function David3DAvatar({
         shirtMesh.position.set(0, 0.05, 0.22);
         avatarGroup.add(shirtMesh);
 
-        // Arms (Resting close to body)
-        const leftArm = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.07, 0.7, 16), suitMat);
-        leftArm.position.set(-0.38, -0.05, 0);
-        leftArm.rotation.z = 0.15;
-        avatarGroup.add(leftArm);
+        // Arms (Tilted forward in front of body near front pockets!)
+        const leftArmGroup = new THREE.Group();
+        leftArmGroup.position.set(-0.28, -0.05, 0.06);
+        avatarGroup.add(leftArmGroup);
 
-        const rightArm = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.07, 0.7, 16), suitMat);
-        rightArm.position.set(0.38, -0.05, 0);
-        rightArm.rotation.z = -0.15;
-        avatarGroup.add(rightArm);
+        const leftArm = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.065, 0.68, 16), suitMat);
+        leftArm.rotation.z = 0.22;
+        leftArm.rotation.x = 0.38; // Tilted forward towards pockets!
+        leftArmGroup.add(leftArm);
 
-        // Legs (To knees)
-        const legsMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.24, 0.6, 32), suitMat);
+        const leftHand = new THREE.Mesh(new THREE.SphereGeometry(0.06, 16, 16), skinMat);
+        leftHand.position.set(0.08, -0.36, 0.18);
+        leftArmGroup.add(leftHand);
+
+        const rightArmGroup = new THREE.Group();
+        rightArmGroup.position.set(0.28, -0.05, 0.06);
+        avatarGroup.add(rightArmGroup);
+
+        const rightArm = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.065, 0.68, 16), suitMat);
+        rightArm.rotation.z = -0.22;
+        rightArm.rotation.x = 0.38; // Tilted forward towards pockets!
+        rightArmGroup.add(rightArm);
+
+        const rightHand = new THREE.Mesh(new THREE.SphereGeometry(0.06, 16, 16), skinMat);
+        rightHand.position.set(-0.08, -0.36, 0.18);
+        rightArmGroup.add(rightHand);
+
+        // Legs (Down to knees)
+        const legsMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.23, 0.6, 32), suitMat);
         legsMesh.position.set(0, -0.75, 0);
         avatarGroup.add(legsMesh);
 
@@ -332,7 +366,7 @@ export function David3DAvatar({
         jawMesh.morphTargetDictionary = { mouthopen: 0, viseme_aa: 0 };
         jawMesh.morphTargetInfluences = [0, 0];
 
-        avatarGroup.position.y -= 0.25;
+        avatarGroup.position.y -= 0.18;
 
         setLoading(false);
         setLoadError(false);
