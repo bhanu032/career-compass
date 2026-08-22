@@ -4,19 +4,23 @@ export interface GeminiChatMessage {
   content?: string;
 }
 
-const DAVID_SYSTEM_INSTRUCTION = `You are David, an intelligent, empathetic 3D AI Voice Companion powered by Google Gemini AI.
-You conduct real-time voice conversations with candidates for career advice, government job preparation, interview practice, and general knowledge.
+const DEVANAGARI_SYSTEM_INSTRUCTION = (gender: "male" | "female") => `You are ${
+  gender === "female" ? "Aura 3D (देवनागरी फीमेल एआई साथी)" : "David 3D (देवनागरी मेल एआई साथी)"
+}.
+You speak STRICTLY and ONLY in Devanagari script (देवनागरी लिपि - हिंदी).
 Guidelines:
-1. Speak naturally in the same language as the user (Hindi, Hinglish, English, etc.).
-2. Keep responses conversational, engaging, and clear for voice readout (avoid complex ASCII tables or markdown code blocks unless requested).
-3. Be encouraging, concise, and helpful.`;
+1. STRICT RULE: Every response MUST be written strictly in Devanagari script (Hindi - देवनागरी लिपि). Absolutely NO English alphabet characters (A-Z).
+2. Keep responses polite, conversational, encouraging, and natural for real-time voice speech synthesis.
+3. Keep responses concise (1-3 sentences, 20-40 words) for smooth live audio playback.
+4. Answer queries on government recruitment exams (SSC, Banking, UPSC, Railway), interview preparation, resume tips, and general questions in pure Devanagari Hindi.`;
 
 /**
  * Call Google Gemini AI Chat Completions endpoint (supports Gemini 1.5/2.0 Flash)
  */
 export async function callGeminiLiveConversation(
   messages: Array<{ role: "user" | "assistant"; text: string }>,
-  apiKeyOverride?: string
+  apiKeyOverride?: string,
+  gender: "male" | "female" = "male"
 ): Promise<string> {
   const apiKey =
     apiKeyOverride?.trim() ||
@@ -37,20 +41,26 @@ export async function callGeminiLiveConversation(
         apiKey.trim()
       )}`;
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3500);
+
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
         body: JSON.stringify({
           system_instruction: {
-            parts: [{ text: DAVID_SYSTEM_INSTRUCTION }],
+            parts: [{ text: DEVANAGARI_SYSTEM_INSTRUCTION(gender) }],
           },
           contents,
           generationConfig: {
             temperature: 0.7,
-            maxOutputTokens: 500,
+            maxOutputTokens: 300,
           },
         }),
       });
+
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const data = await response.json();
@@ -58,36 +68,38 @@ export async function callGeminiLiveConversation(
         if (textReply) return textReply.trim();
       }
     } catch (err) {
-      console.warn("Gemini API direct call notice, using smart Gemini fallback:", err);
+      console.warn("Gemini API direct call notice, using instant Devanagari fallback engine:", err);
     }
   }
 
   // Smart Real-time Gemini AI Conversational Engine (when key is pending or offline)
   const lastUserMsg = messages[messages.length - 1]?.text || "";
-  return generateGeminiFallbackResponse(lastUserMsg);
+  return generateGeminiFallbackResponse(lastUserMsg, gender);
 }
 
-function generateGeminiFallbackResponse(userInput: string): string {
+function generateGeminiFallbackResponse(userInput: string, gender: "male" | "female"): string {
   const q = userInput.toLowerCase().trim();
+  const name = gender === "female" ? "ऑरा (Aura)" : "डेविड (David)";
 
   if (q.includes("नमस्ते") || q.includes("hello") || q.includes("hi") || q.includes("हेलो")) {
-    return "नमस्ते! मैं डेविड हूँ, आपका 3D एआई साथी। बताइए, आज मैं आपकी करियर या परीक्षा तैयारी में कैसे मदद कर सकता हूँ?";
+    return `नमस्ते! मैं ${name} हूँ, आपका 3D देवनागरी एआई साथी। बताइए, आज मैं आपकी परीक्षा या करियर में क्या मदद करूँ?`;
   }
   if (q.includes("ssc") || q.includes("cgl") || q.includes("chsl")) {
-    return "SSC परीक्षाओं के लिए नियमित मॉक टेस्ट और स्पीड प्रैक्टिस बहुत जरूरी है। आप गणित और रीजनिंग में प्रश्नों को तेजी से हल करने पर ध्यान दें। क्या आप किसी खास SSC परीक्षा का सिलेबस जानना चाहते हैं?";
+    return "एसएससी परीक्षाओं में सफलता के लिए गणित और रीजनिंग में स्पीड प्रैक्टिस बहुत आवश्यक है। नियमित मॉक टेस्ट दें और अपने कमजोर विषयों को मजबूत बनाएं।";
   }
   if (q.includes("bank") || q.includes("ibps") || q.includes("sbi")) {
-    return "बैंकिंग परीक्षाओं में स्पीड, एक्यूरेसी और सेक्शनल कट-ऑफ का बड़ा महत्व है। रीजनिंग में पजल्स और मैथ्स में डेटा इंटरप्रिटेशन पर रोजाना अभ्यास करें।";
+    return "बैंकिंग परीक्षा के लिए रीजनिंग पजल्स और क्वांटिटेटिव एप्टीट्यूड पर ध्यान केंद्रित करें। सही समय प्रबंधन ही कट-ऑफ क्लियर करने की कुंजी है।";
   }
   if (q.includes("upsc") || q.includes("ias")) {
-    return "UPSC सिविल सेवा परीक्षा के लिए एनसीईआरटी बुक्स की गहरी समझ और डेली करेंट अफेयर्स नोट्स बनाना अनिवार्य है। आप सामान्य अध्ययन के किस विषय पर मार्गदर्शन चाहते हैं?";
+    return "यूपीएससी सिविल सेवा परीक्षा हेतु एनसीईआरटी किताबों की मूल समझ और दैनिक समाचार पत्रों से नोट्स बनाना सबसे महत्वपूर्ण है।";
   }
   if (q.includes("resume") || q.includes("रिज्यूम") || q.includes("cv")) {
-    return "एक बेहतरीन एटीएस फ्रेंडली रिज्यूम में आपकी मुख्य तकनीकी स्किल्स, प्रोजेक्ट्स और क्वांटिफिएबल उपलब्धियां सबसे ऊपर होनी चाहिए। हमारे रिज्यूम बिल्डर से आप 16 प्रोफेशनल टेम्प्लेट डाउनलोड कर सकते हैं।";
+    return "एक प्रभावशाली एटीएस फ्रेंडली रिज्यूम में आपकी मुख्य तकनीकी स्किल्स और प्रोजेक्ट्स सबसे ऊपर होने चाहिए। हमारे प्लेटफॉर्म से आप प्रिंट-रेडी रिज्यूम डाउनलोड कर सकते हैं।";
   }
   if (q.includes("interview") || q.includes("इंटरव्यू")) {
-    return "इंटरव्यू की तैयारी के लिए आत्मविश्वास, स्पष्ट आवाज और अपने रिज्यूम के हर बिंदु पर गहरी पकड़ होना जरूरी है। आप मुझसे मॉक इंटरव्यू की प्रैक्टिस भी कर सकते हैं।";
+    return "इंटरव्यू में आत्मविश्वास, बॉडी लैंग्वेज और अपने रिज्यूम के हर बिंदु की स्पष्ट जानकारी सबसे अहम होती है। आप मेरे साथ लाइव मॉक प्रैक्टिस कर सकते हैं।";
   }
 
-  return `आपने पूछा: "${userInput}"। यह एक बेहतरीन प्रश्न है! एक एआई साथी के रूप में मेरी सलाह है कि आप अपने लक्ष्य को छोटे दैनिक लक्ष्यों में बांटें और नियमित रूप से अभ्यास करें। क्या आप इस विषय पर अधिक विस्तार से चर्चा करना चाहेंगे?`;
+  return `आपने पूछा: "${userInput}"। यह एक बहुत ही अच्छा सवाल है। देवनागरी एआई साथी के रूप में मेरी सलाह है कि आप रोजाना छोटे लक्ष्य तय करें और निरंतर अभ्यास जारी रखें।`;
 }
+

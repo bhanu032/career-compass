@@ -49,6 +49,7 @@ interface David3DAvatarProps {
   speakingWord?: string;
   className?: string;
   gender?: "male" | "female";
+  armPose?: "elbows_front" | "behind_back" | "front_stomach" | "default_gltf" | "facing_shoes" | "joined_palms" | "front_pockets" | "front_face" | "natural_sides";
 }
 
 export function David3DAvatar({
@@ -57,7 +58,8 @@ export function David3DAvatar({
   isThinking = false,
   speakingWord = '',
   className = '',
-  gender = 'male'
+  gender = 'male',
+  armPose = 'elbows_front'
 }: David3DAvatarProps) {
   const mountRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
@@ -73,12 +75,14 @@ export function David3DAvatar({
   const isSpeakingRef = useRef(isSpeaking);
   const isListeningRef = useRef(isListening);
   const isThinkingRef = useRef(isThinking);
+  const armPoseRef = useRef(armPose);
 
   useEffect(() => {
     isSpeakingRef.current = isSpeaking;
     isListeningRef.current = isListening;
     isThinkingRef.current = isThinking;
-  }, [isSpeaking, isListening, isThinking]);
+    armPoseRef.current = armPose;
+  }, [isSpeaking, isListening, isThinking, armPose]);
 
   // Word-driven timing tracker
   const wordTrackRef = useRef({
@@ -215,18 +219,18 @@ export function David3DAvatar({
             }
           }
 
-          if ((child as THREE.Bone).isBone) {
+          if ((child as THREE.Bone).isBone || child.type === 'Bone') {
             const bone = child as THREE.Bone;
-            const bName = bone.name.toLowerCase();
-            if (bName.includes('head')) foundBones.head = bone;
-            else if (bName.includes('neck')) foundBones.neck = bone;
-            else if (bName.includes('spine2') || bName.includes('chest')) foundBones.chest = bone;
-            else if (bName.includes('spine1')) foundBones.spine1 = bone;
-            else if (bName.includes('spine') && !foundBones.spine) foundBones.spine = bone;
-            else if (bName.includes('leftarm') || bName.includes('leftupperarm') || bName.includes('arm_l')) foundBones.leftArm = bone;
-            else if (bName.includes('rightarm') || bName.includes('rightupperarm') || bName.includes('arm_r')) foundBones.rightArm = bone;
-            else if (bName.includes('leftforearm') || bName.includes('forearm_l')) foundBones.leftForeArm = bone;
-            else if (bName.includes('rightforearm') || bName.includes('forearm_r')) foundBones.rightForeArm = bone;
+            const bName = bone.name;
+            if (bName === 'Head') foundBones.head = bone;
+            else if (bName === 'Neck') foundBones.neck = bone;
+            else if (bName === 'Spine2' || bName === 'Spine1') foundBones.chest = bone;
+            else if (bName === 'LeftArm' || bName === 'LeftUpperArm') foundBones.leftArm = bone;
+            else if (bName === 'LeftForeArm' || bName === 'LeftLowerArm') foundBones.leftForeArm = bone;
+            else if (bName === 'LeftHand') foundBones.leftHand = bone;
+            else if (bName === 'RightArm' || bName === 'RightUpperArm') foundBones.rightArm = bone;
+            else if (bName === 'RightForeArm' || bName === 'RightLowerArm') foundBones.rightForeArm = bone;
+            else if (bName === 'RightHand') foundBones.rightHand = bone;
           }
         });
 
@@ -238,14 +242,24 @@ export function David3DAvatar({
           };
         }
 
-        // Adjust arm bones so hands rest in front of body near front pockets
+        // Position hands in front of pant pockets
         if (foundBones.leftArm) {
-          foundBones.leftArm.rotation.x = 0.38;
-          foundBones.leftArm.rotation.z = Math.min(foundBones.leftArm.rotation.z, -1.1);
+          foundBones.leftArm.rotation.set(0.32, 0.15, -1.32);
+        }
+        if (foundBones.leftForeArm) {
+          foundBones.leftForeArm.rotation.set(0.38, -0.22, 0.22);
+        }
+        if (foundBones.leftHand) {
+          foundBones.leftHand.rotation.set(0.15, 0.10, -0.10);
         }
         if (foundBones.rightArm) {
-          foundBones.rightArm.rotation.x = 0.38;
-          foundBones.rightArm.rotation.z = Math.max(foundBones.rightArm.rotation.z, 1.1);
+          foundBones.rightArm.rotation.set(0.32, -0.15, 1.32);
+        }
+        if (foundBones.rightForeArm) {
+          foundBones.rightForeArm.rotation.set(0.38, 0.22, -0.22);
+        }
+        if (foundBones.rightHand) {
+          foundBones.rightHand.rotation.set(0.15, -0.10, 0.10);
         }
 
         bonesRef.current = foundBones;
@@ -257,8 +271,8 @@ export function David3DAvatar({
         bbox.getCenter(center);
         model.position.sub(center);
 
-        // Face to Knee body framing
-        model.position.y -= 0.65;
+        // Move Avatar Upward to fill frame and eliminate blank area above head
+        model.position.y -= 0.35;
         model.position.z += 0.05;
 
         pivotGroup.add(model);
@@ -329,31 +343,31 @@ export function David3DAvatar({
         shirtMesh.position.set(0, 0.05, 0.22);
         avatarGroup.add(shirtMesh);
 
-        // Arms (Tilted forward in front of body near front pockets!)
+        // Arms & Hands positioned tight & close to the body
         const leftArmGroup = new THREE.Group();
-        leftArmGroup.position.set(-0.28, -0.05, 0.06);
+        leftArmGroup.position.set(-0.17, -0.06, 0.04);
         avatarGroup.add(leftArmGroup);
 
-        const leftArm = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.065, 0.68, 16), suitMat);
-        leftArm.rotation.z = 0.22;
-        leftArm.rotation.x = 0.38; // Tilted forward towards pockets!
+        const leftArm = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, 0.65, 16), suitMat);
+        leftArm.rotation.z = 0.03;
+        leftArm.rotation.x = 0.20;
         leftArmGroup.add(leftArm);
 
-        const leftHand = new THREE.Mesh(new THREE.SphereGeometry(0.06, 16, 16), skinMat);
-        leftHand.position.set(0.08, -0.36, 0.18);
+        const leftHand = new THREE.Mesh(new THREE.SphereGeometry(0.055, 16, 16), skinMat);
+        leftHand.position.set(0.01, -0.34, 0.05);
         leftArmGroup.add(leftHand);
 
         const rightArmGroup = new THREE.Group();
-        rightArmGroup.position.set(0.28, -0.05, 0.06);
+        rightArmGroup.position.set(0.17, -0.06, 0.04);
         avatarGroup.add(rightArmGroup);
 
-        const rightArm = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.065, 0.68, 16), suitMat);
-        rightArm.rotation.z = -0.22;
-        rightArm.rotation.x = 0.38; // Tilted forward towards pockets!
+        const rightArm = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, 0.65, 16), suitMat);
+        rightArm.rotation.z = -0.03;
+        rightArm.rotation.x = 0.20;
         rightArmGroup.add(rightArm);
 
-        const rightHand = new THREE.Mesh(new THREE.SphereGeometry(0.06, 16, 16), skinMat);
-        rightHand.position.set(-0.08, -0.36, 0.18);
+        const rightHand = new THREE.Mesh(new THREE.SphereGeometry(0.055, 16, 16), skinMat);
+        rightHand.position.set(-0.01, -0.34, 0.05);
         rightArmGroup.add(rightHand);
 
         // Legs (Down to knees)
@@ -366,7 +380,7 @@ export function David3DAvatar({
         jawMesh.morphTargetDictionary = { mouthopen: 0, viseme_aa: 0 };
         jawMesh.morphTargetInfluences = [0, 0];
 
-        avatarGroup.position.y -= 0.18;
+        avatarGroup.position.y += 0.12;
 
         setLoading(false);
         setLoadError(false);
@@ -501,6 +515,228 @@ export function David3DAvatar({
       if (bones.neck && initBones.neck) {
         bones.neck.rotation.x = initBones.neck.x - mouseRef.current.y * 0.08 + breathY * 0.3;
         bones.neck.rotation.y = initBones.neck.y + mouseRef.current.x * 0.12;
+      }
+
+      // 5. Enforce Hands & Arms Positioned dynamically according to armPoseRef Every Frame
+      const armBreath = Math.sin(time * 2.2) * 0.015;
+      const talkGesture = talking ? Math.sin(time * 7) * 0.03 : 0;
+      const currentPose = armPoseRef.current;
+
+      if (currentPose === 'elbows_front') {
+        // Original GLTF pose with elbows angled forward & lowered slightly below
+        if (bones.leftArm && initBones.leftArm) {
+          bones.leftArm.rotation.set(
+            initBones.leftArm.x + 0.18 + armBreath + talkGesture,
+            initBones.leftArm.y + 0.08,
+            initBones.leftArm.z
+          );
+          bones.leftArm.updateMatrix();
+        }
+        if (bones.leftForeArm && initBones.leftForeArm) {
+          bones.leftForeArm.rotation.set(
+            initBones.leftForeArm.x + 0.15 + armBreath * 0.5,
+            initBones.leftForeArm.y,
+            initBones.leftForeArm.z
+          );
+          bones.leftForeArm.updateMatrix();
+        }
+        if (bones.leftHand && initBones.leftHand) {
+          bones.leftHand.rotation.set(initBones.leftHand.x + 0.08, initBones.leftHand.y, initBones.leftHand.z);
+          bones.leftHand.updateMatrix();
+        }
+
+        if (bones.rightArm && initBones.rightArm) {
+          bones.rightArm.rotation.set(
+            initBones.rightArm.x + 0.18 + armBreath + talkGesture,
+            initBones.rightArm.y - 0.08,
+            initBones.rightArm.z
+          );
+          bones.rightArm.updateMatrix();
+        }
+        if (bones.rightForeArm && initBones.rightForeArm) {
+          bones.rightForeArm.rotation.set(
+            initBones.rightForeArm.x + 0.15 + armBreath * 0.5,
+            initBones.rightForeArm.y,
+            initBones.rightForeArm.z
+          );
+          bones.rightForeArm.updateMatrix();
+        }
+        if (bones.rightHand && initBones.rightHand) {
+          bones.rightHand.rotation.set(initBones.rightHand.x + 0.08, initBones.rightHand.y, initBones.rightHand.z);
+          bones.rightHand.updateMatrix();
+        }
+      } else if (currentPose === 'behind_back') {
+        // Hands Positioned Behind Back / Opposite to Stomach
+        if (bones.leftArm) {
+          bones.leftArm.rotation.set(-0.45 + armBreath + talkGesture, -0.25, -1.35);
+          bones.leftArm.updateMatrix();
+        }
+        if (bones.leftForeArm) {
+          bones.leftForeArm.rotation.set(-0.40 + armBreath * 0.5, 0.45, -0.25);
+          bones.leftForeArm.updateMatrix();
+        }
+        if (bones.leftHand) {
+          bones.leftHand.rotation.set(-0.15, -0.20, 0.10);
+          bones.leftHand.updateMatrix();
+        }
+
+        if (bones.rightArm) {
+          bones.rightArm.rotation.set(-0.45 + armBreath + talkGesture, 0.25, 1.35);
+          bones.rightArm.updateMatrix();
+        }
+        if (bones.rightForeArm) {
+          bones.rightForeArm.rotation.set(-0.40 + armBreath * 0.5, -0.45, 0.25);
+          bones.rightForeArm.updateMatrix();
+        }
+        if (bones.rightHand) {
+          bones.rightHand.rotation.set(-0.15, 0.20, -0.10);
+          bones.rightHand.updateMatrix();
+        }
+      } else if (currentPose === 'front_stomach') {
+        // Hands Positioned In Front of Stomach
+        if (bones.leftArm) {
+          bones.leftArm.rotation.set(0.50 + armBreath + talkGesture, 0.30, -1.20);
+          bones.leftArm.updateMatrix();
+        }
+        if (bones.leftForeArm) {
+          bones.leftForeArm.rotation.set(0.55 + armBreath * 0.5, -0.60, 0.35);
+          bones.leftForeArm.updateMatrix();
+        }
+        if (bones.leftHand) {
+          bones.leftHand.rotation.set(0.30, 0.20, -0.15);
+          bones.leftHand.updateMatrix();
+        }
+
+        if (bones.rightArm) {
+          bones.rightArm.rotation.set(0.50 + armBreath + talkGesture, -0.30, 1.20);
+          bones.rightArm.updateMatrix();
+        }
+        if (bones.rightForeArm) {
+          bones.rightForeArm.rotation.set(0.55 + armBreath * 0.5, 0.60, -0.35);
+          bones.rightForeArm.updateMatrix();
+        }
+        if (bones.rightHand) {
+          bones.rightHand.rotation.set(0.30, -0.20, 0.15);
+          bones.rightHand.updateMatrix();
+        }
+      } else if (currentPose === 'default_gltf') {
+        // Original GLTF model pose as loaded from david.glb
+        if (bones.leftArm && initBones.leftArm) {
+          bones.leftArm.rotation.set(
+            initBones.leftArm.x + armBreath + talkGesture,
+            initBones.leftArm.y,
+            initBones.leftArm.z
+          );
+          bones.leftArm.updateMatrix();
+        }
+        if (bones.leftForeArm && initBones.leftForeArm) {
+          bones.leftForeArm.rotation.set(
+            initBones.leftForeArm.x + armBreath * 0.5,
+            initBones.leftForeArm.y,
+            initBones.leftForeArm.z
+          );
+          bones.leftForeArm.updateMatrix();
+        }
+        if (bones.leftHand && initBones.leftHand) {
+          bones.leftHand.rotation.set(initBones.leftHand.x, initBones.leftHand.y, initBones.leftHand.z);
+          bones.leftHand.updateMatrix();
+        }
+
+        if (bones.rightArm && initBones.rightArm) {
+          bones.rightArm.rotation.set(
+            initBones.rightArm.x + armBreath + talkGesture,
+            initBones.rightArm.y,
+            initBones.rightArm.z
+          );
+          bones.rightArm.updateMatrix();
+        }
+        if (bones.rightForeArm && initBones.rightForeArm) {
+          bones.rightForeArm.rotation.set(
+            initBones.rightForeArm.x + armBreath * 0.5,
+            initBones.rightForeArm.y,
+            initBones.rightForeArm.z
+          );
+          bones.rightForeArm.updateMatrix();
+        }
+        if (bones.rightHand && initBones.rightHand) {
+          bones.rightHand.rotation.set(initBones.rightHand.x, initBones.rightHand.y, initBones.rightHand.z);
+          bones.rightHand.updateMatrix();
+        }
+      } else if (currentPose === 'joined_palms') {
+        // Namaste / Joined Palms Pose (Lowered down to waist level close to body)
+        if (bones.leftArm) {
+          bones.leftArm.rotation.set(0.40 + armBreath + talkGesture, 0.35, -1.15);
+          bones.leftArm.updateMatrix();
+        }
+        if (bones.leftForeArm) {
+          bones.leftForeArm.rotation.set(0.35 + armBreath * 0.5, -0.65, 0.30);
+          bones.leftForeArm.updateMatrix();
+        }
+        if (bones.leftHand) {
+          bones.leftHand.rotation.set(0.15, 0.50, -0.20);
+          bones.leftHand.updateMatrix();
+        }
+
+        if (bones.rightArm) {
+          bones.rightArm.rotation.set(0.40 + armBreath + talkGesture, -0.35, 1.15);
+          bones.rightArm.updateMatrix();
+        }
+        if (bones.rightForeArm) {
+          bones.rightForeArm.rotation.set(0.35 + armBreath * 0.5, 0.65, -0.30);
+          bones.rightForeArm.updateMatrix();
+        }
+        if (bones.rightHand) {
+          bones.rightHand.rotation.set(0.15, -0.50, 0.20);
+          bones.rightHand.updateMatrix();
+        }
+      } else {
+        let armX = 0.15;
+        let forearmX = 0.20;
+        let forearmY = -0.15;
+        let handX = 0.85;
+
+        if (currentPose === 'front_pockets') {
+          armX = 0.55;
+          forearmX = 0.65;
+          forearmY = -0.40;
+          handX = 0.25;
+        } else if (currentPose === 'front_face') {
+          armX = 1.35;
+          forearmX = 1.45;
+          forearmY = -0.65;
+          handX = 0.50;
+        } else if (currentPose === 'natural_sides') {
+          armX = 0.05;
+          forearmX = 0.15;
+          forearmY = -0.10;
+          handX = 0.05;
+        }
+
+        if (bones.leftArm) {
+          bones.leftArm.rotation.set(armX + armBreath + talkGesture, 0.05, -1.45);
+          bones.leftArm.updateMatrix();
+        }
+        if (bones.leftForeArm) {
+          bones.leftForeArm.rotation.set(forearmX + armBreath * 0.5, forearmY, 0.12);
+          bones.leftForeArm.updateMatrix();
+        }
+        if (bones.leftHand) {
+          bones.leftHand.rotation.set(handX, 0.08, -0.05);
+          bones.leftHand.updateMatrix();
+        }
+
+        if (bones.rightArm) {
+          bones.rightArm.rotation.set(armX + armBreath + talkGesture, -0.05, 1.45);
+          bones.rightArm.updateMatrix();
+        }
+        if (bones.rightForeArm) {
+          bones.rightForeArm.rotation.set(forearmX + armBreath * 0.5, -forearmY, -0.12);
+          bones.rightForeArm.updateMatrix();
+        }
+        if (bones.rightHand) {
+          bones.rightHand.rotation.set(handX, -0.08, 0.05);
+          bones.rightHand.updateMatrix();
+        }
       }
 
       if (renderer) {
