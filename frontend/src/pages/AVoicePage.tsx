@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { David3DAvatar } from "@/components/David3DAvatar";
+import { callGeminiLiveConversation } from "@/services/geminiVoiceClient";
 import {
   speechEngine,
   PRESET_PERSONAS,
@@ -169,9 +170,23 @@ export function AVoicePage(): JSX.Element {
     }
   };
 
-  const handleSendMessage = (textToSend?: string) => {
+  // Gemini API Key State
+  const [geminiApiKey, setGeminiApiKey] = useState<string>(
+    () => localStorage.getItem("gemini_api_key") || ""
+  );
+  const [showGeminiKeyInput, setShowGeminiKeyInput] = useState(false);
+
+  const handleSaveGeminiKey = (key: string) => {
+    const trimmed = key.trim();
+    setGeminiApiKey(trimmed);
+    if (trimmed) localStorage.setItem("gemini_api_key", trimmed);
+    else localStorage.removeItem("gemini_api_key");
+    setShowGeminiKeyInput(false);
+  };
+
+  const handleSendMessage = async (textToSend?: string) => {
     const text = (textToSend || inputText).trim();
-    if (!text) return;
+    if (!text || isThinking) return;
 
     const userMsg: ChatMessage = {
       id: String(Date.now()),
@@ -180,42 +195,31 @@ export function AVoicePage(): JSX.Element {
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
     };
 
-    setMessages((prev) => [...prev, userMsg]);
+    const nextHistory = [...messages, userMsg];
+    setMessages(nextHistory);
     setInputText("");
     setIsThinking(true);
 
-    // AI Response generation (Simulated Gemini 3.5 intelligent response)
-    setTimeout(() => {
-      let replyText = "";
-      const lower = text.toLowerCase();
-
-      if (lower.includes("job") || lower.includes("नौकरी") || lower.includes("भर्ती")) {
-        replyText =
-          "करियर कम्पास पर इस समय यूपीएससी सिविल सर्विसेज, एसएससी सीजीएल और रेलवे आरआरबी की बंपर भर्तियां सक्रिय हैं। आप होमपेज और जॉब्स सेक्शन में जाकर सीधे ऑनलाइन आवेदन कर सकते हैं।";
-      } else if (lower.includes("admit") || lower.includes("एडमिट कार्ड")) {
-        replyText =
-          "एसएससी और बैंक परीक्षाओं के नए एडमिट कार्ड जारी हो चुके हैं। आप एडमिट कार्ड सेक्शन से सीधे अपना हॉल टिकट डाउनलोड कर सकते हैं।";
-      } else if (lower.includes("resume") || lower.includes("रिज्यूम")) {
-        replyText =
-          "आप हमारे इन-बिल्ट एटीएस-फ्रेंडली रिज्यूम बिल्डर का उपयोग करके 2 मिनट में प्रोफेशनल बायोडाटा बना सकते हैं और पीडीएफ डाउनलोड कर सकते हैं।";
-      } else if (lower.includes("namaste") || lower.includes("नमस्ते") || lower.includes("hello")) {
-        replyText =
-          "नमस्ते! मैं आपका AuraVoice डिजिटल साथी हूँ। बताइए आज मैं आपकी तैयारी और करियर में कैसे मदद कर सकता हूँ?";
-      } else {
-        replyText = `आपके प्रश्न "${text}" के संदर्भ में: सरकारी परीक्षाओं और करियर तैयारी में नियमित अभ्यास, मॉक टेस्ट और समय प्रबंधन सबसे महत्वपूर्ण हैं।`;
-      }
+    try {
+      const geminiReply = await callGeminiLiveConversation(
+        nextHistory.map((m) => ({ role: m.role, text: m.text })),
+        geminiApiKey
+      );
 
       const botMsg: ChatMessage = {
         id: String(Date.now() + 1),
         role: "assistant",
-        text: replyText,
+        text: geminiReply,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
       };
 
       setMessages((prev) => [...prev, botMsg]);
       setIsThinking(false);
-      speakText(replyText);
-    }, 650);
+      speakText(geminiReply);
+    } catch (err) {
+      console.error("Gemini conversation error:", err);
+      setIsThinking(false);
+    }
   };
 
   const speakText = (text: string) => {
