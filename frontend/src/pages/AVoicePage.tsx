@@ -628,34 +628,36 @@ export function AVoicePage(): JSX.Element {
 
       {/* ── TAB 1: 3D AVATAR & REALTIME VOICE CHAT ──────────────────────── */}
       {activeTab === "chat" && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left Column: 3D David Avatar & Controls */}
-          <div className="lg:col-span-5 flex flex-col gap-6">
-            <div className="card overflow-hidden border-cyan-500/30 bg-slate-950 p-4 relative flex flex-col items-center">
-              <David3DAvatar
-                isSpeaking={isSpeaking}
-                isListening={isListening}
-                isThinking={isThinking}
-                speakingWord={speakingWord}
-                className="h-[380px] w-full"
-              />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Left Column: Info & Voice Controls */}
+          <div className="lg:col-span-3 flex flex-col gap-5">
+            <div className="card border-slate-800 bg-slate-900/90 p-5 space-y-4">
+              <div className="flex items-center gap-2 text-cyan-400">
+                <Sparkles className="h-4 w-4" />
+                <h3 className="font-bold text-white text-sm">Assistant Info</h3>
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                David is your 3D Gemini AI Companion. Ask about Government Jobs, Exam Preparation, or Resume Building.
+              </p>
 
               {/* Persona Selector */}
-              <div className="w-full mt-4 space-y-2">
+              <div className="space-y-2 pt-2 border-t border-slate-800">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Voice Persona</span>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div className="flex flex-col gap-2">
                   {PRESET_PERSONAS.map((p) => (
                     <button
                       key={p.id}
                       onClick={() => setSelectedPersona(p)}
-                      className={`flex flex-col items-start p-2.5 rounded-xl text-left border transition-all text-xs ${
+                      className={`flex items-center justify-between p-2.5 rounded-xl border transition-all text-xs ${
                         selectedPersona.id === p.id
                           ? "bg-cyan-950/40 border-cyan-500 text-cyan-300 font-bold shadow-sm shadow-cyan-500/20"
                           : "bg-slate-900/60 border-slate-800 text-slate-400 hover:bg-slate-800"
                       }`}
                     >
-                      <span className="text-base">{p.avatar}</span>
-                      <span className="font-bold mt-1 text-slate-200">{p.name.split("(")[0]}</span>
+                      <span className="flex items-center gap-2">
+                        <span>{p.avatar}</span>
+                        <span className="text-slate-200">{p.name.split("(")[0]}</span>
+                      </span>
                       <span className="text-[10px] text-slate-400">{p.gender}</span>
                     </button>
                   ))}
@@ -663,7 +665,7 @@ export function AVoicePage(): JSX.Element {
               </div>
 
               {/* Pitch & Rate Controls */}
-              <div className="w-full mt-4 grid grid-cols-2 gap-3 pt-3 border-t border-slate-800/80">
+              <div className="space-y-3 pt-3 border-t border-slate-800">
                 <div>
                   <div className="flex justify-between text-xs font-semibold text-slate-400 mb-1">
                     <span>Pitch</span>
@@ -698,8 +700,8 @@ export function AVoicePage(): JSX.Element {
             </div>
           </div>
 
-          {/* Right Column: Live Conversational Chat Window */}
-          <div className="lg:col-span-7 flex flex-col card p-6 bg-slate-900/90 border-slate-800 h-[580px]">
+          {/* Middle Column: Live Conversational Chat Window */}
+          <div className="lg:col-span-5 flex flex-col card p-6 bg-slate-900/90 border-slate-800 h-[580px]">
             <div className="flex items-center justify-between pb-4 border-b border-slate-800">
               <div className="flex items-center gap-2">
                 <div className="h-3 w-3 rounded-full bg-emerald-500 animate-pulse" />
@@ -763,7 +765,7 @@ export function AVoicePage(): JSX.Element {
 
               {isThinking && (
                 <div className="flex items-center gap-2 text-xs text-cyan-400 italic p-2">
-                  <Sparkles className="h-4 w-4 animate-spin" /> Thinking and formulating Hindi response...
+                  <Sparkles className="h-4 w-4 animate-spin" /> Gemini AI processing response...
                 </div>
               )}
 

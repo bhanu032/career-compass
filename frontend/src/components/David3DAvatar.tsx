@@ -128,7 +128,7 @@ export function David3DAvatar({
     // Scene & Camera
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 100);
-    camera.position.set(0, 0, 2.15);
+    camera.position.set(0, 0.15, 3.1);
 
     let renderer: THREE.WebGLRenderer | null = null;
     try {
@@ -221,6 +221,10 @@ export function David3DAvatar({
             else if (bName.includes('spine2') || bName.includes('chest')) foundBones.chest = bone;
             else if (bName.includes('spine1')) foundBones.spine1 = bone;
             else if (bName.includes('spine') && !foundBones.spine) foundBones.spine = bone;
+            else if (bName.includes('leftarm') || bName.includes('leftupperarm') || bName.includes('arm_l')) foundBones.leftArm = bone;
+            else if (bName.includes('rightarm') || bName.includes('rightupperarm') || bName.includes('arm_r')) foundBones.rightArm = bone;
+            else if (bName.includes('leftforearm') || bName.includes('forearm_l')) foundBones.leftForeArm = bone;
+            else if (bName.includes('rightforearm') || bName.includes('forearm_r')) foundBones.rightForeArm = bone;
           }
         });
 
@@ -232,6 +236,14 @@ export function David3DAvatar({
           };
         }
 
+        // Adjust arm bones so hands stay close to body
+        if (foundBones.leftArm) {
+          foundBones.leftArm.rotation.z = Math.min(foundBones.leftArm.rotation.z, -1.2);
+        }
+        if (foundBones.rightArm) {
+          foundBones.rightArm.rotation.z = Math.max(foundBones.rightArm.rotation.z, 1.2);
+        }
+
         bonesRef.current = foundBones;
         initialBonesRef.current = initialRot;
 
@@ -241,8 +253,8 @@ export function David3DAvatar({
         bbox.getCenter(center);
         model.position.sub(center);
 
-        // Portrait framing
-        model.position.y -= 0.12;
+        // Face to Knee body framing
+        model.position.y -= 0.65;
         model.position.z += 0.05;
 
         pivotGroup.add(model);
