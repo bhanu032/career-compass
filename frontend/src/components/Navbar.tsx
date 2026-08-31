@@ -37,20 +37,12 @@ export function Navbar(): JSX.Element {
   const isTricolor = theme === "tricolor";
   const isDark = theme === "dark";
 
-  // 3 Primary Navbar Pillars
+  // Primary Navbar Pillars
   const PRIMARY_LINKS = [
-    { to: "/jobs", label: "Jobs", icon: Briefcase },
-    { to: "/mock-tests", label: "Mock Tests", icon: GraduationCap },
+    { to: "/", label: "Portfolio", icon: UserIcon },
     { to: "/resume-builder", label: "Resume Builder", icon: FileText },
-  ];
-
-  // Secondary Quick Links
-  const QUICK_LINKS = [
-    { to: "/swifterp", label: "SwiftERP", icon: Building2 },
-    { to: "/avoice", label: "AuraVoice AI", icon: Mic },
-    { to: "/admit-cards", label: "Admit Cards", icon: FileCheck },
-    { to: "/results", label: "Results", icon: Trophy },
-    { to: "/search", label: "Search", icon: Search },
+    { to: "/jobs", label: "Jobs Hub", icon: Briefcase },
+    { to: "/mock-tests", label: "Mock Tests", icon: GraduationCap },
   ];
 
   function handleLogout(): void {
@@ -142,8 +134,8 @@ export function Navbar(): JSX.Element {
       <div className="container-page flex h-16 items-center justify-between gap-4">
         <Logo />
 
-        {/* ── Desktop Primary 3 Pillars Navigation ─────────────────────── */}
-        <nav className="hidden items-center gap-1.5 md:flex">
+        {/* ── Desktop Clean Navigation ─────────────────────────────────── */}
+        <nav className="hidden items-center gap-2 md:flex">
           {PRIMARY_LINKS.map((link) => {
             const Icon = link.icon;
             return (
@@ -165,32 +157,26 @@ export function Navbar(): JSX.Element {
               </NavLink>
             );
           })}
-
-          {/* Quick Sub-links: Admit Cards & Results */}
-          <div className="ml-2 flex items-center gap-1 border-l border-slate-200 dark:border-slate-800 pl-2">
-            {QUICK_LINKS.map((link) => {
-              const Icon = link.icon;
-              return (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  className={({ isActive }) =>
-                    classNames(
-                      "flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-all",
-                      isActive ? "bg-slate-100 dark:bg-slate-800 text-violet-600 dark:text-violet-400 font-bold" : inactiveClass,
-                    )
-                  }
-                >
-                  <Icon className="h-3.5 w-3.5" />
-                  <span>{link.label}</span>
-                </NavLink>
-              );
-            })}
-          </div>
         </nav>
 
         {/* Desktop actions */}
         <div className="hidden items-center gap-2 md:flex">
+          <a
+            href="https://github.com/bhanu032"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition"
+          >
+            GitHub
+          </a>
+          <a
+            href="https://www.linkedin.com/in/bhanu032"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-blue-600/10 hover:bg-blue-600/20 text-blue-600 dark:text-blue-400 border border-blue-500/20 transition"
+          >
+            LinkedIn
+          </a>
           <LanguageSwitcher />
           <ThemeToggle />
           {isAuthenticated && (
@@ -258,22 +244,25 @@ export function Navbar(): JSX.Element {
               })}
             </div>
 
-            {/* Quick Govt Sections */}
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3">Government Updates</span>
-            {QUICK_LINKS.map((link) => {
-              const Icon = link.icon;
-              return (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  onClick={() => setOpen(false)}
-                  className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-                >
-                  <Icon className="h-4 w-4 text-slate-500" />
-                  <span>{link.label}</span>
-                </Link>
-              );
-            })}
+            {/* Quick Links */}
+            <div className="space-y-1">
+              <a
+                href="https://github.com/bhanu032"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+              >
+                GitHub Profile
+              </a>
+              <a
+                href="https://www.linkedin.com/in/bhanu032"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+              >
+                LinkedIn Profile
+              </a>
+            </div>
           </div>
         </div>
       )}

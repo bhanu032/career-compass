@@ -37,13 +37,13 @@ export function Logo(): JSX.Element {
 
       <div className="flex flex-col">
         <span
-          className="text-base sm:text-lg font-extrabold tracking-tight leading-none"
+          className="text-base sm:text-lg font-extrabold tracking-tight leading-tight"
           style={{ color: isTricolor ? "#1a1a2e" : isDark ? "#fff" : "#0f172a" }}
         >
           Bhanu Pratap Singh
         </span>
-        <span className="text-[10px] font-bold text-violet-600 dark:text-violet-400">
-          SDE | Portfolio &amp; Apps
+        <span className="text-[10px] sm:text-[11px] font-semibold text-violet-600 dark:text-violet-400 leading-tight">
+          ReactJS &amp; MERN Stack Developer | Full-Stack (.NET)
         </span>
       </div>
     </Link>

@@ -664,23 +664,23 @@ export function HomePage(): JSX.Element {
                 </div>
                 <div className="text-left sm:text-right">
                   <span className="inline-block rounded-full bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 text-xs font-bold px-3 py-1">
-                    Jul 2024 – Present
+                    Jan 2026 – Jul 2026
                   </span>
-                  <p className="text-xs text-slate-500 mt-1">Remote | Converted to full-time Nov 2024 (4-mo internship)</p>
+                  <p className="text-xs text-slate-500 mt-1">Remote | Converted to full-time in May 2026 after a 4-month internship</p>
                 </div>
               </div>
 
               <ul className="mt-4 space-y-2.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300 list-disc list-inside leading-relaxed">
-                <li>Built and maintained <b>InterviewGhost.ai</b>, an AI-powered hiring and career-automation platform, using React.js, TypeScript, Next.js, Node.js/Express REST APIs, Vite, and Tailwind CSS across B2C, B2B/HR, and scheduling route groups following SDLC practices.</li>
-                <li>Developed ATS-focused resume workflows: dashboard (create/edit/preview/upload/download/delete), template rendering, ATS score and keyword analysis, cover-letter generation, and print-ready PDF export via <b>jsPDF</b>, <b>react-to-print</b>, and <b>html2canvas</b>.</li>
-                <li>Implemented real-time AI interview experiences using WebSockets, speech recognition, live transcription, audio capture, and candidate verification/hardware-check flows; integrated screen sharing, fullscreen monitoring, and candidate proctoring workflows using <b>face-api.js</b>.</li>
-                <li>Built dynamic HRTech candidate, HR, and executive dashboards for screening, onboarding, job creation/matching, interview scheduling, and interviewer feedback.</li>
-                <li>Managed application state with Redux Toolkit, React Query, and Context API; built reusable UI design layer with Radix UI, shadcn-style components, and Lucide icons.</li>
-                <li>Wrote and executed test cases/scenarios with Vitest &amp; Testing Library; owned production delivery via Docker multi-stage builds with Nginx, Vercel SPA routing, and GitHub Actions CI/CD.</li>
+                <li>Built and maintained <b>InterviewGhost.ai</b>, an AI-powered hiring and career-automation platform, using React.js, TypeScript, Next.js, Node.js/Express REST APIs, Vite, Bootstrap, and Tailwind CSS across B2C, B2B/HR, and scheduling route groups, following SDLC practices from design specifications through to production deployment.</li>
+                <li>Developed ATS-focused resume workflows: resume dashboard (create/edit/preview/upload/download/delete), template rendering, ATS score and keyword analysis, cover-letter generation, and print-ready PDF export using <b>jsPDF</b>, <b>react-to-print</b>, and <b>html2canvas</b>.</li>
+                <li>Implemented real-time AI interview experiences using WebSockets, speech recognition, live transcription, audio capture, and candidate verification/hardware-check flows; integrated screen sharing, fullscreen monitoring, and camera/microphone handling, plus interview-proctoring workflows using <b>face-api.js</b>.</li>
+                <li>Built dynamic HRTech dashboards spanning candidate, HR, and executive views for screening, onboarding, job creation/matching, interview scheduling, and interviewer feedback, coordinating with cross-functional stakeholders on requirements and production issues.</li>
+                <li>Managed application state with Redux Toolkit, React Query, and Context API (auth, ATS, job matcher, resume, and user-profile contexts), and built a reusable UI layer with Bootstrap, Radix UI, shadcn-style components, and Lucide icons.</li>
+                <li>Wrote and executed test cases and scenarios with Vitest and Testing Library to validate features against design specifications before release; owned production build and delivery via Docker multi-stage builds with Nginx, Vercel SPA routing/rewrites, and GitHub Actions CI/CD.</li>
               </ul>
             </motion.div>
 
-            {/* EXP 2: SysMorph */}
+            {/* EXP 2: Sysmorph */}
             <motion.div
               variants={fadeUpVariants}
               initial="hidden"
@@ -692,24 +692,27 @@ export function HomePage(): JSX.Element {
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-4">
                 <div>
                   <h3 className="text-lg font-extrabold text-slate-900 dark:text-white">
-                    Front-End Developer Intern
+                    Software Developer / Full-Stack Developer (MERN &amp; .NET/Angular)
                   </h3>
                   <p className="text-sm font-semibold text-blue-600 dark:text-blue-400">
-                    SysMorph (Subhashish Homes)
+                    Sysmorph
                   </p>
                 </div>
                 <div className="text-left sm:text-right">
                   <span className="inline-block rounded-full bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 text-xs font-bold px-3 py-1">
-                    Jul 2024 – Dec 2024
+                    Jun 2024 – Dec 2025
                   </span>
-                  <p className="text-xs text-slate-500 mt-1">On-site | Jaipur, India</p>
+                  <p className="text-xs text-slate-500 mt-1">Hybrid | Enterprise Client Solutions</p>
                 </div>
               </div>
 
               <ul className="mt-4 space-y-2.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300 list-disc list-inside leading-relaxed">
-                <li>Developed responsive, user-friendly web pages using HTML, CSS, JavaScript, and React.js, improving page performance and cross-browser compatibility.</li>
-                <li>Created reusable UI components and optimized layouts for responsiveness across mobile, tablet, and desktop devices.</li>
-                <li>Managed Git workflows and project configurations for efficient team collaboration and deployment.</li>
+                <li>Architected, developed, and deployed full-stack client solutions and enterprise tools across MERN, Python, and .NET/Angular stacks.</li>
+                <li><strong>SwiftERP Suite:</strong> Developed an enterprise ERP suite featuring <b>.NET 8 Web API (Clean Architecture), Angular 18+ (Signals &amp; Reactive Forms), MSSQL with EF Core</b>, and a <b>React Native</b> companion app; built inventory management with atomic stock deduction and optimistic concurrency (<code>RowVersion</code>), order processing, and HR leave approval workflows.</li>
+                <li><strong>Career Compass (GovJobs Portal):</strong> Built a government job aggregation platform using <b>React 19, TypeScript, Tailwind CSS, and Python (FastAPI/PostgreSQL)</b> with automated multi-portal scrapers running every 6 hours, dynamic multi-parameter search, bookmarks, and notification PDF exports.</li>
+                <li><strong>Translify (A-Translator Extension):</strong> Built a real-time web translation extension with <b>JavaScript (Chrome Manifest V3) and DOM APIs</b> for seamless in-page contextual translation without layout shifts.</li>
+                <li><strong>AMobile (Hardware Input Bridge):</strong> Developed a low-latency input streaming utility and USB reverse-proxy communication bridge connecting Android devices to Windows systems using <b>C++, Win32 APIs, and PowerShell</b>.</li>
+                <li><strong>Advertising Space Management System &amp; IntellectInn:</strong> Engineered a MERN advertising marketplace with Stripe payments and Google Maps API discovery, alongside a student networking portal with profile showcases.</li>
               </ul>
             </motion.div>
 
@@ -743,6 +746,7 @@ export function HomePage(): JSX.Element {
         <div className="mt-8 flex flex-wrap gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
           {[
             { id: "mern", label: "MERN & Backend", icon: DatabaseIcon },
+            { id: "dotnet", label: ".NET 8 & Angular", icon: Server },
             { id: "frontend", label: "Frontend & Web", icon: Code2 },
             { id: "state", label: "State & Data", icon: Layers },
             { id: "ui", label: "UI / 3D & Media", icon: Cpu },
@@ -847,12 +851,12 @@ export function HomePage(): JSX.Element {
             </div>
             <div className="space-y-3 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
               <div>
-                <span className="font-bold text-slate-900 dark:text-white">Programming Languages:</span>
-                <p className="text-slate-500 mt-0.5">JavaScript, TypeScript, Python, SQL</p>
+                <span className="font-bold text-slate-900 dark:text-white">Programming Languages &amp; Stacks:</span>
+                <p className="text-slate-500 dark:text-slate-400 mt-0.5">JavaScript, TypeScript, C#, Python, SQL, C++, HTML5, CSS3, SCSS</p>
               </div>
               <div>
-                <span className="font-bold text-slate-900 dark:text-white">Domain Expertise:</span>
-                <p className="text-slate-500 mt-0.5">ATS Optimization, Resume Builder Workflows, HRTech Platforms, Interview Automation, System Design</p>
+                <span className="font-bold text-slate-900 dark:text-white">Domain &amp; Process Expertise:</span>
+                <p className="text-slate-500 dark:text-slate-400 mt-0.5">Reactive Programming (React JS), UI &amp; Markup Language (TypeScript), SDLC &amp; Design Spec Analysis, HRTech Platforms, ERP Systems, ATS Optimization, Real-Time WebSockets, Test Case Design &amp; Execution</p>
               </div>
             </div>
           </motion.div>
@@ -987,6 +991,15 @@ function DatabaseIcon(props: any) {
 
 function getSkillsList(category: string): Array<{ name: string; detail: string }> {
   switch (category) {
+    case "dotnet":
+      return [
+        { name: ".NET 8 Web API", detail: "ASP.NET Core REST APIs & Clean Architecture" },
+        { name: "C# & LINQ", detail: "Object-oriented programming & LINQ queries" },
+        { name: "Entity Framework Core", detail: "ORM data modeling, migrations & SQL Server" },
+        { name: "Angular 18+", detail: "Signals, Standalone components & Reactive Forms" },
+        { name: "RxJS", detail: "Reactive stream pipelines & observables" },
+        { name: "JWT & RBAC", detail: "Role-based authorization & BCrypt hashing" },
+      ];
     case "mern":
       return [
         { name: "MongoDB", detail: "Database modeling, aggregations & indexing" },
@@ -1015,6 +1028,7 @@ function getSkillsList(category: string): Array<{ name: string; detail: string }
     case "ui":
       return [
         { name: "Tailwind CSS", detail: "Utility-first design & custom design systems" },
+        { name: "Bootstrap", detail: "Responsive grids & enterprise component styling" },
         { name: "Radix UI", detail: "Unstyled accessible UI primitives" },
         { name: "Framer Motion", detail: "GPU-accelerated smooth animations" },
         { name: "Lucide React", detail: "Modern SVG icon design system" },
@@ -1035,7 +1049,7 @@ function getSkillsList(category: string): Array<{ name: string; detail: string }
         { name: "Nginx", detail: "Reverse proxy & SPA routing configuration" },
         { name: "Vercel", detail: "Automated deployment & SPA rewrites" },
         { name: "GitHub Actions", detail: "Automated CI/CD workflows" },
-        { name: "Vitest", detail: "Unit & component testing framework" },
+        { name: "Vitest & xUnit", detail: "Unit & component testing frameworks" },
       ];
     default:
       return [];
