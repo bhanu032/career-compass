@@ -25,6 +25,7 @@ import {
   MapPin,
   Phone,
   Rocket,
+  Server,
   ShieldCheck,
   Sparkles,
   Star,
