@@ -368,11 +368,12 @@ export class SpeechEngine {
     try {
       const AudioCtx = (window as any).AudioContext || (window as any).webkitAudioContext;
       if (!AudioCtx) return;
-      this.audioCtx = new AudioCtx();
-      const buffer = this.audioCtx.createBuffer(1, 1, 22050);
-      const src = this.audioCtx.createBufferSource();
+      const ctx: AudioContext = new AudioCtx();
+      this.audioCtx = ctx;
+      const buffer = ctx.createBuffer(1, 1, 22050);
+      const src = ctx.createBufferSource();
       src.buffer = buffer;
-      src.connect(this.audioCtx.destination);
+      src.connect(ctx.destination);
       src.start(0);
     } catch { /* ignore */ }
   }

@@ -287,6 +287,42 @@ export function HomePage(): JSX.Element {
             </div>
           </motion.div>
 
+          {/* FLAGSHIP PROJECT: SwiftERP Enterprise Cloud Platform */}
+          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-indigo-300 dark:border-indigo-700/60 bg-gradient-to-br from-indigo-500/5 via-cyan-500/5 to-emerald-500/10 shadow-md hover:shadow-indigo-500/10 transition-all">
+            <div className="p-6">
+              <div className="flex items-center justify-between gap-2">
+                <span className="inline-flex items-center gap-1 rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-950/80 dark:text-indigo-300 px-3 py-1 text-xs font-bold border border-indigo-300/40">
+                  <Building2 className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" /> .NET 8 • Angular 18 • React Native
+                </span>
+                <span className="text-xs text-indigo-600 dark:text-indigo-400 font-bold">Enterprise v1.0</span>
+              </div>
+              <h3 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                SwiftERP — Full-Stack Enterprise ERP Cloud Suite
+              </h3>
+              <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Mission-critical ERP platform engineered with <strong>.NET 8 Clean Architecture</strong>, <strong>Angular 18 standalone components</strong>, and <strong>React Native mobile app</strong>. Features high-concurrency inventory with atomic stock deductions, automated multi-tier HR leave approvals, salary audit trails, and sub-millisecond SQL stored procedure analytics.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-1.5">
+                {[".NET 8 Web API", "EF Core 8", "Angular 18", "React Native", "Clean Architecture", "Atomic Stock Deductions", "HR & Payroll Engine", "JWT Refresh Tokens"].map((tag) => (
+                  <span key={tag} className="rounded-md bg-indigo-100/70 dark:bg-indigo-950/60 px-2.5 py-1 text-[11px] font-semibold text-indigo-900 dark:text-indigo-200 border border-indigo-200/50 dark:border-indigo-800/40">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-6 pt-0 border-t border-indigo-200/60 dark:border-indigo-800/40 mt-4 flex flex-wrap items-center justify-between gap-3 bg-indigo-500/5 dark:bg-indigo-950/20">
+              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                <CheckCircle2 className="h-3.5 w-3.5" /> 116 Clean Architecture Source Files
+              </span>
+              <div className="flex gap-2">
+                <Link to="/swifterp" className="btn-primary text-xs py-2 px-4 bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white shadow-md">
+                  Explore ERP Suite <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+
           {/* FLAGSHIP PROJECT: aMobile — Phone to PC Hardware Keyboard & Bridge */}
           <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-orange-300 dark:border-orange-700/60 bg-gradient-to-br from-orange-500/5 via-amber-500/5 to-purple-500/10 shadow-md hover:shadow-orange-500/10 transition-all">
             <div className="p-6">

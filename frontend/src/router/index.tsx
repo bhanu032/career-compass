@@ -17,6 +17,7 @@ import { SearchPage } from "@/pages/SearchPage";
 import { TranslifyPage } from "@/pages/TranslifyPage";
 import { AMobilePage } from "@/pages/AMobilePage";
 import { AVoicePage } from "@/pages/AVoicePage";
+import { SwiftERPPage } from "@/pages/SwiftERPPage";
 import { ResumeLandingPage } from "@/pages/resume/ResumeLandingPage";
 import { ResumeTemplateSelectionPage } from "@/pages/resume/ResumeTemplateSelectionPage";
 import { ResumeEditorPage } from "@/pages/resume/ResumeBuilderPage";
@@ -62,6 +63,8 @@ export const router = createBrowserRouter([
       { path: "/a-mobile", element: <Navigate to="/amobile" replace /> },
       { path: "/avoice", element: <AVoicePage /> },
       { path: "/aura-voice", element: <Navigate to="/avoice" replace /> },
+      { path: "/swifterp", element: <SwiftERPPage /> },
+      { path: "/swift-erp", element: <Navigate to="/swifterp" replace /> },
       // Redirect old auth routes to home — login/register are removed
       { path: "/login",    element: <Navigate to="/" replace /> },
       { path: "/register", element: <Navigate to="/" replace /> },

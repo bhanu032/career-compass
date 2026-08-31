@@ -46,6 +46,7 @@ export function Navbar(): JSX.Element {
 
   // Secondary Quick Links
   const QUICK_LINKS = [
+    { to: "/swifterp", label: "SwiftERP", icon: Building2 },
     { to: "/avoice", label: "AuraVoice AI", icon: Mic },
     { to: "/admit-cards", label: "Admit Cards", icon: FileCheck },
     { to: "/results", label: "Results", icon: Trophy },
