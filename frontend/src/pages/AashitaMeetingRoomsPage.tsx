@@ -79,8 +79,8 @@ export function AashitaMeetingRoomsPage(): JSX.Element {
   const [modalRoomId, setModalRoomId] = useState<number>(1);
   const [formTitle, setFormTitle] = useState<string>("");
   const [formDate, setFormDate] = useState<string>(TODAY);
-  const [formStartTime, setFormStartTime] = useState<string>("10:00");
-  const [formEndTime, setFormEndTime] = useState<string>("11:00");
+  const [formStartTime, setFormStartTime] = useState<string>("11:00");
+  const [formEndTime, setFormEndTime] = useState<string>("12:00");
   const [formConflictWarning, setFormConflictWarning] = useState<string | null>(null);
 
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
@@ -359,6 +359,9 @@ export function AashitaMeetingRoomsPage(): JSX.Element {
                   onClick={() => {
                     setModalRoomId(rooms[0]?.id || 1);
                     setFormDate(selectedDate);
+                    setFormStartTime("11:00");
+                    setFormEndTime("12:00");
+                    setFormConflictWarning(null);
                     setIsModalOpen(true);
                   }}
                   className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-600/20 flex items-center justify-center gap-2 transition cursor-pointer"
@@ -557,6 +560,9 @@ export function AashitaMeetingRoomsPage(): JSX.Element {
                       onClick={() => {
                         setModalRoomId(room.id);
                         setFormDate(selectedDate);
+                        setFormStartTime("11:00");
+                        setFormEndTime("12:00");
+                        setFormConflictWarning(null);
                         setIsModalOpen(true);
                       }}
                       className="w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-indigo-600 text-slate-800 hover:text-white text-xs font-bold border border-slate-200 hover:border-indigo-600 flex items-center justify-center gap-1.5 transition shadow-xs cursor-pointer"
