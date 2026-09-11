@@ -85,6 +85,23 @@ export function AashitaMeetingRoomsPage(): JSX.Element {
 
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
+  useEffect(() => {
+    // Strictly enforce light theme & pure white background
+    const html = document.documentElement;
+    const hadDark = html.classList.contains("dark");
+    html.classList.remove("dark");
+    html.style.colorScheme = "light";
+    const prevBg = document.body.style.backgroundColor;
+    document.body.style.backgroundColor = "#ffffff";
+
+    return () => {
+      if (hadDark) {
+        html.classList.add("dark");
+      }
+      document.body.style.backgroundColor = prevBg;
+    };
+  }, []);
+
   const addToast = (type: ToastMessage["type"], message: string) => {
     const id = Math.random().toString(36).substring(2, 9);
     setToasts((prev) => [...prev, { id, type, message }]);
@@ -281,7 +298,7 @@ export function AashitaMeetingRoomsPage(): JSX.Element {
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 pb-20">
+    <div className="min-h-screen bg-white text-slate-800 pb-20" style={{ backgroundColor: "#ffffff" }}>
       {/* ── TOAST CONTAINER ─────────────────────────────────────────────────── */}
       <div className="fixed top-20 right-4 z-50 flex flex-col gap-2 pointer-events-none max-w-sm w-full">
         {toasts.map((toast) => (
