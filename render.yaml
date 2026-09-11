@@ -34,3 +34,22 @@ services:
         value: "gpt-4o-mini"
     healthCheckPath: /health
     autoDeploy: true
+
+  # ── Meeting Room Booking API ──────────────────────────────────────────────
+  - type: web
+    name: meeting-rooms-api
+    runtime: python
+    rootDir: aashita_tech/meeting-room-booking/backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        sync: false   # Set in Render dashboard → Internal DB URL from meeting-rooms-db
+      - key: PYTHONUNBUFFERED
+        value: "1"
+
+databases:
+  - name: meeting-rooms-db
+    plan: free
