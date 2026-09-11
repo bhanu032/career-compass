@@ -18,6 +18,7 @@ import { TranslifyPage } from "@/pages/TranslifyPage";
 import { AMobilePage } from "@/pages/AMobilePage";
 import { AVoicePage } from "@/pages/AVoicePage";
 import { SwiftERPPage } from "@/pages/SwiftERPPage";
+import { AashitaMeetingRoomsPage } from "@/pages/AashitaMeetingRoomsPage";
 import { ResumeLandingPage } from "@/pages/resume/ResumeLandingPage";
 import { ResumeTemplateSelectionPage } from "@/pages/resume/ResumeTemplateSelectionPage";
 import { ResumeEditorPage } from "@/pages/resume/ResumeBuilderPage";
@@ -65,6 +66,10 @@ export const router = createBrowserRouter([
       { path: "/aura-voice", element: <Navigate to="/avoice" replace /> },
       { path: "/swifterp", element: <SwiftERPPage /> },
       { path: "/swift-erp", element: <Navigate to="/swifterp" replace /> },
+      { path: "/meeting-room-booking", element: <AashitaMeetingRoomsPage /> },
+      { path: "/meeting-rooms", element: <Navigate to="/meeting-room-booking" replace /> },
+      { path: "/aashita-tech", element: <Navigate to="/meeting-room-booking" replace /> },
+      { path: "/aashita-meeting-rooms", element: <Navigate to="/meeting-room-booking" replace /> },
       // Redirect old auth routes to home — login/register are removed
       { path: "/login",    element: <Navigate to="/" replace /> },
       { path: "/register", element: <Navigate to="/" replace /> },

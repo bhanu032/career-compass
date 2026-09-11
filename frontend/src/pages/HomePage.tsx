@@ -252,6 +252,42 @@ export function HomePage(): JSX.Element {
           className="mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-3"
         >
 
+          {/* FLAGSHIP PROJECT: Aashita Tech Meeting Room Booking System */}
+          <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-indigo-400 dark:border-indigo-600/70 bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-cyan-500/10 shadow-md hover:shadow-indigo-500/10 transition-all">
+            <div className="p-6">
+              <div className="flex items-center justify-between gap-2">
+                <span className="inline-flex items-center gap-1 rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-950/80 dark:text-indigo-300 px-3 py-1 text-xs font-bold border border-indigo-300/40">
+                  <Calendar className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" /> FastAPI &amp; Next.js 14
+                </span>
+                <span className="text-xs text-indigo-600 dark:text-indigo-400 font-bold">Aashita Tech</span>
+              </div>
+              <h3 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                Meeting Room Booking System — Conflict Engine &amp; Next Slot
+              </h3>
+              <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                Full-stack corporate meeting room scheduler engineered with <strong>Python FastAPI</strong> and <strong>Next.js 14</strong>. Enforces 09:00–18:00 business hours, real-time overlapping conflict detection with exact collision reporting (HTTP 409), and algorithmic next-available-slot calculations.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-1.5">
+                {["Python FastAPI", "Next.js 14", "SQLAlchemy & Pydantic", "Conflict Detection (409)", "Next-Available-Slot", "09:00–18:00 Hours", "Tailwind CSS"].map((tag) => (
+                  <span key={tag} className="rounded-md bg-indigo-100/70 dark:bg-indigo-950/60 px-2.5 py-1 text-[11px] font-semibold text-indigo-900 dark:text-indigo-200 border border-indigo-200/50 dark:border-indigo-800/40">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-6 pt-0 border-t border-indigo-200/60 dark:border-indigo-800/40 mt-4 flex flex-wrap items-center justify-between gap-3 bg-indigo-500/5 dark:bg-indigo-950/20">
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                <Sparkles className="h-3.5 w-3.5 text-indigo-500" /> 5 Pre-Seeded Rooms
+              </span>
+              <div className="flex gap-2">
+                <Link to="/meeting-room-booking" className="btn-primary text-xs py-2 px-4 bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white shadow-md">
+                  Launch Booking System <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+
           {/* FLAGSHIP PROJECT: AuraVoice AI — 3D David Avatar & Voice Studio */}
           <motion.div variants={cardVariant} className="card overflow-hidden group flex flex-col justify-between border-cyan-300 dark:border-cyan-700/60 bg-gradient-to-br from-cyan-500/5 via-violet-500/5 to-pink-500/10 shadow-md hover:shadow-cyan-500/10 transition-all">
             <div className="p-6">
