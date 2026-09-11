@@ -6,6 +6,7 @@ import {
   BookOpen,
   Briefcase,
   Building2,
+  Calendar,
   CheckCircle2,
   ChevronRight,
   Code2,
